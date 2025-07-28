@@ -110,7 +110,11 @@ class _ResumePdfViewerPageState extends State<ResumePdfViewerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
+      backgroundColor: Color(0xffF9F2ED),
       appBar: AppBar(
         title: const Text('Resume Viewer'),
         actions: [
@@ -121,9 +125,9 @@ class _ResumePdfViewerPageState extends State<ResumePdfViewerPage> {
           ),
           IconButton(
             icon: isDownloading
-                ? const SizedBox(
-              width: 20,
-              height: 20,
+                ?  SizedBox(
+              width: width * 0.05,   // 5% of screen width (≈ 20px on 400px screen)
+              height: height * 0.025,
               child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
             )
                 : const Icon(Icons.download),

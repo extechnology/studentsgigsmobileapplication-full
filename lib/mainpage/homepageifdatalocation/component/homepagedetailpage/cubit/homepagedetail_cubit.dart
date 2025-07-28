@@ -2,25 +2,28 @@
   import 'package:meta/meta.dart';
   import 'package:http/http.dart' as http;
 
-  import '../model/model.dart';
+  import '../../../../datapage/datapage.dart';
+import '../model/model.dart';
 
   part 'homepagedetail_state.dart';
 
   class HomepagedetailCubit extends Cubit<HomepagedetailState> {
     HomepagedetailCubit() : super(HomepagedetailInitial());
 
-    String baseurl = "https://server.studentsgigs.com";
-    String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyMjMyNzgwLCJpYXQiOjE3NTE2Mjc5ODAsImp0aSI6IjQzOTRkYjgyMmRlOTQ0YjJhM2ZjNzMzMjFiMDM4ZTc0IiwidXNlcl9pZCI6OTN9.XjfCED0nFwJPmaxOQUToaE49IPDTrhrLfezxdi-wWBU";
-
+    final String baseurl = ApiConstants.baseUrl;
+    final headers =  ApiConstants.headers;
     Future<void> fetchEmployeeDetail({required int id}) async {
       emit(HomepagedetailLoding());
 
 
       try {
+        final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+        final tokens = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
         final response = await http.get(
           Uri.parse('https://server.studentsgigs.com/api/employer/employee-data/?id=$id'),
           headers: {
-            'Authorization': 'Bearer $token',
+            'Authorization': 'Bearer ${token ?? tokens}',
             'Accept': 'application/json',
           },
         );

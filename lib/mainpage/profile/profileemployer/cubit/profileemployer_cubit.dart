@@ -1,9 +1,14 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
+import '../../../dashborad/dashborad.dart';
+import '../../../datapage/datapage.dart';
+import '../../../registerpage/loginpageog.dart';
 import '../../companyinfo/model/model.dart';
 
 part 'profileemployer_state.dart';
@@ -18,13 +23,15 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
   File? selectedImage;
   String? networkImage;
 
-  final String baseurl = "https://server.studentsgigs.com";
-  final String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyMjMyNzgwLCJpYXQiOjE3NTE2Mjc5ODAsImp0aSI6IjQzOTRkYjgyMmRlOTQ0YjJhM2ZjNzMzMjFiMDM4ZTc0IiwidXNlcl9pZCI6OTN9.XjfCED0nFwJPmaxOQUToaE49IPDTrhrLfezxdi-wWBU";
+  final String baseurl = ApiConstants.baseUrl;
 
   Future<void> getcompanyinfo() async {
+    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+    final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
     final url = "$baseurl/api/employer/employer-info/";
     final response = await http.get(Uri.parse(url),headers: {
-      'Authorization': 'Bearer $bearerToken',
+      'Authorization': 'Bearer ${token ?? token2}',
       'Content-Type': 'application/json',
 
     });
@@ -49,6 +56,7 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
       // print("hey moji");
       // print("networkurl$networkImage");
 
+      print(networkImage);
 
       emit(ProfileemployerInitial());
       Future.delayed(Duration(milliseconds: 5000), () {
@@ -60,6 +68,20 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
       print("Something Wrong");
     }
 
+  }
+   getToken(BuildContext context) async {
+    final token = await ApiConstants.getTokenOnly();    // Await the future properly
+    final tokens = await ApiConstants.getTokenOnly2();  // Await the second token as well
+
+    if (token != null && token.isNotEmpty || tokens != null && tokens.isNotEmpty) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => Dashborad()),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => Registerpage()),
+      );
+    }
   }
 
 }

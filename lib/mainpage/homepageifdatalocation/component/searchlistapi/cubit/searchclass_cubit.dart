@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
+import '../../../../datapage/datapage.dart';
 import '../model/model.dart';
 
 part 'searchclass_state.dart';
@@ -13,8 +14,8 @@ class SearchclassCubit extends Cubit<SearchclassState> {
 
   List<Map<String, dynamic>> allData = [];
   List<Map<String, dynamic>> filteredData = [];
+  final String baseurl = ApiConstants.baseUrl;
 
-  final String baseurl = "https://server.studentsgigs.com";
 
   Future<void> getFunction() async {
     emit(SearchclassLoading());

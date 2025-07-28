@@ -10,28 +10,28 @@ String postedpagelistToJson(List<Postedpagelist> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 // wdjdvcqh
 class Postedpagelist {
-  int id;
+  int ? id;
   Employee employee;
   DateTime dateApplied;
-  String resume;
-  int onlineJob;
+  String ? resume;
+  int ?onlineJob;
   dynamic offlineJob;
 
   Postedpagelist({
-    required this.id,
+     this.id,
     required this.employee,
     required this.dateApplied,
-    required this.resume,
-    required this.onlineJob,
+     this.resume,
+     this.onlineJob,
     this.offlineJob,
   });
 
   factory Postedpagelist.fromJson(Map<String, dynamic> json) => Postedpagelist(
-    id: json["id"],
+    id: json["id"]?? 0,
     employee: Employee.fromJson(json["employee"]),
     dateApplied: DateTime.parse(json["date_applied"]),
-    resume: json["resume"],
-    onlineJob: json["online_job"],
+    resume: json["resume"]?? "",
+    onlineJob: json["online_job"]?? 0,
     offlineJob: json["offline_job"],
   );
 
@@ -46,50 +46,50 @@ class Postedpagelist {
 }
 
 class Employee {
-  int id;
+  int ? id;
   List<PreferredJobCategory> preferredJobCategories;
   List<WorkPreference> workPreferences;
   Profile profile;
   bool premiumBadge;
-  String name;
+  String ? name;
   dynamic profilePhoto;
-  String email;
+  String? email;
   dynamic phone;
   dynamic preferredWorkLocation;
   dynamic availableWorkHours;
   dynamic portfolio;
   dynamic about;
-  String jobTitle;
+  String ?jobTitle;
   dynamic gender;
   dynamic dateOfBirth;
-  int age;
-  String plan;
-  int profileView;
+  int ? age;
+  String ? plan;
+  int? profileView;
   DateTime createdDate;
-  int user;
+  int ? user;
 
   Employee({
-    required this.id,
+     this.id,
     required this.preferredJobCategories,
     required this.workPreferences,
     required this.profile,
     required this.premiumBadge,
-    required this.name,
+     this.name,
     this.profilePhoto,
-    required this.email,
+     this.email,
     this.phone,
     this.preferredWorkLocation,
     this.availableWorkHours,
     this.portfolio,
     this.about,
-    required this.jobTitle,
+     this.jobTitle,
     this.gender,
     this.dateOfBirth,
-    required this.age,
-    required this.plan,
-    required this.profileView,
+     this.age,
+     this.plan,
+     this.profileView,
     required this.createdDate,
-    required this.user,
+     this.user,
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) => Employee(
@@ -111,22 +111,22 @@ class Employee {
 
     profile: Profile.fromJson(json["profile"]),
     premiumBadge: json["premium_badge"],
-    name: json["name"],
+    name: json["name"]??"",
     profilePhoto: json["profile_photo"],
-    email: json["email"],
+    email: json["email"]??"",
     phone: json["phone"],
     preferredWorkLocation: json["preferred_work_location"],
     availableWorkHours: json["available_work_hours"],
     portfolio: json["portfolio"],
     about: json["about"],
-    jobTitle: json["job_title"],
+    jobTitle: json["job_title"]??"",
     gender: json["gender"],
     dateOfBirth: json["date_of_birth"],
-    age: json["age"],
-    plan: json["plan"],
-    profileView: json["profile_view"],
+    age: json["age"]?? 0,
+    plan: json["plan"]??"",
+    profileView: json["profile_view"]??0,
     createdDate: DateTime.parse(json["created_date"]),
-    user: json["user"],
+    user: json["user"]?? 0,
   );
 
   Map<String, dynamic> toJson() => {
@@ -156,21 +156,21 @@ class Employee {
 }
 
 class PreferredJobCategory {
-  int id;
+  int ? id;
   String preferredJobCategory;
-  int employee;
+  int ? employee;
 
   PreferredJobCategory({
-    required this.id,
+     this.id,
     required this.preferredJobCategory,
-    required this.employee,
+     this.employee,
   });
 
   factory PreferredJobCategory.fromJson(Map<String, dynamic> json) =>
       PreferredJobCategory(
-        id: json["id"],
+        id: json["id"]??0,
         preferredJobCategory: json["preferred_job_category"],
-        employee: json["employee"],
+        employee: json["employee"]??0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -186,7 +186,7 @@ class WorkPreference {
   String expectedSalaryRange;
   String availability;
   String transportationAvailability;
-  int employee;
+  int ? employee;
 
   WorkPreference({
     required this.id,
@@ -194,7 +194,7 @@ class WorkPreference {
     required this.expectedSalaryRange,
     required this.availability,
     required this.transportationAvailability,
-    required this.employee,
+     this.employee,
   });
 
   factory WorkPreference.fromJson(Map<String, dynamic> json) => WorkPreference(
@@ -203,7 +203,7 @@ class WorkPreference {
     expectedSalaryRange: json["expected_salary_range"],
     availability: json["availability"],
     transportationAvailability: json["transportation_availability"],
-    employee: json["employee"],
+    employee: json["employee"]?? 0,
   );
 
   Map<String, dynamic> toJson() => {
@@ -220,20 +220,20 @@ class Profile {
   int id;
   dynamic coverPhoto;
   dynamic profilePic;
-  int employee;
+  int ? employee;
 
   Profile({
     required this.id,
     this.coverPhoto,
     this.profilePic,
-    required this.employee,
+     this.employee,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
     id: json["id"],
     coverPhoto: json["cover_photo"],
     profilePic: json["profile_pic"],
-    employee: json["employee"],
+    employee: json["employee"]??0 ,
   );
 
   Map<String, dynamic> toJson() => {

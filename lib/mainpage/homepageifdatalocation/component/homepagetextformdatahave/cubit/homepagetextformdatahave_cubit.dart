@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 
+import '../../../../datapage/datapage.dart';
 import '../../../../postyourjob/postyourjob/model/model.dart';
 import '../../../../postyourjob/postyourjob/model2/model2.dart';
 import '../model/model.dart';
@@ -62,8 +63,8 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
     "Vacation Gigs",
     "Project Based",
   ];
-  String baseurl = "https://server.studentsgigs.com";
-  String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyMjMyNzgwLCJpYXQiOjE3NTE2Mjc5ODAsImp0aSI6IjQzOTRkYjgyMmRlOTQ0YjJhM2ZjNzMzMjFiMDM4ZTc0IiwidXNlcl9pZCI6OTN9.XjfCED0nFwJPmaxOQUToaE49IPDTrhrLfezxdi-wWBU";
+  final String baseurl = ApiConstants.baseUrl;
+  final headers =  ApiConstants.headers;
   Future<void> getthetextsuggestion() async {
     final url = "$baseurl/api/employer/category-and-title-view/";
     final response = await http.get(Uri.parse(url)
@@ -176,11 +177,14 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
       //   '$baseurl/api/employer/search-employee/'
       //       '?category=$category&location=$location&page=${counter ?? 1}',
       // );
+      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
 
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${token ?? token2}',
           'Accept': 'application/json',
         },
       );
@@ -221,6 +225,8 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
     // 🛰️ Otherwise, make API call
     final url = "$baseurl/api/employer/employer-plan/";
     try {
+      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+
       final response = await http.get(
         Uri.parse(url),
         headers: {
@@ -246,6 +252,8 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
     cachedPlanUsage = null;
   }
   Future<void> postVisitedCount(String employeeId) async {
+    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+
 
     print("yes");
     print("Token: $token");

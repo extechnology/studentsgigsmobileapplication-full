@@ -1,20 +1,27 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:emoji_flag_converter/emoji_flag_converter.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart';
 
-import '../../../postedsisg/model/model.dart'; // for MediaType
+import '../../../dashborad/dashborad.dart';
+import '../../../datapage/datapage.dart';
+import '../../../postedsisg/model/model.dart' as onboard;
+import '../model/model.dart'as posted;
 
 part 'onboardprofile4_state.dart';
 
 class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
   Onboardprofile4Cubit() : super(Onboardprofile4Initial());
+  String selectedCountryCode = "+91"; // Default value
 
   TextEditingController onboardingcompanyname = TextEditingController();
   TextEditingController onboardingemail = TextEditingController();
@@ -22,12 +29,12 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
   TextEditingController onboardingphone = TextEditingController();
   TextEditingController onboardingstreet = TextEditingController();
   TextEditingController onboardingpostcode = TextEditingController();
-  Country? selectedCountry;
+  posted.Country? selectedCountry;
   String? selectedState;
   String? selectedCity;
-  final String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyMjMyNzgwLCJpYXQiOjE3NTE2Mjc5ODAsImp0aSI6IjQzOTRkYjgyMmRlOTQ0YjJhM2ZjNzMzMjFiMDM4ZTc0IiwidXNlcl9pZCI6OTN9.XjfCED0nFwJPmaxOQUToaE49IPDTrhrLfezxdi-wWBU";
-  final String baseurl = "https://server.studentsgigs.com";
+  final String baseurl = ApiConstants.baseUrl;
 
+  String ? user;
 
   File? selectedImage;
 
@@ -238,6 +245,9 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
     'Zambia': 'ZM',
     'Zimbabwe': 'ZW',
   };
+  bool isCategoryValid = true;
+  bool isValid = true;
+
   TextEditingController countryController = TextEditingController();
   TextEditingController stateController = TextEditingController();
   TextEditingController cityController = TextEditingController();
@@ -249,9 +259,46 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
   TextEditingController profilestreet = TextEditingController();
   TextEditingController profilepostcode = TextEditingController();
 
-  Future<void> updateEmployerProfile(int user) async {
+  Future<void> updateEmployerProfile( BuildContext context ,{
+    required GlobalKey email,
+    required GlobalKey companyname,
+    required GlobalKey location,
+
+
+  })
+  async {
+    isValid = true;
+    GlobalKey? firstInvalidKey;
+
+    if (profilecompanyname.text.trim().isEmpty) {
+      isValid = false;
+      firstInvalidKey ??= companyname;
+    }
+
+    if (profileemail.text.trim().isEmpty) {
+      isValid = false;
+      firstInvalidKey ??= email;
+    }
+
+    if (stateController.text.trim().isEmpty) {
+      isValid = false;
+      firstInvalidKey ??= location;
+    }
+
+    if (!isValid) {
+      emit(Onboardprofile4Initial());
+      scrollToField(firstInvalidKey!);
+      return;
+    }
+
+
     print("Function is working");
+    print("Function is working $user");
+
     try {
+      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
       var uri = Uri.parse('$baseurl/api/employer/employer-info/?pk=$user');
 
       var request = http.MultipartRequest('PUT', uri);
@@ -260,13 +307,13 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
 
 
       // Pass your Bearer token here
-      request.headers['Authorization'] = 'Bearer $bearerToken';
+      request.headers['Authorization'] = 'Bearer ${token ?? token2}';
 
       // Form fields (update as per your form inputs)
       request.fields['company_name'] = profilecompanyname.text.trim();
       request.fields['company_info'] = profilecompanyinfo.text.trim();
       request.fields['email'] = profileemail.text.trim();
-      request.fields['phone_number'] = profilephone.text.trim();
+      request.fields['phone_number'] = '$selectedCountryCode${profilephone.text.trim()}';
       request.fields['street_address'] = profilestreet.text.trim();
       request.fields['state'] = stateController.text.trim();  // ✅ FIXED
       request.fields['city'] = cityController.text.trim();    // ✅ FIXED
@@ -298,6 +345,7 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
 
         print("Profile Updated Successfully");
         print('Response: $data');
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Dashborad(),));
       } else {
         print('Failed: ${response.statusCode}');
         print('Response: $data');
@@ -306,7 +354,93 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       print('Error: $e');
     }
   }
+  void scrollToField(GlobalKey key) {
+    final context = key.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+  void parsePhoneNumber(String fullPhoneNumber) {
+    if (fullPhoneNumber.startsWith('+')) {
+      // List of all country codes from the package
+      final allCountryCodes =
+      codes.map((c) => CountryCode.fromJson(c)).toList();
 
+      // Sort by length of dial code in descending order to match longest first
+      allCountryCodes
+          .sort((a, b) => b.dialCode!.length.compareTo(a.dialCode!.length));
+
+      for (final code in allCountryCodes) {
+        if (fullPhoneNumber.startsWith(code.dialCode!)) {
+          selectedCountryCode = code.dialCode!;
+          profilephone.text = fullPhoneNumber.substring(code.dialCode!.length);
+          return;
+        }
+      }
+    }
+    profilephone.text = fullPhoneNumber;
+  }
+
+  Future<void> getcompanyinfo(BuildContext context) async {
+    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+    final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
+    final url = "$baseurl/api/employer/employer-info/";
+    final response = await http.get(Uri.parse(url),headers: {
+      'Authorization': 'Bearer ${token ?? token2}',
+      'Content-Type': 'application/json',
+
+    });
+    if(response.statusCode >= 200 && response.statusCode <= 299){
+      final data = posted.compantonboardingFromJson(response.body);
+      print(data);
+
+      if (data.employer?.companyName?.isNotEmpty == true) {
+        // Navigate to dashboard if company name is empty
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Dashborad()),
+        );
+      } else {
+
+        print("object no va");
+        print("1${user}");
+
+
+      }
+      // profileemail.text = data.employer.email!;
+      // profilecompanyinfo.text = data.employer.companyInfo!;
+      // profilephone.text = data.employer.phoneNumber!;
+      // profilestreet.text = data.employer.streetAddress!;
+      // profilepostcode.text = data.employer.postalCode!;
+      // countryController.text = data.employer.country?.label ?? "";
+      //
+      //
+      // stateController.text = cleanValue(data.employer.state);
+      // cityController.text = cleanValue(data.employer.city);
+      // print("hey moji");
+      user = data.employer!.id.toString();
+      print(" 2${  user}");
+      profileemail.text = data.employer?.user?.email ?? "";
+      print(data.employer?.user?.email);
+      // print("networkurl$networkImage");
+
+
+      // emit(CompanyinfoInitial());
+      // Future.delayed(Duration(milliseconds: 5000), () {
+      //   // Trigger a fake user interaction
+      //   emit(CompanyinfoInitial()); // Ensure rebuild (if needed)
+      // });
+
+    }else {
+      print("Something Wrong");
+    }
+
+  }
 
 
 

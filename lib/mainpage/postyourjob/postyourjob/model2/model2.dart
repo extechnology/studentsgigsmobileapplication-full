@@ -8,11 +8,11 @@ Countrylocation countrylocationFromJson(String str) => Countrylocation.fromJson(
 String countrylocationToJson(Countrylocation data) => json.encode(data.toJson());
 
 class Countrylocation {
-  String type;
+  String ? type;
   List<Feature> features;
 
   Countrylocation({
-    required this.type,
+     this.type,
     required this.features,
   });
 
@@ -78,15 +78,15 @@ enum FeatureType { FEATURE }
 final featureTypeValues = EnumValues({ "Feature": FeatureType.FEATURE });
 
 class Properties {
-  String osmType;
+  String ? osmType;
   int osmId;
-  String osmKey;
-  String osmValue;
-  String type;
-  String countrycode;
-  String name;
-  String country;
-  String state;
+  String ?osmKey;
+  String ?osmValue;
+  String? type;
+  String? countrycode;
+  String ?name;
+  String? country;
+  String ?state;
   String? county;
   List<double>? extent;
   String? city;
@@ -96,15 +96,15 @@ class Properties {
   String? street;
 
   Properties({
-    required this.osmType,
+     this.osmType,
     required this.osmId,
-    required this.osmKey,
-    required this.osmValue,
-    required this.type,
-    required this.countrycode,
-    required this.name,
-    required this.country,
-    required this.state,
+     this.osmKey,
+     this.osmValue,
+     this.type,
+     this.countrycode,
+     this.name,
+     this.country,
+     this.state,
     this.county,
     this.extent,
     this.city,

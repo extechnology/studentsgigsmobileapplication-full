@@ -7,7 +7,7 @@ import 'dart:convert';
 Getjobpostdata getjobpostdataFromJson(String str) => Getjobpostdata.fromJson(json.decode(str));
 
 String getjobpostdataToJson(Getjobpostdata data) => json.encode(data.toJson());
-
+// qkejfbkebf
 class Getjobpostdata {
   List<Job> jobs;
 
@@ -25,8 +25,8 @@ class Getjobpostdata {
 }
 
 class Job {
-  int id;
-  Company company;
+  int ?id;
+  Company ?company;
   bool applied;
   int totalApplied;
   bool savedJob;
@@ -43,7 +43,7 @@ class Job {
   String ?jobType;
 
   Job({
-    required this.id,
+     this.id,
     required this.company,
     required this.applied,
     required this.totalApplied,
@@ -101,7 +101,7 @@ class Job {
 }
 
 class Company {
-  int id;
+  int ?id;
   String ?username;
   String ?companyName;
   String ?companyInfo;
@@ -115,10 +115,10 @@ class Company {
   Country ?country;
   String? plan;
   DateTime ?createdAt;
-  int user;
+  User? user; // ✅ correct
 
   Company({
-    required this.id,
+     this.id,
     this.username,
     this.companyName,
     this.companyInfo,
@@ -150,7 +150,7 @@ class Company {
     country: Country.fromJson(json["country"]),
     plan: json["plan"],
     createdAt: DateTime.parse(json["created_at"]),
-    user: json["user"],
+    user: json["user"] != null ? User.fromJson(json["user"]) : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -193,5 +193,24 @@ class Country {
     "value": value,
     "label": label,
     "flag": flag,
+  };
+}
+class User {
+  String? email;
+  String? username;
+
+  User({
+    this.email,
+    this.username,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+    email: json["email"],
+    username: json["username"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "email": email,
+    "username": username,
   };
 }

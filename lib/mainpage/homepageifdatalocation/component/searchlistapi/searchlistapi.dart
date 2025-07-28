@@ -20,123 +20,132 @@ class Searchlistapi extends StatelessWidget {
     ),
 
   ],
-  child: SafeArea(
-        child: Scaffold(
-          backgroundColor: const Color(0xffF9F2ED),
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: width * 0.05),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: height * 0.02),
-                  BlocBuilder<SearchclassCubit, SearchclassState>(
-                    builder: (context, state) {
-                      final cubit = context.read<SearchclassCubit>();
-                      return
-                        formField(
-                          onFieldSubmitted: (value) {
-                            final trimmedValue = value.trim(); // remove spaces from start/end
-                            if (trimmedValue.isEmpty) return; // don't proceed if input is blank
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Dashborad(initialSearchText: trimmedValue),
-                              ),
-                            );
-
-                          },
-
-                        prefixIcon: Icons.search,
-                        context: context,
-                        controller: cubit.searchController,
-                        onChanged: (value) => cubit.search(value),
-                        topLeft: height * 0.02,
-                        topRight: height * 0.02,
-                          bottomLeft: height * 0.02,
-                          bottomRight: height * 0.02,
-
-                      );
-                    },
-                  ),
-
-
-                  SizedBox(height: height * 0.02),
-
-
-                     BlocBuilder<SearchclassCubit, SearchclassState>(
-                      builder: (context, state) {
-                        if (state is SearchclassLoading) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else if (state is SearchclassLoaded) {
-                          if (state.data.isEmpty) {
-                            return const Center(child: Text("No matching data"));
-                          }
-                          return ListView.separated(
-                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-
-                            itemCount: state.data.length,
-                            separatorBuilder: (context, index) =>
-                                SizedBox(height: height * 0.005),
-                            itemBuilder: (context, index) {
-                              final item = state.data[index];
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff7DFFFFFF),
-                                  borderRadius: BorderRadius.circular(height * 0.02),
-                                ),
-                                child: ListTile(
-                                  leading: const Icon(Icons.history,color: Color(0xff3F414E),),
-                                  title: Text(
-                                    item['label'] ?? '',
-                                    style: const TextStyle(color: Color(0xff3F414E)),
-                                  ),
-                                  onTap: () {
-                                    final cubit = context.read<SearchclassCubit>();
-                                    cubit.onItemSelected(item);
-                                  },
-                                ),
-                              );
-                            },
-                          );
-                        } else if (state is SearchclassError) {
-                          return Center(child: Text(state.message));
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-                  SizedBox(height: height * 0.02),
-                  fieldTitle(title: "Suggested For You", width: width),
-                  SizedBox(height: height * 0.02),
-
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.22,
-                    child:
-                    ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      separatorBuilder: (context, index) => SizedBox(width: MediaQuery.of(context).size.width * 0.03), // <-- horizontal spacing
-                      itemBuilder: (context, index) {
-                        return customBox(
-                          imageurl: '',
-                          name: 'YOKESH V',
-                          carrier: 'FRONTEND DEVELOPER',
-                          location: 'Kozhikode, Kerala, India',
-                          context: context,
+  child: Scaffold(
+    backgroundColor: const Color(0xffF9F2ED),
+    body: SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+        
+              SizedBox(height: height * 0.02),
+              BlocBuilder<SearchclassCubit, SearchclassState>(
+                builder: (context, state) {
+                  final cubit = context.read<SearchclassCubit>();
+                  return
+                    formField(
+                      onFieldSubmitted: (value) {
+                        final trimmedValue = value.trim(); // remove spaces from start/end
+                        if (trimmedValue.isEmpty) return; // don't proceed if input is blank
+        
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Dashborad(initialSearchText: trimmedValue),
+                          ),
                         );
+        
                       },
-                    ),
-                  ),
-
-
-
-                ],
+        
+        
+                    prefixIcon: Icons.search,
+                    context: context,
+                    controller: cubit.searchController,
+                    onChanged: (value) => cubit.search(value),
+                    topLeft: height * 0.02,
+                    topRight: height * 0.02,
+                      bottomLeft: height * 0.02,
+                      bottomRight: height * 0.02,
+        
+                  );
+                },
               ),
-            ),
+        
+        
+              SizedBox(height: height * 0.02),
+        
+        
+                 BlocBuilder<SearchclassCubit, SearchclassState>(
+                  builder: (context, state) {
+                    if (state is SearchclassLoading) {
+                      return Center(
+                        child: CircularProgressIndicator(color: Color(0xff000000)), // customize color
+                      );
+
+
+
+                    } else if (state is SearchclassLoaded) {
+                      if (state.data.isEmpty) {
+                        return const Center(child: Text("No matching data"));
+                      }
+                      return ListView.separated(
+                         shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+        
+                        itemCount: state.data.length,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: height * 0.005),
+                        itemBuilder: (context, index) {
+                          final item = state.data[index];
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xffF9F2ED),
+                              borderRadius: BorderRadius.circular(height * 0.02),
+                            ),
+                            child: ListTile(
+                              leading: const Icon(Icons.history,color: Color(0xff3F414E),),
+                              title: Text(
+                                item['label'] ?? '',
+                                style: const TextStyle(color: Color(0xff3F414E)),
+                              ),
+                              onTap: () {
+                                final cubit = context.read<SearchclassCubit>();
+                                cubit.onItemSelected(item);
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    } else if (state is SearchclassError) {
+                      return Center(child: Text(state.message));
+                    }
+
+                    return Center(
+                      child: CircularProgressIndicator(color: Color(0xff000000)), // customize color
+                    );
+                    },
+                ),
+              SizedBox(height: height * 0.02),
+              SizedBox(height: height * 0.02),
+        
+              // SizedBox(
+              //   height: MediaQuery.of(context).size.height * 0.22,
+              //   child:
+              //   ListView.separated(
+              //     scrollDirection: Axis.horizontal,
+              //     itemCount: 5,
+              //     separatorBuilder: (context, index) => SizedBox(width: MediaQuery.of(context).size.width * 0.03), // <-- horizontal spacing
+              //     itemBuilder: (context, index) {
+              //       return customBox(
+              //         imageurl: '',
+              //         name: 'YOKESH V',
+              //         carrier: 'FRONTEND DEVELOPER',
+              //         location: 'Kozhikode, Kerala, India',
+              //         context: context,
+              //       );
+              //     },
+              //   ),
+              // ),
+        
+        
+        
+            ],
           ),
         ),
       ),
+    ),
+  ),
 );
   }
 }
@@ -163,52 +172,74 @@ Widget formField({
   double width = MediaQuery.of(context).size.width;
   double height = MediaQuery.of(context).size.height;
 
-  return Container(
-    width: width * 0.9,
-    height: height * 0.065,
-    padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-    decoration: BoxDecoration(
-      color: const Color(0xff004673),
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular( topLeft ?? 0),
-        topRight: Radius.circular(topRight ?? 0),
-        bottomLeft: Radius.circular(bottomLeft ?? 0),
-        bottomRight: Radius.circular(bottomRight ?? 0),
-      ),      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 4,
-          offset: const Offset(0, 2),
+  return Material(
+    borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(  height * 0.02,),
+      topRight: Radius.circular( height * 0.02,),
+      bottomLeft: Radius.circular( height * 0.02,),
+      bottomRight: Radius.circular( height * 0.02,),
+    ),    elevation: 2,
+    child: Container(
+      width: width * 0.9,
+      height: height * 0.065,
+      padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+      decoration: BoxDecoration(
+        color: const Color(0xffF9F2ED),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular( topLeft ?? 0),
+          topRight: Radius.circular(topRight ?? 0),
+          bottomLeft: Radius.circular(bottomLeft ?? 0),
+          bottomRight: Radius.circular(bottomRight ?? 0),
         ),
-      ],
-    ),
-    child: Center(
-      child: child ??
-          TextFormField(
-            controller: controller,
-            onChanged: onChanged,
-            style: TextStyle(
-              fontFamily: 'Sora',
-              fontSize: height * 0.017,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: hintText,
-              hintStyle: const TextStyle(color: Color(0xff3F414E)),
-              prefixIcon: prefixIcon != null
-                  ? Icon(prefixIcon, color: Colors.white)
-                  : null,
-              suffixIcon: suffixIcon != null
-                  ? GestureDetector(
-                onTap: onSuffixTap,
-                child: Icon(suffixIcon, color: Colors.white),
-              )
-                  : null,
-            ),
-            onFieldSubmitted: onFieldSubmitted,
+        border: Border.all(
+          color: Colors.black12, // 👈 border color
+          width: 1.0,          // 👈 border width
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: height * 0.005, // 4 for 800px height
+            offset: Offset(0, height * 0.0025), // 2 for 800px height
           ),
+        ],
+      ),
+      child: Center(
+        child: child ??
+            TextFormField(
+              controller: controller,
+              onChanged: onChanged,
+              style: TextStyle(
+                fontFamily: 'Sora',
+                fontSize: height * 0.017,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: hintText ?? "Search",
+                hintStyle: const TextStyle(color: Color(0xff3F414E)),
+                prefixIcon: prefixIcon != null
+                    ? GestureDetector(
+                  onTap: () {
+                    final value = controller?.text.trim() ?? '';
+                    if (value.isNotEmpty && onFieldSubmitted != null) {
+                      onFieldSubmitted(value);
+                    }
+                  },
+                  child: Icon(prefixIcon, color: Colors.black),
+                )
+                    : null,
+
+                suffixIcon: suffixIcon != null
+                    ? GestureDetector(
+                  onTap: onSuffixTap,
+                  child: Icon(suffixIcon, color: Color(0xffF9F2ED)),
+                )
+                    : null,
+              ),
+              onFieldSubmitted: onFieldSubmitted,
+            ),
+      ),
     ),
   );
 }
@@ -228,14 +259,14 @@ Widget responsiveContainer(BuildContext context) {
       boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.1),
-          blurRadius: 4,
-          offset: const Offset(0, 2),
+          blurRadius: screenHeight * 0.005, // 4 for 800px height
+          offset: Offset(0, screenHeight * 0.0025), // 2 for 800px height
         ),
       ],
     ),
     child: Row(
       children: [
-        const Icon(Icons.search),
+        const Icon(Icons.search,color: Colors.black,),
         SizedBox(width: screenWidth * 0.02),
         const Expanded(
           child: TextField(
@@ -275,8 +306,8 @@ Widget searchInfoBox({
       boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.1),
-          blurRadius: 4,
-          offset: const Offset(0, 2),
+          blurRadius: screenHeight * 0.005, // 4 for 800px height
+          offset: Offset(0, screenHeight * 0.0025),
         ),
       ],
     ),
@@ -304,7 +335,7 @@ Widget fieldTitle({
   return Row(
     children: [
       Padding(
-        padding: const EdgeInsets.only(left: 18.0),
+        padding: EdgeInsets.only(left: width * 0.048), // 18 is ~4.8% of 375
         child: Text(
           title,
           style: TextStyle(

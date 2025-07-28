@@ -1,8 +1,9 @@
-import 'package:anjalim/mainpage/Planusage/cubit/planusage_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+import 'cubit/planusage_cubit.dart';
 
 
 class Planusagenew extends StatelessWidget {
@@ -81,17 +82,6 @@ class Planusagenew extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: height * 0.03),
-                      Container(
-                        width: 149,
-                        height: 57,
-                        decoration: BoxDecoration(
-                        ),
-                        child:  Image.asset(
-                          "assets/images/logos/image 1.png",
-                          fit: BoxFit.contain,
-                        ),
-                  
-                      ),
                       SizedBox(height: height * 0.005),
                   
                       Padding(
@@ -101,31 +91,36 @@ class Planusagenew extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: 'Sora',
                             fontWeight: FontWeight.w600, // 600 weight
-                            fontSize: 20,
+                            fontSize: 19,
                             height: 32 / 20, // Flutter's height is a multiple of font size
                             letterSpacing: 0,
                             color: Color(0xff3F414E), // Optional
                           ),
                         ),
                       ),
-                      SizedBox(height: height * 0.02),
+                      SizedBox(height: height * 0.015),
                   
                       Container(
-                  
-                  
+
+
                         width: width * 0.9,
                         decoration: BoxDecoration(
                           color: Color(0x0DEB8125),
                           borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: Colors.black12, // 👈 border color
+                            width: width * 0.002, // 👈 Responsive border width (~0.8px on 400px screen)
+                          ),
+
                         ),
                         child: Padding(
                           padding:  EdgeInsets.only(right: width *0.05,left: width * 0.04,top: height * 0.04,bottom: height * 0.04),
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                  
+
                               Container(
-                                width: 156,
-                                height: 33,
+                                width: width * 0.42,
+                                height: height * 0.05,
                                 decoration: BoxDecoration(
                                   color: Color(0xffEB8125), // 5% orange background
                                   borderRadius: BorderRadius.circular(16),
@@ -138,11 +133,11 @@ class Planusagenew extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                  
+
                                 child: Row(mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(Icons.emoji_events, color: Colors.white),
-                                    SizedBox(width: 10), // gap
+                                    SizedBox(width:width * 0.025,), // gap
                                     Text(
                                       "${plan.plan}",
                                       style: TextStyle(
@@ -152,13 +147,13 @@ class Planusagenew extends StatelessWidget {
                                         color: Color(0xffFFFFFF),
                                       ),
                                     ),
-                                    SizedBox(width: 10), // gap
-                  
+                                    SizedBox(width:width * 0.025,), // gap
+
                                   ],
                                 ),
                               ),
                               SizedBox(height: height * 0.02),
-                  
+
                               Row(
                                 children: [
                                   Text(
@@ -173,43 +168,48 @@ class Planusagenew extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(width: width *0.13,),
-                                  Container(
-                                    width: 156,
-                                    height: 32,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: Color(0x1C30AE3F),
-                                      border: Border.all(
-                                        color: Color(0xFF0C792F), // border color: #0C792F
-                                        width: 1, // adjust thickness as needed
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.access_time,color:Color(0xff479F51) ,),
-                                        SizedBox(width: 5), // gap
-                                        Text(
-                                          "$remaining days remaining",
-                                          style: TextStyle(
-                                            fontFamily: 'Sora',
-                                            fontWeight: FontWeight.w400, // Regular
-                                            fontSize: 11,
-                                            height: 1.5, // 150% line-height
-                                            letterSpacing: 0, // 0% letter spacing
-                                            color: Color(0xFF0C792F), // border color: #0C792F
-                                          ),
+                                  Material(
+                                    elevation: 2,
+                                    borderRadius: BorderRadius.circular(15),
+
+                                    child: Container(
+                                      width: width * 0.35,
+                                      height: height * 0.05,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: Color(0x1C30AE3F),
+                                        border: Border.all(
+                                          color: Color(0xFF0C792F), // border color: #0C792F
+                                          width: 1, // adjust thickness as needed
                                         ),
-                                        SizedBox(width: 5), // gap
-                  
-                  
-                                      ],
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.access_time,color:Color(0xff479F51) ,),
+                                          SizedBox(width: width * 0.01), // gap
+                                          Text(
+                                            "$remaining days remaining",
+                                            style: TextStyle(
+                                              fontFamily: 'Sora',
+                                              fontWeight: FontWeight.w400, // Regular
+                                              fontSize: 11,
+                                              height: 1.5, // 150% line-height
+                                              letterSpacing: 0, // 0% letter spacing
+                                              color: Color(0xFF0C792F), // border color: #0C792F
+                                            ),
+                                          ),
+                                          SizedBox(width: 5), // gap
+
+
+                                        ],
+                                      ),
                                     ),
                                   )
                                 ],
                               ),
                               SizedBox(height: height * 0.02),
-                  
+
                               Row(
                                 children: [
                                   buildbox(color: Color(0xff000000), text: 'Profile Access'),
@@ -217,20 +217,20 @@ class Planusagenew extends StatelessWidget {
                                 Text("${plan.planFeatures[0].used }of ${plan.planFeatures[0].limit} used",style: TextStyle(color:Color(0xffEB4335) ),)
                                 ],
                               ),
-                              SizedBox(height: 10,),
-                  
-                              buildcontaner(text: 'Profile Access Used', icons: Icon(Icons.bolt,color: Color(0xffEB8125),),textnun: plan.planFeatures[0].used.toString()),
-                              SizedBox(height: 10,),
-                              buildcontaner(text: 'Profile Access Left', icons: Icon(Icons.add,color: Color(0xffEB8125),),textnun:" ${profileaccess}"),
-                  
-                              SizedBox(height: 10,),
-                              buildcontaner(text: 'Used', icons: Icon(Icons.settings,color: Color(0xffEB8125),),textnun:" ${formatPercent(profileaccessPercent)}"),
-                  
-                              SizedBox(height: 10,),
-                  
+                              SizedBox(height: height * 0.01,),
+
+                              buildcontaner(text: 'Profile Access Used', icons: Icon(Icons.bolt,color: Color(0xffEB8125),),textnun: plan.planFeatures[0].used.toString(), context: context),
+                              SizedBox(height: height * 0.01,),
+                              buildcontaner(text: 'Profile Access Left', icons: Icon(Icons.add,color: Color(0xffEB8125),),textnun:" ${profileaccess}", context: context),
+
+                              SizedBox(height: height * 0.01,),
+                              buildcontaner(text: 'Used', icons: Icon(Icons.settings,color: Color(0xffEB8125),),textnun:" ${formatPercent(profileaccessPercent)}", context: context),
+
+                              SizedBox(height: height * 0.02,),
+
                               Center(
                                 child: Container(
-                                  width: 350,
+                                  width: width* 0.9,
                                   height: 1, // or more, like 5.0 or 10.0
                                   decoration: BoxDecoration(
                                     border: Border.all(
@@ -247,18 +247,16 @@ class Planusagenew extends StatelessWidget {
                                   Text("${plan.planFeatures[1].used }of ${plan.planFeatures[1].limit} used",style: TextStyle(color:Color(0xffEB4335) ),)
                                 ],
                               ),
-                              SizedBox(height: 10,),
-                              SizedBox(height: 10,),
-                              buildcontaner(text: 'Job Posting Used', icons: Icon(Icons.bolt,color: Color(0xffEB8125),),textnun:"${plan.planFeatures[1].used}" ),
-                  
-                              SizedBox(height: 10,),
-                              SizedBox(height: 10,),
-                              buildcontaner(text: 'Job Posting Left', icons: Icon(Icons.add,color: Color(0xffEB8125),),textnun: "${profileaccess2}"),
-                  
-                              SizedBox(height: 10,),SizedBox(height: 10,),
-                              buildcontaner(text: 'Used', icons: Icon(Icons.settings,color: Color(0xffEB8125),),textnun: "${formatPercent(profileaccess2Percent)}"),
-                  
-                              SizedBox(height: 10,),
+                              SizedBox(height: height * 0.01,),
+                              buildcontaner(text: 'Job Posting Used', icons: Icon(Icons.bolt,color: Color(0xffEB8125),),textnun:"${plan.planFeatures[1].used}", context: context ),
+
+                              SizedBox(height: height * 0.01,),
+                              buildcontaner(text: 'Job Posting Left', icons: Icon(Icons.add,color: Color(0xffEB8125),),textnun: "${profileaccess2}", context: context),
+
+                              SizedBox(height: height * 0.01,),
+                              buildcontaner(text: 'Used', icons: Icon(Icons.settings,color: Color(0xffEB8125),),textnun: "${formatPercent(profileaccess2Percent)}", context: context),
+
+                              SizedBox(height: height * 0.02,),
                               Container(
                                   width: double.infinity,
                                   height: 1, // or more, like 5.0 or 10.0
@@ -269,14 +267,14 @@ class Planusagenew extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                  
-                  
-                  
-                              SizedBox(height: 10,),SizedBox(height: 10,),
-                              buildcontaner(text: 'Plan Started', icons: Icon(Icons.calendar_today,color: Color(0xffFB4A59),),textnun: "$created"),
-                              SizedBox(height: 10,),SizedBox(height: 10,),
-                              buildcontaner(text: 'Plan Expires', icons: Icon(Icons.calendar_today,color: Color(0xffFB4A59),),textnun: "$expiry"),
-                  
+
+
+
+                              SizedBox(height: height * 0.02,),
+                              buildcontaner(text: 'Plan Started', icons: Icon(Icons.calendar_today,color: Color(0xffFB4A59),),textnun: "$created", context: context),
+                              SizedBox(height: height * 0.01,),
+                              buildcontaner(text: 'Plan Expires', icons: Icon(Icons.calendar_today,color: Color(0xffFB4A59),),textnun: "$expiry", context: context),
+
                             ],
                           ),
                         ),
@@ -312,10 +310,14 @@ Widget buildbox({ required String text,required Color color, double ? fontsize})
   );
 
 }
-Widget buildcontaner({ required String text,required Icon icons,String ? textnun}){
+Widget buildcontaner({ required BuildContext context ,required String text,required Icon icons,String ? textnun}){
+  final size = MediaQuery.of(context).size;
+
+  final width = size.width;
+  final height = size.height;
   return Container(
-  width: 317,
-  height: 73,
+  width: width * 0.9,
+  height: height * 0.1,
   decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(11),
       color: Color(0xffFFFFFF),
@@ -332,19 +334,24 @@ Widget buildcontaner({ required String text,required Icon icons,String ? textnun
   ),
   child: Row(
     children: [
-      SizedBox(width: 20,),
-      Container(
-        width: 35,
-        height: 35,
-        decoration: BoxDecoration(
-            color: Color(0x1AEb8125),
-            borderRadius: BorderRadius.circular(6)
-        ),
-        child: Center(
-          child: icons,
+      SizedBox(width: width * 0.05,),
+      Material(
+        elevation: 2,
+        borderRadius: BorderRadius.circular(6),
+
+        child: Container(
+          width: width * 0.09,
+          height:  width * 0.09,
+          decoration: BoxDecoration(
+              color: Color(0x1AEb8125),
+              borderRadius: BorderRadius.circular(6)
+          ),
+          child: Center(
+            child: icons,
+          ),
         ),
       ),
-      SizedBox(width: 20,),
+      SizedBox(width: width * 0.04,),
 
       Container(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start,

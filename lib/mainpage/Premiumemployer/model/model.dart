@@ -10,61 +10,61 @@ String premiumPageModelToJson(List<PremiumPageModel> data) => json.encode(List<d
 
 class PremiumPageModel {
   int planId;
-  String id;
-  String name;
-  String price;
+  String ?id;
+  String ?name;
+  String ?price;
   List<Feature> features;
-  String color;
+  String ?color;
   bool recommended;
-  String profileAccess;
-  String validity;
-  String jobPosting;
-  String resumeViewing;
-  String jobAutoRefreshing;
-  String hotJobLabel;
-  String accessToCertifiedStudents;
-  String instantCandidateMatching;
-  String directChatWithCandidate;
-  String companyDashboardAnalytics;
+  String ?profileAccess;
+  String ?validity;
+  String? jobPosting;
+  String ?resumeViewing;
+  String ?jobAutoRefreshing;
+  String? hotJobLabel;
+  String ?accessToCertifiedStudents;
+  String ?instantCandidateMatching;
+  String ?directChatWithCandidate;
+  String ?companyDashboardAnalytics;
 
   PremiumPageModel({
     required this.planId,
-    required this.id,
-    required this.name,
-    required this.price,
+     this.id,
+     this.name,
+     this.price,
     required this.features,
-    required this.color,
+     this.color,
     required this.recommended,
-    required this.profileAccess,
-    required this.validity,
-    required this.jobPosting,
-    required this.resumeViewing,
-    required this.jobAutoRefreshing,
-    required this.hotJobLabel,
-    required this.accessToCertifiedStudents,
-    required this.instantCandidateMatching,
-    required this.directChatWithCandidate,
-    required this.companyDashboardAnalytics,
+     this.profileAccess,
+     this.validity,
+     this.jobPosting,
+     this.resumeViewing,
+     this.jobAutoRefreshing,
+     this.hotJobLabel,
+     this.accessToCertifiedStudents,
+     this.instantCandidateMatching,
+     this.directChatWithCandidate,
+     this.companyDashboardAnalytics,
   });
 
   factory PremiumPageModel.fromJson(Map<String, dynamic> json) => PremiumPageModel(
     planId: json["plan_id"],
-    id: json["id"],
-    name: json["name"],
-    price: json["price"],
+    id: json["id"]??"",
+    name: json["name"]??"",
+    price: json["price"]??"",
     features: List<Feature>.from(json["features"].map((x) => Feature.fromJson(x))),
-    color: json["color"],
+    color: json["color"]??"",
     recommended: json["recommended"],
-    profileAccess: json["profile_access"],
-    validity: json["validity"],
-    jobPosting: json["job_posting"],
-    resumeViewing: json["resume_viewing"],
+    profileAccess: json["profile_access"]??"",
+    validity: json["validity"]??"",
+    jobPosting: json["job_posting"]??"",
+    resumeViewing: json["resume_viewing"]??"",
     jobAutoRefreshing: json["job_auto-refreshing"],
-    hotJobLabel: json["hot_job_label"],
-    accessToCertifiedStudents: json["access_to_certified_students"],
-    instantCandidateMatching: json["instant_candidate_matching"],
-    directChatWithCandidate: json["direct_chat_with_candidate"],
-    companyDashboardAnalytics: json["company_dashboard_analytics"],
+    hotJobLabel: json["hot_job_label"]??"",
+    accessToCertifiedStudents: json["access_to_certified_students"]??"",
+    instantCandidateMatching: json["instant_candidate_matching"]??"",
+    directChatWithCandidate: json["direct_chat_with_candidate"]??"",
+    companyDashboardAnalytics: json["company_dashboard_analytics"]??"",
   );
 
   Map<String, dynamic> toJson() => {
@@ -89,17 +89,17 @@ class PremiumPageModel {
 }
 
 class Feature {
-  String name;
-  String value;
+  String ?name;
+  String ?value;
 
   Feature({
-    required this.name,
-    required this.value,
+     this.name,
+     this.value,
   });
 
   factory Feature.fromJson(Map<String, dynamic> json) => Feature(
-    name: json["name"],
-    value: json["value"],
+    name: json["name"]??"",
+    value: json["value"]??"",
   );
 
   Map<String, dynamic> toJson() => {

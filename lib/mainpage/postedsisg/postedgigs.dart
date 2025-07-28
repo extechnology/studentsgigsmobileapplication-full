@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../datapage/datapage.dart';
 import 'components/postjobgigsdetailpage/postjobgigsdetailpage.dart';
 import 'cubit/getpostjob_cubit.dart';
+import 'cubit2/delete_cubit.dart';
 
 class Postedgigs extends StatelessWidget {
   const Postedgigs({super.key});
@@ -13,249 +15,363 @@ class Postedgigs extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
-    return BlocProvider(
+    return MultiBlocProvider(
+  providers: [
+    BlocProvider(
   create: (context) => GetpostjobCubit(),
+),
+    BlocProvider(
+      create: (context) => DeleteCubit(),
+    ),
+  ],
   child: BlocBuilder<GetpostjobCubit, GetpostjobState>(
   builder: (context, state) {
     final cubit = context.read<GetpostjobCubit>();
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xffF9F2ED),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + height * 0.1,right: width *0.07,left: width * 0.07,top: MediaQuery.of(context).viewInsets.top + height * 0.03 ),
-            child: Column(
-              crossAxisAlignment:CrossAxisAlignment.start ,
-              children: [
-                buildFieldTitle("Posted Gigs",width),
-                SizedBox(height: height * 0.03,),
-                if (state is GetpostjobIoading)
-                  Center(child: CircularProgressIndicator())
-                else if (state is Getpostjoberror)
-                  Text(state.message)
-                else if (state is GetpostjobIoaded)
+        body: RefreshIndicator(
+          backgroundColor: Color(0xffFFFFFF),
+          color: Color(0xff000000),
+          onRefresh: ()async {
+            await cubit.fetchJobPosts();      // optional: clear old cache
+          },
 
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(), // important!
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + height * 0.1,right: width *0.07,left: width * 0.07,top: MediaQuery.of(context).viewInsets.top + height * 0.014 ),
+              child: Column(
+                crossAxisAlignment:CrossAxisAlignment.start ,
+                children: [
+                  buildFieldTitle("Posted Gigs",width,height),
+                  SizedBox(height: height * 0.015,),
+                  if (state is GetpostjobIoading)
+                    Center(child: SizedBox())
+                  else if (state is Getpostjoberror)
+                    Text(state.message)
+                  else if (state is GetpostjobIoaded)
+                    if(state.jobs.isEmpty)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "No jobs found......",
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 8),
+                          // ElevatedButton(
+                          //   onPressed: () {
+                          //     // Navigate to Add Job page or show dialog
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(builder: (_) => AddJobPage()), // 👈 Your add job page
+                          //     );
+                          //   },
+                          //   child: Text("Add Job"),
+                          // )
+                        ],
+                      )else
 
-                  itemCount: state.jobs.length,
-                  itemBuilder: (context, index) {
-                    final job = state.jobs[index];
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => Postjobgigsdetailpage(id: job.id ,jobType: job.jobType! ,catecortyjob: job.category!,),
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Container(
-                         width: 400,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Color(0xffFFFFFF)
-                        ),
-                        child: Padding(
-                          padding:  EdgeInsets.only(bottom: height * 0.02,top: height * 0.02,left: width * 0.04,right:  width * 0.04,),
-                          child: Column(
-                            children: [
-                              Row(
+                      ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(), // important!
 
+                    itemCount: state.jobs.length,
+                    itemBuilder: (context, index) {
+                      final job = state.jobs[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => Postjobgigsdetailpage(id: job.id! ,jobType: job.jobType! ,catecortyjob: job.category!,),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: height * 0.005),
+                        child:
+                        Material(
+                          elevation: 2,
+                          borderRadius: BorderRadius.circular(width * 0.04),
+
+                          child: Container(
+                            width: width * 0.9,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(width * 0.04),
+                              color: Color(0xffFFFFFF)
+                            ),
+                            child: Padding(
+                              padding:  EdgeInsets.only(bottom: height * 0.02,top: height * 0.02,left: width * 0.04,right:  width * 0.04,),
+                              child: Column(
                                 children: [
+                                  Row(
+
+                                    children: [
 
 
-                                     Container(
-                                      width: 160,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                         Container(
+                                           width: width * 0.45,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(job.jobTitle ?? "Unknown Title",
+                                                style: TextStyle(
+                                                  fontFamily: 'Sora',
+                                                  fontWeight: FontWeight.w400, // Normal weight
+                                                  fontSize: width * 0.038,
+                                                  height: 1.35,                // Line height = 135%
+                                                  letterSpacing: 0.0,          // No letter spacing
+                                                  color: Colors.black,         // Optional
+                                                ),
+                                                softWrap: true,
+                                                overflow: TextOverflow.ellipsis,
+
+                                              )
+                                            ],
+                                          ),
+
+
+                                        ),
+                                            SizedBox(width: width * 0.01,),
+
+                                            Row(
+                                              children: [
+
+                                                Material(
+
+                                                  elevation: 2,
+                                                  borderRadius: BorderRadius.circular(width * 0.0125), // ~5 on 400px width
+
+                                                  child: Container(
+                                                    width: width * 0.12,   // roughly 48 on 400px screen
+                                                    height: height * 0.018,
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0xff9FEBA8),
+                                                      borderRadius: BorderRadius.circular(width * 0.0125), // ~5 on 400px width
+                                                    ),
+                                                    child: Center(
+                                                      child:
+                                                      Padding(
+                                                        padding:  EdgeInsets.only(bottom: height * 0.001,top: height * 0.001,left: width * 0.001,right:  width * 0.001,),
+                                                        child: Text(
+                                                          job.jobType ?? "Unknown",
+                                                          style: TextStyle(
+                                                            fontFamily: 'Sora',
+                                                            fontWeight: FontWeight.w400, // Regular weight
+                                                            fontSize: width * 0.0275, // ~11 on 400px width
+                                                            height: 1.35,                // Line height = 135%
+                                                            letterSpacing: 0.0,
+                                                            color: Colors.black,         // Optional
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ),
+
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: width * 0.13,
+                                                ),
+                                                InkWell(
+                                                  onTap: () async {
+                                                    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+                                                    final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
+                                                    final tokens = token; // ✅ Replace with secure storage or cubit
+                                                    final token3 = token2; // ✅ Replace with secure storage or cubit
+
+                                                    final deleteCubit = context.read<DeleteCubit>();
+
+                                                    // ✅ Optional: Show confirmation dialog
+                                                    final confirm = await showDialog<bool>(
+                                                      context: context,
+                                                      builder: (ctx) => AlertDialog(
+                                                        backgroundColor: Color(0xffFFFFFF),
+                                                        title: Text("Confirm Delete"),
+                                                        content: Text("Are you sure you want to delete this gig?"),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () => Navigator.pop(ctx, false),
+                                                            child: Text("Cancel"),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () => Navigator.pop(ctx, true),
+                                                            child: Text("Delete"),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+
+                                                    if (confirm == true) {
+                                                      await deleteCubit.deleteJob(
+                                                        type: job.jobType ?? "online",
+                                                        pk: job.id!,
+                                                        token: tokens ?? token3!,
+                                                      );
+
+                                                      final deleteState = deleteCubit.state;
+                                                      if (deleteState is DeleteobSucces) {
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                          SnackBar(content: Text("Job deleted successfully")),
+                                                        );
+                                                        // ✅ Reload the jobs
+                                                        context.read<GetpostjobCubit>().fetchJobPosts(); // Adjust based on your method name
+                                                      } else if (deleteState is DeletejobError) {
+                                                        ScaffoldMessenger.of(context).showSnackBar(
+                                                          SnackBar(content: Text(deleteState.message)),
+                                                        );
+                                                      }
+                                                    }
+                                                  },
+                                                  child: Icon(Icons.delete),
+                                                ),
+
+
+
+
+                                              ],
+                                            ),
+
+
+
+
+
+
+                                    ],
+                                  ),
+                                  SizedBox(height: height * 0.01,),
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+
+                                        radius: width * 0.03, // ~12 when width is 400
+                                        backgroundColor: Colors.grey[200],
+                                        backgroundImage: (job.company?.logo != null && job.company!.logo!.isNotEmpty)
+                                            ? NetworkImage(job.company!.logo!)
+                                            : null,
+                                        child: (job.company?.logo == null || job.company!.logo!.isEmpty)
+                                            ? Icon(Icons.person, size: 14, color: Colors.grey)
+                                            : null,                                      ),
+                                      SizedBox(width: width * 0.01,),
+                                      Column(
                                         children: [
-                                          Text(job.jobTitle ?? "Unknown Title",
+                                          Text(
+                                            job.company!.companyName ?? 'Unknown Company' ,
                                             style: TextStyle(
                                               fontFamily: 'Sora',
-                                              fontWeight: FontWeight.w400, // Normal weight
-                                              fontSize: 15,                // 15px font size
-                                              height: 1.35,                // Line height = 135%
-                                              letterSpacing: 0.0,          // No letter spacing
-                                              color: Colors.black,         // Optional
+                                              fontWeight: FontWeight.w700, // Bold
+                                              fontSize: width * 0.0275, // ≈ 11 when width is 400
+                                              height: 1.35,                // 135% line height
+                                              letterSpacing: 0.0,          // No extra spacing
+                                              color: Colors.black,
+                          // Optional
                                             ),
-                                            softWrap: true,
-                                            overflow: TextOverflow.visible,
-                                          )
+                                            overflow: TextOverflow.ellipsis,
+
+                                          ),
                                         ],
-                                      ),
-
-
-                                    ),
-                                        SizedBox(width: width * 0.01,),
-
-                                        Row(
-                                          children: [
-
-                                            Container(
-                                              width: 48,
-                                              height: 15,
-                                              decoration: BoxDecoration(
-                                                color: Color(0xff9FEBA8),
-                                                borderRadius: BorderRadius.circular(5),
-                                              ),
-                                              child: Center(
-                                                child:
-                                                Padding(
-                                                  padding:  EdgeInsets.only(bottom: height * 0.001,top: height * 0.001,left: width * 0.001,right:  width * 0.001,),
-                                                  child: Text(
-                                                    job.jobType ?? "Unknown",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Sora',
-                                                      fontWeight: FontWeight.w400, // Regular weight
-                                                      fontSize: 11,
-                                                      height: 1.35,                // Line height = 135%
-                                                      letterSpacing: 0.0,
-                                                      color: Colors.black,         // Optional
-                                                    ),
-                                                  ),
-                                                )
-                                              ),
-
-                                            ),
-                                            SizedBox(
-                                              width: width * 0.2,
-                                            ),
-
-                                            Icon(
-                                              Icons.favorite,
-                                              size: 25,
-                                              color: Colors.red,
-                                            ),
-
-                                          ],
-                                        ),
-
-
-
-
-
-
-                                ],
-                              ),
-                              SizedBox(height: height * 0.01,),
-                              Row(
-                                children: [
-                                  CircleAvatar(
-
-                                    radius: 12,
-                                    backgroundImage:NetworkImage(job.company!.logo ?? "") ,
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(width: width * 0.01,),
-                                  Column(
+                                  SizedBox(height: height * 0.01,),
+
+                                  Row(
                                     children: [
                                       Text(
-                                        job.company!.companyName ?? 'Unknown Company' ,
+                                        'Gig Pay',
                                         style: TextStyle(
                                           fontFamily: 'Sora',
-                                          fontWeight: FontWeight.w700, // Bold
-                                          fontSize: 11,                // 11px
-                                          height: 1.35,                // 135% line height
-                                          letterSpacing: 0.0,          // No extra spacing
-                                          color: Colors.black,         // Optional
+                                          fontWeight: FontWeight.w200, // Thin
+                                          fontSize: width * 0.02, // ~8px when width is 400
+                                          height: 1.35, // This is 135% line height
+                                          letterSpacing: 0.0,
+                                          color: Colors.black, // optional
+                                        ),
+                                      ) ,
+                                      SizedBox(width: width * 0.33,),
+                                      Text(
+                                        'Experience Level',
+                                        style: TextStyle(
+                                          fontFamily: 'Sora',
+                                          fontWeight: FontWeight.w200, // Thin
+                                          fontSize: width * 0.02, // ~8px when width is 400
+                                          height: 1.35, // This is 135% line height
+                                          letterSpacing: 0.0,
+                                          color: Colors.black, // optional
+                                        ),
+                                      )
+
+                                    ],
+                                  ),
+                                  SizedBox(height: height * 0.01,),
+
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: width * 0.4,
+                                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "₹${job.payStructure ?? ""} - ${job.salaryType ?? ""}",
+                                              style: TextStyle(
+                                                fontFamily: 'Sora',
+                                                fontWeight: FontWeight.w400, // Regular
+                                                fontSize: width * 0.025, // ≈ 10px when width is ~400
+                                                height: 1.35,                // Line height = 135%
+                                                letterSpacing: 0.0,         // No extra spacing
+                                                color: Colors.black,        // Optional
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+
+                                            ),
+                                          ],
                                         ),
                                       ),
+
+                                      Text(
+                                        'Middle',
+                                        style: TextStyle(
+                                          fontFamily: 'Sora',
+                                          fontWeight: FontWeight.w400, // Regular
+                                          fontSize: width * 0.025,                // 10px
+                                          height: 1.35,                // Line height = 135%
+                                          letterSpacing: 0.0,         // No extra spacing
+                                          color: Colors.black,        // Optional
+                                        ),
+                                      ),
+                                      SizedBox(width: width * 0.15,),
+                                      Text(
+                                        '${job.postedDate!.difference(DateTime.now()).inDays.abs()} days ago',                                  style: TextStyle(
+                                          fontFamily: 'Sora',
+                                          fontWeight: FontWeight.w400, // Regular
+                                          fontSize: width * 0.025,                // 10px
+                                          height: 1.35,                // Line height = 135%
+                                          letterSpacing: 0.0,         // No extra spacing
+                                          color: Colors.black,        // Optional
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+
+                                      ),
+
+
+
                                     ],
                                   )
                                 ],
                               ),
-                              SizedBox(height: height * 0.01,),
-
-                              Row(
-                                children: [
-                                  Text(
-                                    'Gig Pay',
-                                    style: TextStyle(
-                                      fontFamily: 'Sora',
-                                      fontWeight: FontWeight.w200, // Thin
-                                      fontSize: 8,
-                                      height: 1.35, // This is 135% line height
-                                      letterSpacing: 0.0,
-                                      color: Colors.black, // optional
-                                    ),
-                                  ) ,
-                                  SizedBox(width: width * 0.33,),
-                                  Text(
-                                    'Experience Level',
-                                    style: TextStyle(
-                                      fontFamily: 'Sora',
-                                      fontWeight: FontWeight.w200, // Thin
-                                      fontSize: 8,
-                                      height: 1.35, // This is 135% line height
-                                      letterSpacing: 0.0,
-                                      color: Colors.black, // optional
-                                    ),
-                                  )
-
-                                ],
-                              ),
-                              SizedBox(height: height * 0.01,),
-
-                              Row(
-                                children: [
-                                  Container(
-                                    width: width * 0.4,
-                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "₹${job.payStructure ?? ""} - ${job.salaryType ?? ""}",
-                                          style: TextStyle(
-                                            fontFamily: 'Sora',
-                                            fontWeight: FontWeight.w400, // Regular
-                                            fontSize: 10,                // 10px
-                                            height: 1.35,                // Line height = 135%
-                                            letterSpacing: 0.0,         // No extra spacing
-                                            color: Colors.black,        // Optional
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  Text(
-                                    'Middle',
-                                    style: TextStyle(
-                                      fontFamily: 'Sora',
-                                      fontWeight: FontWeight.w400, // Regular
-                                      fontSize: 10,                // 10px
-                                      height: 1.35,                // Line height = 135%
-                                      letterSpacing: 0.0,         // No extra spacing
-                                      color: Colors.black,        // Optional
-                                    ),
-                                  ),
-                                  SizedBox(width: width * 0.15,),
-                                  Text(
-                                    '${job.postedDate!.difference(DateTime.now()).inDays.abs()} days ago',                                  style: TextStyle(
-                                      fontFamily: 'Sora',
-                                      fontWeight: FontWeight.w400, // Regular
-                                      fontSize: 10,                // 10px
-                                      height: 1.35,                // Line height = 135%
-                                      letterSpacing: 0.0,         // No extra spacing
-                                      color: Colors.black,        // Optional
-                                    ),
-                                  ),
-
-
-
-                                ],
-                              )
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },)
-                
-              ],
+                    );
+                   },
+                  )
+
+
+                ],
+              ),
             ),
           ),
         ),
@@ -266,9 +382,9 @@ class Postedgigs extends StatelessWidget {
 );
   }
 }
-Widget buildFieldTitle(String title, double width) {
+Widget buildFieldTitle(String title, double width,double height ) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5),
+    padding:  EdgeInsets.symmetric(vertical: height * 0.00625,),
     child: Text(
       title,
       style: TextStyle(

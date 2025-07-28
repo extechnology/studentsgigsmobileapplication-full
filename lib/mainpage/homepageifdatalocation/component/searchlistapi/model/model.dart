@@ -9,17 +9,17 @@ List<Related> relatedFromJson(String str) => List<Related>.from(json.decode(str)
 String relatedToJson(List<Related> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class Related {
-  String label;
-  String value;
-  String category;
+  String ?label;
+  String ?value;
+  String ?category;
   int? id;
   String? jobTitle;
   int? talentCategory;
 
   Related({
-    required this.label,
-    required this.value,
-    required this.category,
+     this.label,
+     this.value,
+     this.category,
     this.id,
     this.jobTitle,
     this.talentCategory,

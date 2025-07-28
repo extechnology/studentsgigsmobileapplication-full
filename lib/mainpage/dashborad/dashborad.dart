@@ -23,9 +23,9 @@ class _DashboradState extends State<Dashborad> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xffF9F2ED),
         bottomNavigationBar: Container(
-          color: Colors.white,
+          color: Color(0xffF9F2ED),
           height: 70,
           child: const TabBar(
             tabs: [

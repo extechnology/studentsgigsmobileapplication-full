@@ -10,6 +10,8 @@ class MinAgeField extends StatefulWidget {
 
   final String? initialValue;
   final void Function(String)? onChanged;
+  final int? maxLength;
+
 
   const MinAgeField({
     super.key,
@@ -18,6 +20,8 @@ class MinAgeField extends StatefulWidget {
     this.labelText = "Minimum Age",
     this.initialValue,
     this.onChanged, this.hinttext, this.firsttext,
+    this.maxLength, // 👈 Add here
+
   });
 
   @override
@@ -75,6 +79,9 @@ class _MinAgeFieldState extends State<MinAgeField> {
               key: _fieldKey,
               height: isSmall ? 48 : 56,
               child: TextField(
+
+                maxLength: widget.maxLength, // 👈 Add here
+
                 controller: widget.controller,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -89,7 +96,9 @@ class _MinAgeFieldState extends State<MinAgeField> {
 
                   hintText: widget.hinttext ?? 'Enter number',
                   contentPadding: EdgeInsets.symmetric(
+
                     horizontal: 16,
+
                     vertical: isSmall ? 10 : 14,
                   ),
                 ),

@@ -4,6 +4,8 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
+import '../../datapage/datapage.dart';
 import '../model2/locationsearch.dart'; // <-- import your model correctly
 
 part 'defaultsearch_state.dart';
@@ -12,10 +14,10 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
   DefaultsearchCubit() : super(DefaultsearchInitial()){
     getserch();
   }
-  final String baseurl = "https://server.studentsgigs.com";
+  final String baseurl = ApiConstants.baseUrl;
+  final headers =  ApiConstants.headers;
 
   final TextEditingController locationsearchController = TextEditingController();
- final String bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyMjMyNzgwLCJpYXQiOjE3NTE2Mjc5ODAsImp0aSI6IjQzOTRkYjgyMmRlOTQ0YjJhM2ZjNzMzMjFiMDM4ZTc0IiwidXNlcl9pZCI6OTN9.XjfCED0nFwJPmaxOQUToaE49IPDTrhrLfezxdi-wWBU";
   bool isPaginationListenerAttached = false;
   final scrollController = ScrollController();
   int counter = 1;
@@ -27,11 +29,9 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
   Future<void>getserch() async {
 
     final url = "$baseurl/api/employer/search-employee/?page=$counter";
-    final response = await http.get(Uri.parse(url),headers: {
-      'Authorization': 'Bearer $bearerToken',
-      'Content-Type': 'application/json',
-
-    });
+    final response = await http.get(Uri.parse(url),
+        headers: await headers
+    );
    if(response.statusCode >= 200 && response.statusCode <= 299){
      final data = locationsearchFromJson(response.body);
      print(data);
@@ -45,6 +45,7 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
 
        };
      }).toList());
+     print(headers);
 
      print("hey where$imagesData");
 
@@ -71,10 +72,7 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer $bearerToken',
-          'Content-Type': 'application/json',
-        },
+        headers:  await headers
       );
 
       if (response.statusCode >= 200 && response.statusCode <= 299) {
@@ -93,7 +91,6 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
   Future<void> postVisitedCount(String employeeId) async {
 
     print("yes");
-    print("Token: $bearerToken");
     print("Employee ID: $employeeId");
 
     final uri = Uri.parse("$baseurl/api/employer/employee-profile-access/");
@@ -102,9 +99,10 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
     try {
       final request = http.MultipartRequest("POST", uri);
 
+      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
 
       request.fields["employee_id"] = employeeId;
-      request.headers["Authorization"] = "Bearer $bearerToken";
+      request.headers["Authorization"] = "Bearer $token";
 
       final response = await request.send();
       final responseBody = await response.stream.bytesToString();

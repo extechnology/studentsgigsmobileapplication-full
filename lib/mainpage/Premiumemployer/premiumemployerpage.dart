@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../razerpaydemo/cubit/razerpay_cubit.dart';
 import 'cubit2/premium_cubit.dart';
 import 'cubit3/razerpay_cubit.dart';
 import 'model/model.dart';
@@ -59,10 +58,10 @@ class Premiumemployerpage extends StatelessWidget {
                 BlocBuilder<PrrmiumemployerCubit, PrrmiumemployerState>(
                   builder: (context, state) {
                     final cubit = context.read<PrrmiumemployerCubit>();
-                    return SafeArea(
-                      child: Scaffold(
-                        backgroundColor: const Color(0xffF9F2ED),
-                        body: SingleChildScrollView(
+                    return Scaffold(
+                      backgroundColor: const Color(0xffF9F2ED),
+                      body: SafeArea(
+                        child: SingleChildScrollView(
                           child: Padding(
                             padding: EdgeInsets.only(
                               bottom: MediaQuery
@@ -74,25 +73,31 @@ class Premiumemployerpage extends StatelessWidget {
                               top: MediaQuery
                                   .of(context)
                                   .viewInsets
-                                  .top + height * 0.03,
+                                  .top + height * 0.003,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: height * 0.002),
-                                Container(
-                                  width: 55,
-                                  height: 55,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: const Color(0xffE3E3E3)),
-                                    color: const Color(0xffF9F2ED),
-                                  ),
-                                  child: const Center(
-                                    child: Icon(
-                                        Icons.arrow_back, color: Colors.black,
-                                        size: 24),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    width: width * 0.15,   // 15% of screen width
+                                    height: height * 0.07, // 7%
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: const Color(0xffE3E3E3)),
+                                      color: const Color(0xffF9F2ED),
+                                    ),
+                                    child:  Center(
+                                      child: Icon(
+                                          Icons.arrow_back, color: Colors.black,
+                                        size: width * 0.06, // 6% of screen width ≈ 24 on 400px-wide screen
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 ShaderMask(
@@ -108,14 +113,14 @@ class Premiumemployerpage extends StatelessWidget {
                                     ).createShader(bounds);
                                   },
                                   blendMode: BlendMode.srcIn,
-                                  child: const Center(
+                                  child:  Center(
                                     child: SizedBox(
-                                      width: 280,
+                                      width: width * 0.75,
                                       child: Text(
                                         "Upgrade Your Job Posting Experience",
                                         style: TextStyle(
                                           fontFamily: "Poppins",
-                                          fontSize: 24,
+                                          fontSize: width * 0.06, // 6% of screen width (adjust as needed)
                                           fontWeight: FontWeight.w700,
                                           height: 1.5,
                                         ),
@@ -124,14 +129,14 @@ class Premiumemployerpage extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const Center(
+                                 Center(
                                   child: Text(
                                     'Engage the most talented candidates with our premium\nfeatures',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontFamily: 'Sora',
                                       fontWeight: FontWeight.w400,
-                                      fontSize: 10,
+                                      fontSize:  width * 0.025, // ≈ 10 for 400px width
                                       height: 1.7,
                                       letterSpacing: 0,
                                     ),
@@ -145,9 +150,59 @@ class Premiumemployerpage extends StatelessWidget {
                                       if (state is PremiumLoading) {
                                         return CircularProgressIndicator();
                                       } else if (state is PremiumLoaded) {
-                                        return Text(
-                                            "Plan Name: ${state.premium.plan.name}");
-                                      } else if (state is PremiumError) {
+                                        return
+                                          Center(
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: width * 0.04,
+                                                vertical: height * 0.015,
+                                              ),                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.circular(20),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black12,
+                                                    blurRadius: 10,
+                                                    offset: Offset(0, 4),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  // Green dot
+                                                  Container(
+                                                    width: width * 0.03,  // around 12px on 400px wide screen
+                                                    height: width * 0.03,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.greenAccent,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: width * 0.02),
+                                                  // Texts
+                                                  Text(
+                                                    "Current Plan: ",
+                                                    style: TextStyle(
+                                                      fontSize: width * 0.025, // ~16px
+                                                      color: Color(0xFF1F2937), // dark grayish
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    state.premium.plan.name!.toUpperCase(),
+                                                    style: TextStyle(
+                                                      fontSize: width * 0.025, // ~16px
+                                                      color: Colors.pinkAccent,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );                                      } else if (state is PremiumError) {
                                         return Text("Error: ${state.message}");
                                       } else {
                                         return SizedBox(); // or Text("No data loaded yet")
@@ -156,14 +211,14 @@ class Premiumemployerpage extends StatelessWidget {
                                   )
                                   ,
                                 ),
-
+                                            
                                 if (state is PrrmiumemployerIoading) ...[
                                   const Center(
                                       child: CircularProgressIndicator()),
                                 ] else
                                   if (state is PrrmiumemployerIoaded) ...[
                                     SizedBox(
-                                      height: 700,
+                                      height: height * 0.85, // Approx. 700 on 820px height screens
                                       width: double.infinity,
                                       child: PageView.builder(
                                         controller: controller,
@@ -174,7 +229,7 @@ class Premiumemployerpage extends StatelessWidget {
                                         },
                                       ),
                                     ),
-                                    const SizedBox(height: 16),
+                                    SizedBox(height: height * 0.02), // roughly equals 16 on an 800px screen
                                     Center(
                                       child: SmoothPageIndicator(
                                         controller: controller,
@@ -193,18 +248,7 @@ class Premiumemployerpage extends StatelessWidget {
                                     if (state is PrrmiumemployerError) ...[
                                       Center(child: Text(state.message)),
                                     ],
-
-                                InkWell(
-
-                                   onTap: () {
-                      context.read<PaymentCubit>().startPaymentProcess(
-                        context: context,
-                        amount: 1,
-                        currency: 'INR',
-                        plan: 'standard',
-                      );
-                    },
-                                    child: Text("data"))
+                                            
 
                               ],
                             ),
@@ -243,6 +287,7 @@ class Premiumemployerpage extends StatelessWidget {
       isSelectable = false; // cannot upgrade beyond premium
     }
     return Card(
+      elevation: 4,
       margin:  EdgeInsets.all(16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       color: Color(0xffFFFFFF),
@@ -254,7 +299,7 @@ class Premiumemployerpage extends StatelessWidget {
             isCurrentPlan
                 ? Container(
               decoration: BoxDecoration(
-                color: getPlanColor(plan.color),
+                color: getPlanColor(plan.color!),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(15),
                   topRight: Radius.circular(15),
@@ -273,7 +318,7 @@ class Premiumemployerpage extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.04,
                     width: double.infinity,
               decoration: BoxDecoration(
-                color: getPlanColor(plan.color),
+                color: getPlanColor(plan.color!),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(15),
                   topRight: Radius.circular(15),
@@ -284,16 +329,19 @@ class Premiumemployerpage extends StatelessWidget {
 
             Padding(
               padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
-              child: Text(
-                  plan.name.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+              child:
+              Text(
+                  plan.name!.toUpperCase(),
+                  style:  TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.045 ,
+                    fontFamily: 'Sora', // 👈 Apply Sora font
+                    fontWeight: FontWeight.w600, // or w700 for bold
+
                     color: Colors.black,
                   ),
                 ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01), // ~8 if height is around 800
              Padding(
                padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
                child: Text(
@@ -310,10 +358,14 @@ class Premiumemployerpage extends StatelessWidget {
                   final feature = plan.features[i];
                   return ListTile(
                     dense: true,
-                    title: Text(feature.name,
-                        style:  TextStyle(fontSize: 14, color: Color(0xff000000))),
-                    trailing: Text(feature.value,
-                        style:  TextStyle(fontSize: 14, color:  getFeatureColor(feature.value,plan),)),
+                    title: Text(feature.name!,
+                        style:  TextStyle(
+                            fontSize: MediaQuery.of(context).size.width * 0.035, // ~14 if width is 400
+                            color: Color(0xff000000))),
+                    trailing: Text(feature.value!,
+                        style:  TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.035, // ~14 if width is 400
+                          color:  getFeatureColor(feature.value!,plan),)),
                   );
                 },
               ),
@@ -336,23 +388,23 @@ class Premiumemployerpage extends StatelessWidget {
                     ? () {
                   context.read<PaymentCubit>().startPaymentProcess(
                     context: context,
-                    amount: int.parse(plan.price), // Or a mapped amount
+                    amount: int.parse(plan.price!), // Or a mapped amount
                     currency: 'INR',
-                    plan: plan.id,
+                    plan: plan.id!,
                   );
                 }
                     : null,
                 child: Container(
                   decoration: BoxDecoration(
                     color: isCurrentPlan
-                        ? getPlanColor(plan.color)
+                        ? getPlanColor(plan.color!)
                         : isSelectable
-                        ? getPlanColor(plan.color)
-                        : getPlanColor(plan.color).withOpacity(0.5), // 0.0 = transparent, 1.0 = full color
+                        ? getPlanColor(plan.color!)
+                        : getPlanColor(plan.color!).withOpacity(0.5), // 0.0 = transparent, 1.0 = full color
 
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: isCurrentPlan
-                        ? [BoxShadow(color: getPlanColor(plan.color).withOpacity(0.4), blurRadius: 8)]
+                        ? [BoxShadow(color: getPlanColor(plan.color!).withOpacity(0.4), blurRadius: 8)]
                         : [],
                   ),
                   width: MediaQuery.of(context).size.width * 0.4,

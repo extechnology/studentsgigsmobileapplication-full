@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
   class CustomTypeAheadWithEmptyCheck<T> extends StatefulWidget {
     final TextStyle? textStyle; // 👈 ADD THIS
-
+    //location
     final TextEditingController controller;
     final FocusNode? focusNode;
     final Future<List<T>> Function(String) suggestionsCallback;
@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
     final InputDecoration? decoration;
     final VoidCallback? onTap;
     final ValueChanged<String>? onChanged;
+    final int? maxLength;
+
 
     const CustomTypeAheadWithEmptyCheck({
       super.key,
@@ -23,8 +25,10 @@ import 'package:flutter/material.dart';
       this.onTap,
       this.onChanged,
       this.textStyle, // 👈 ADD THIS
+      this.maxLength, // 👈 Add here
 
     });
+
 
   @override
   State<CustomTypeAheadWithEmptyCheck<T>> createState() =>
@@ -189,12 +193,14 @@ class _CustomTypeAheadWithEmptyCheckState<T> extends State<CustomTypeAheadWithEm
     return CompositedTransformTarget(
       link: _layerLink,
       child: TextField(
+        maxLength: widget.maxLength, // 👈 Add here
+
         key: _textFieldKey,
         controller: widget.controller,
         focusNode: widget.focusNode,
         decoration: widget.decoration ?? const InputDecoration(),
         onTap: widget.onTap,
-        onChanged: (val) {
+        onChanged: (val) { 
           // ✅ IMPORTANT:
           // User started typing again -> reset `_userHasPicked`
           _userHasPicked = false;

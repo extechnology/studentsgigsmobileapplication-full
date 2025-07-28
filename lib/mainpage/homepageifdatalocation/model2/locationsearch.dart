@@ -7,7 +7,7 @@ import 'dart:convert';
 Locationsearch locationsearchFromJson(String str) => Locationsearch.fromJson(json.decode(str));
 
 String locationsearchToJson(Locationsearch data) => json.encode(data.toJson());
-
+// hbs
 class Locationsearch {
   int pageNumber;
   int totalPages;
@@ -63,21 +63,21 @@ class Datum {
     required this.workPreferences,
     required this.profile,
     required this.premiumBadge,
-    required this.name,
+     this.name,
     required this.profilePhoto,
-    required this.email,
-    required this.phone,
-    required this.preferredWorkLocation,
+     this.email,
+     this.phone,
+     this.preferredWorkLocation,
     required this.availableWorkHours,
     required this.availableWorkingPeriodsStartDate,
     required this.availableWorkingPeriodsEndDate,
-    required this.portfolio,
-    required this.about,
-    required this.jobTitle,
-    required this.gender,
+     this.portfolio,
+     this.about,
+     this.jobTitle,
+     this.gender,
     required this.dateOfBirth,
     required this.age,
-    required this.plan,
+     this.plan,
     required this.profileView,
     required this.createdDate,
     required this.user,
@@ -143,7 +143,7 @@ class PreferredJobCategory {
 
   PreferredJobCategory({
     required this.id,
-    required this.preferredJobCategory,
+     this.preferredJobCategory,
     required this.employee,
   });
 
@@ -168,8 +168,8 @@ class Profile {
 
   Profile({
     required this.id,
-    required this.coverPhoto,
-    required this.profilePic,
+     this.coverPhoto,
+     this.profilePic,
     required this.employee,
   });
 
@@ -198,10 +198,10 @@ class WorkPreference {
 
   WorkPreference({
     required this.id,
-    required this.interestedJobType,
-    required this.expectedSalaryRange,
-    required this.availability,
-    required this.transportationAvailability,
+     this.interestedJobType,
+     this.expectedSalaryRange,
+     this.availability,
+     this.transportationAvailability,
     required this.employee,
   });
 

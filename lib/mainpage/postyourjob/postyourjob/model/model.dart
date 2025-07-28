@@ -10,28 +10,28 @@ String getthetextsuggestionToJson(List<Getthetextsuggestion> data) => json.encod
 
 class Getthetextsuggestion {
   int id;
-  String category;
-  String jobTitle;
+  String ?category;
+  String ?jobTitle;
   int talentCategory;
-  String value;
-  String label;
+  String? value;
+  String? label;
 
   Getthetextsuggestion({
     required this.id,
-    required this.category,
-    required this.jobTitle,
+     this.category,
+     this.jobTitle,
     required this.talentCategory,
-    required this.value,
-    required this.label,
+     this.value,
+     this.label,
   });
 
   factory Getthetextsuggestion.fromJson(Map<String, dynamic> json) => Getthetextsuggestion(
     id: json["id"],
-    category: json["category"],
-    jobTitle: json["job_title"],
+    category: json["category"]??"",
+    jobTitle: json["job_title"]??"",
     talentCategory: json["talent_category"],
-    value: json["value"],
-    label: json["label"],
+    value: json["value"]??"",
+    label: json["label"]??"",
   );
 
   Map<String, dynamic> toJson() => {

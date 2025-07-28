@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
 
+import '../../datapage/datapage.dart';
 import '../cubit2/premium_cubit.dart';
 
 part 'payment_state.dart';
@@ -17,8 +18,7 @@ class PaymentCubit extends Cubit<PaymentState> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handleFailure);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
-  final token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyMjMyNzgwLCJpYXQiOjE3NTE2Mjc5ODAsImp0aSI6IjQzOTRkYjgyMmRlOTQ0YjJhM2ZjNzMzMjFiMDM4ZTc0IiwidXNlcl9pZCI6OTN9.XjfCED0nFwJPmaxOQUToaE49IPDTrhrLfezxdi-wWBU";
-  final String baseurl = "https://server.studentsgigs.com";
+  final String baseurl = ApiConstants.baseUrl;
 
 
   late Razorpay _razorpay;
@@ -36,10 +36,13 @@ class PaymentCubit extends Cubit<PaymentState> {
      String url = "$baseurl/api/employer/create-order-employer/";
 
     try {
+      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
       final response = await http.post(
         Uri.parse(url),
           headers: {
-            'Authorization': 'Bearer $token',
+            'Authorization': 'Bearer ${token ?? token2}',
             'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: {
@@ -58,7 +61,7 @@ class PaymentCubit extends Cubit<PaymentState> {
         // String plan = data[]
 
         _razorpay.open({
-          'key': 'rzp_test_JJEW8E6TC9K8Lj',
+          'key': 'rzp_live_ic7tdu8aeCEoSo',
           'amount': orderAmount,
           'currency': currency,
           'name': 'Student Gigs',
@@ -96,6 +99,8 @@ class PaymentCubit extends Cubit<PaymentState> {
      String url = "$baseurl/api/employer/verify-payment-employer/";
 
     try {
+      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+
       final verifyResponse = await http.post(
         Uri.parse(url),
         headers: {

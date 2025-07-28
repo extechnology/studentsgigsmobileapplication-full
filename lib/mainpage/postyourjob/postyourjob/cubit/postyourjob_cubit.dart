@@ -17,6 +17,7 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart'as http;
 
 import '../../../Premiumemployer/premiumemployerpage.dart';
+import '../../../datapage/datapage.dart';
 import '../model/model.dart';
 import '../model2/model2.dart';
 
@@ -102,9 +103,8 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     "M.Tech - Computer Science",
     "M.Tech - Mechanical Engineering",
   ];
+  final String baseurl = ApiConstants.baseUrl;
 
-  String baseurl = "https://server.studentsgigs.com";
-  String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyMjMyNzgwLCJpYXQiOjE3NTE2Mjc5ODAsImp0aSI6IjQzOTRkYjgyMmRlOTQ0YjJhM2ZjNzMzMjFiMDM4ZTc0IiwidXNlcl9pZCI6OTN9.XjfCED0nFwJPmaxOQUToaE49IPDTrhrLfezxdi-wWBU";
 
 
   void updateJobTitlesForCategory(String category) {
@@ -232,9 +232,9 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
 
 
 
-      ..insert('\n ✅ Adobe Photoshop\n')
-      ..insert('\n ✅ Canva\n')
-      ..insert('\n ✅ Social Media Marketing\n\n')
+      ..insert('\n • Adobe Photoshop\n')
+      ..insert('\n • Canva\n')
+      ..insert('\n • Social Media Marketing\n\n')
       ..insert('\n 2. Job Type & Payment\n', {'b': true})
 
 
@@ -277,8 +277,11 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     final uri = Uri.parse('$baseurl/api/employer/employer-plan/');
 
     try {
+      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
       final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer ${token ?? token2}',
         'Content-Type': 'application/json',
       });
 
@@ -401,11 +404,15 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
 
 
     try {
+
+      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
       final request = http.MultipartRequest('POST', uri);
 
       // 👇 Replace with your actual token
 
-      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Authorization'] = 'Bearer ${token ?? token2}';
 
       request.fields['job_title'] = jobTitleController.text.trim();
       request.fields['category'] = categoryController.text.trim();
@@ -420,6 +427,22 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
       final response = await request.send();
 
       if (response.statusCode >= 200 && response.statusCode <= 299) {
+        jobTitleController.clear();
+        categoryController.clear();
+
+
+        minage.clear();
+        maxage.clear();
+        preferredacademicController.clear();
+        amountcontroller.clear();
+        compensationController.clear();
+        locationController.clear();
+        quillController = QuillController(
+          document: Document()..insert(0, defaultQuillText),
+          selection: const TextSelection.collapsed(offset: 0),
+        );
+
+        // ✅ Reset all validation flags if needed
         print("success");
         emit(PostyourjobSuccess());
       } else {

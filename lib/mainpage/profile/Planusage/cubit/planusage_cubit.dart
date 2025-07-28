@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import '../../datapage/datapage.dart';
+import '../../../datapage/datapage.dart';
 import '../Model/model.dart';
 
 part 'planusage_state.dart';
@@ -22,11 +22,12 @@ class PlanusageCubit extends Cubit<PlanusageState> {
 
     try {
       final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       final response = await http.get(
         url,
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${token ?? token2}',
           'Content-Type': 'application/json',
         },
       );

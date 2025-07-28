@@ -2,13 +2,13 @@ import 'package:anjalim/mainpage/postedsisg/components/postjobgigsdetailpage/cub
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../datapage/datapage.dart';
 import '../model/model.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
   DashboardCubit() : super(DashboardInitial());
 
-  final token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUyMjMyNzgwLCJpYXQiOjE3NTE2Mjc5ODAsImp0aSI6IjQzOTRkYjgyMmRlOTQ0YjJhM2ZjNzMzMjFiMDM4ZTc0IiwidXNlcl9pZCI6OTN9.XjfCED0nFwJPmaxOQUToaE49IPDTrhrLfezxdi-wWBU";
-  final base = "https://server.studentsgigs.com";
+  final String baseurl = ApiConstants.baseUrl;
 
   Future<void> fetchApplications({
     required String jobType,
@@ -16,17 +16,20 @@ class DashboardCubit extends Cubit<DashboardState> {
   }) async {
     emit(DashboardLoading());
 
-    final uri = Uri.parse("$base/api/employer/dashboard-applications/")
+    final uri = Uri.parse("$baseurl/api/employer/dashboard-applications/")
         .replace(queryParameters: {
       'job_type': jobType,
       'id': id.toString(),
     });
 
     try {
+      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+
       final response = await http.get(
         uri,
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer ${token ?? token2}',
           'Content-Type': 'application/json',
         },
       );
@@ -35,7 +38,7 @@ class DashboardCubit extends Cubit<DashboardState> {
         print("statuscode ${response.statusCode}");
         final List<Postedpagelist> applications = postedpagelistFromJson(response.body); // ✅ ✅ ✅
         print("${applications.length}");
-        print("data $applications");
+        print("data ${applications}");
 
         emit(DashboardLoaded(applications));
       } else {

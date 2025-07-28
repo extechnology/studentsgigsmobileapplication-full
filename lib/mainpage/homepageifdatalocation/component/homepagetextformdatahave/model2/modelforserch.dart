@@ -38,19 +38,19 @@ class Datum {
   List<WorkPreference> workPreferences;
   Profile profile;
   bool premiumBadge;
-  String name;
+  String ?name;
   dynamic profilePhoto;
-  String email;
-  String phone;
-  String preferredWorkLocation;
+  String ?email;
+  String? phone;
+  String ?preferredWorkLocation;
   int availableWorkHours;
-  String portfolio;
-  String about;
-  String jobTitle;
-  String gender;
+  String? portfolio;
+  String ?about;
+  String? jobTitle;
+  String? gender;
   DateTime dateOfBirth;
   int age;
-  String plan;
+  String ?plan;
   int profileView;
   DateTime createdDate;
   int user;
@@ -61,19 +61,19 @@ class Datum {
     required this.workPreferences,
     required this.profile,
     required this.premiumBadge,
-    required this.name,
+     this.name,
     this.profilePhoto,
-    required this.email,
-    required this.phone,
-    required this.preferredWorkLocation,
+     this.email,
+     this.phone,
+     this.preferredWorkLocation,
     required this.availableWorkHours,
-    required this.portfolio,
-    required this.about,
-    required this.jobTitle,
-    required this.gender,
+     this.portfolio,
+     this.about,
+     this.jobTitle,
+     this.gender,
     required this.dateOfBirth,
     required this.age,
-    required this.plan,
+     this.plan,
     required this.profileView,
     required this.createdDate,
     required this.user,
@@ -85,19 +85,19 @@ class Datum {
     workPreferences: List<WorkPreference>.from(json["work_preferences"].map((x) => WorkPreference.fromJson(x))),
     profile: Profile.fromJson(json["profile"]),
     premiumBadge: json["premium_badge"],
-    name: json["name"],
-    profilePhoto: json["profile_photo"],
-    email: json["email"],
-    phone: json["phone"],
-    preferredWorkLocation: json["preferred_work_location"],
+    name: json["name"]?? "",
+    profilePhoto: json["profile_photo"]?? "",
+    email: json["email"]?? "",
+    phone: json["phone"]?? "",
+    preferredWorkLocation: json["preferred_work_location"]?? "",
     availableWorkHours: json["available_work_hours"],
-    portfolio: json["portfolio"],
-    about: json["about"],
-    jobTitle: json["job_title"],
-    gender: json["gender"],
+    portfolio: json["portfolio"]?? "",
+    about: json["about"]?? "",
+    jobTitle: json["job_title"]?? "",
+    gender: json["gender"]?? "",
     dateOfBirth: DateTime.parse(json["date_of_birth"]),
     age: json["age"],
-    plan: json["plan"],
+    plan: json["plan"]?? "",
     profileView: json["profile_view"],
     createdDate: DateTime.parse(json["created_date"]),
     user: json["user"],
@@ -130,18 +130,18 @@ class Datum {
 
 class PreferredJobCategory {
   int id;
-  String preferredJobCategory;
+  String? preferredJobCategory;
   int employee;
 
   PreferredJobCategory({
     required this.id,
-    required this.preferredJobCategory,
+     this.preferredJobCategory,
     required this.employee,
   });
 
   factory PreferredJobCategory.fromJson(Map<String, dynamic> json) => PreferredJobCategory(
     id: json["id"],
-    preferredJobCategory: json["preferred_job_category"],
+    preferredJobCategory: json["preferred_job_category"]?? "",
     employee: json["employee"],
   );
 
@@ -154,21 +154,21 @@ class PreferredJobCategory {
 
 class Profile {
   int id;
-  String coverPhoto;
-  String profilePic;
+  String ?coverPhoto;
+  String? profilePic;
   int employee;
 
   Profile({
     required this.id,
-    required this.coverPhoto,
-    required this.profilePic,
+     this.coverPhoto,
+     this.profilePic,
     required this.employee,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
     id: json["id"],
-    coverPhoto: json["cover_photo"],
-    profilePic: json["profile_pic"],
+    coverPhoto: json["cover_photo"]?? "",
+    profilePic: json["profile_pic"]?? "",
     employee: json["employee"],
   );
 
@@ -182,27 +182,27 @@ class Profile {
 
 class WorkPreference {
   int id;
-  String interestedJobType;
-  String expectedSalaryRange;
-  String availability;
-  String transportationAvailability;
+  String ?interestedJobType;
+  String ?expectedSalaryRange;
+  String? availability;
+  String? transportationAvailability;
   int employee;
 
   WorkPreference({
     required this.id,
-    required this.interestedJobType,
-    required this.expectedSalaryRange,
-    required this.availability,
-    required this.transportationAvailability,
+     this.interestedJobType,
+     this.expectedSalaryRange,
+     this.availability,
+     this.transportationAvailability,
     required this.employee,
   });
 
   factory WorkPreference.fromJson(Map<String, dynamic> json) => WorkPreference(
     id: json["id"],
-    interestedJobType: json["interested_job_type"],
-    expectedSalaryRange: json["expected_salary_range"],
-    availability: json["availability"],
-    transportationAvailability: json["transportation_availability"],
+    interestedJobType: json["interested_job_type"]?? "",
+    expectedSalaryRange: json["expected_salary_range"]?? "",
+    availability: json["availability"]?? "",
+    transportationAvailability: json["transportation_availability"]?? "",
     employee: json["employee"],
   );
 

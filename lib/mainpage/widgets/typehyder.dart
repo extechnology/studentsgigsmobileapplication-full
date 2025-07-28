@@ -10,6 +10,8 @@ class CustomTypeAhead<T> extends StatefulWidget {
   final void Function(T) onSuggestionSelected;
   final InputDecoration? decoration;
   final VoidCallback? onTap; // 👈 NEW
+  final int? maxLength;
+
 
 
   const CustomTypeAhead({
@@ -22,6 +24,8 @@ class CustomTypeAhead<T> extends StatefulWidget {
     this.decoration,
     this.onTap, // 👈 NEW
     this.textStyle, // 👈 ADD THIS
+    this.maxLength, // 👈 Add here
+
 
 
   });
@@ -149,6 +153,7 @@ class _CustomTypeAheadState<T> extends State<CustomTypeAhead<T>> {
     return CompositedTransformTarget(
       link: _layerLink,
       child: TextField(
+        maxLength: widget.maxLength, // 👈 Add here
         key: _textFieldKey,
         controller: widget.controller,
         focusNode: widget.focusNode,
