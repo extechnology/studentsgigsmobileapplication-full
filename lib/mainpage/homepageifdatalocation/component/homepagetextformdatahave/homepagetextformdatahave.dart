@@ -466,7 +466,7 @@ Widget customBox({
         width: width * 0.44,
         height: height * 0.12,
         decoration: BoxDecoration(
-          color: Color(0xffF9F2ED),
+          color: Color(0xffFFFFFF),
           borderRadius: BorderRadius.circular(height * 0.016),
           boxShadow: [
             BoxShadow(

@@ -345,7 +345,8 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
 
         print("Profile Updated Successfully");
         print('Response: $data');
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Dashborad(),));
+        Navigator.pushReplacementNamed(context,"Dashborad" );
+        // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashborad(),));
       } else {
         print('Failed: ${response.statusCode}');
         print('Response: $data');

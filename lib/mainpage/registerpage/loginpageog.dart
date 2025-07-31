@@ -135,7 +135,7 @@ class _RegisterpageState extends State<Registerpage> {
                 children: [
                   InkWell(
                     onTap: () {
-                      context.read<LoginCubit>().signIn(context, "employer"); // or "employer", "admin"
+                      context.read<LoginCubit>().signIn(context); // or "employer", "admin"
 
                     },
                     child: Container(
@@ -414,7 +414,7 @@ class _RegisterpageState extends State<Registerpage> {
                 children: [
                   InkWell(
                     onTap: () {
-                      context.read<LoginCubit>().signIn(context, "employer"); // or "employer", "admin"
+                      context.read<LoginCubit>().signIn(context); // or "employer", "admin"
 
                     },
                     child: Container(
@@ -693,7 +693,7 @@ class _RegisterpageState extends State<Registerpage> {
                       InkWell(
                         onTap: () {
                           if (isChecked){
-                            context.read<LoginCubit>().signIn(context, "employer"); // or "employer", "admin"
+                            context.read<LoginCubit>().signIn(context); // or "employer", "admin"
 
                           }else{
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -946,7 +946,8 @@ class _RegisterpageState extends State<Registerpage> {
               Center(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => GoogleSignInPage(),));
+                    Navigator.pushNamed(context,'GoogleSignInPage' );
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => GoogleSignInPage(),));
 
                   },
                   child: RichText(

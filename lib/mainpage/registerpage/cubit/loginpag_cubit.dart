@@ -24,6 +24,7 @@ class LoginpagCubit extends Cubit<LoginpagState> {
   String ? user;
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  static const String userType = "employer";
 
   Future<void> loginUser( BuildContext context,String name, String password) async {
     print("hey its working");
@@ -46,13 +47,15 @@ class LoginpagCubit extends Cubit<LoginpagState> {
 
         // ✅ Save token securely
         await secureStorage.write(key:'token_local', value: token);
+        await _storage.write(key: 'user_type', value: userType);
 
         if (token!.isNotEmpty) {
           getcompanyinfo(context);
 
         } else {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GoogleSignInPage()));
+          Navigator.pushNamed(context, 'GoogleSignInPage');
+          // Navigator.of(context)
+          //     .push(MaterialPageRoute(builder: (context) => GoogleSignInPage()));
         }
 
         emit(LoginpagIoaded());
@@ -95,15 +98,18 @@ class LoginpagCubit extends Cubit<LoginpagState> {
 
       if ((data.employer?.companyName ?? "").isNotEmpty) {
         // Navigate to dashboard if company name is empty
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Dashborad()),
-        );
+        Navigator.pushReplacementNamed(context,'Dashborad' );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => Dashborad()),
+        // );
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => OnboardProfiles()),
-        );
+        Navigator.pushNamed(context,'OnboardProfiles' );
+
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => OnboardProfiles()),
+        // );
       }
       // profileemail.text = data.employer.email!;
       // profilecompanyinfo.text = data.employer.companyInfo!;

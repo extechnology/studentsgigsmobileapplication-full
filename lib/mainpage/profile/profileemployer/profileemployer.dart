@@ -83,7 +83,8 @@ class Profileemployer extends StatelessWidget {
                    SizedBox(height: height * 0.01875), // 15 is ~1.875% of 800px height
 
                    buildprofile(context: context, text: "Company Info", leadingIcon: Icons.work_outline,color: Color(0xff000000), callback: () {
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => Companyinfo(),));
+                     Navigator.pushNamed(context, "Companyinfo");
+                     // Navigator.push(context, MaterialPageRoute(builder: (context) => Companyinfo(),));
 
                    }, bottomRight: width * 0.042, bottomLeft: width * 0.042, topRight: width * 0.042, topLeft: width * 0.042),
                    SizedBox(height: height * 0.03125), // 25 is ~3.125% of 800px
@@ -91,11 +92,13 @@ class Profileemployer extends StatelessWidget {
 
 
                    buildprofile(context: context, text: "Plan Usage", leadingIcon: Icons.speed,color: Color(0xffEB8125), callback: () {
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => Planusagenew(),));
+                     Navigator.pushNamed(context,'Planusagenew' );
+                     // Navigator.push(context, MaterialPageRoute(builder: (context) => Planusagenew(),));
 
                    },  topRight: width * 0.042, topLeft: width * 0.042),
                    buildprofile(context: context, text: "Premium ", leadingIcon: Icons.emoji_events  ,color: Color(0xff004673), callback: () {
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => Premiumemployerpage(),));
+                     Navigator.pushNamed(context,'Premiumemployerpage' );
+                     // Navigator.push(context, MaterialPageRoute(builder: (context) => Premiumemployerpage(),));
 
                    }, bottomRight: width * 0.042, bottomLeft: width * 0.042),
 
@@ -138,15 +141,18 @@ class Profileemployer extends StatelessWidget {
 
                          if (token != null) {
                            context.read<LoginCubit>().signOut();
-                           Navigator.pushReplacement(
-                             context,
-                             MaterialPageRoute(builder: (_) => Registerpage()),
-                           );
+                           Navigator.pushNamed(context,'Registerpage' );
+                           // Navigator.pushReplacement(
+                           //   context,
+                           //   MaterialPageRoute(builder: (_) => Registerpage()),
+                           // );
                          } else if (token2 != null) {
-                           Navigator.pushReplacement(
-                             context,
-                             MaterialPageRoute(builder: (_) => Registerpage()),
-                           );
+                           Navigator.pushNamed(context,'Registerpage' );
+
+                           // Navigator.pushReplacement(
+                           //   context,
+                           //   MaterialPageRoute(builder: (_) => Registerpage()),
+                           // );
                          } else {
                            print("yes");
                          }

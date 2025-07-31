@@ -31,8 +31,9 @@ class LoginCubit extends Cubit<LoginState> {
 
 
   // static const _storage = FlutterSecureStorage();
+  static const String userType = "employer";
 
-  Future<void> signIn(BuildContext context, String userType) async {
+  Future<void> signIn(BuildContext context) async {
     emit(LoginIoading());
 
     try {
@@ -133,15 +134,18 @@ class LoginCubit extends Cubit<LoginState> {
 
       if ((data.employer?.companyName ?? "").isNotEmpty) {
         // Navigate to dashboard if company name is empty
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Dashborad()),
-        );
+        Navigator.pushNamed(context, 'Dashborad');
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => Dashborad()),
+        // );
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => OnboardProfiles()),
-        );
+        Navigator.pushNamed(context, 'OnboardProfiles');
+
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => OnboardProfiles()),
+        // );
       }
       // profileemail.text = data.employer.email!;
       // profilecompanyinfo.text = data.employer.companyInfo!;

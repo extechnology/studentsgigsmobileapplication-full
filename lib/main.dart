@@ -13,8 +13,10 @@ import 'mainpage/postedsisg/components/postjobgigsdetailpage/postjobgigsdetailpa
 import 'mainpage/postedsisg/postedgigs.dart';
 import 'mainpage/postyourjob/postyourjob/cubit/postyourjob_cubit.dart';
 import 'mainpage/postyourjob/postyourjob/postyourjob.dart';
+import 'mainpage/profile/Planusage/planusage.dart';
 import 'mainpage/profile/companyinfo/companyinfo.dart';
 import 'mainpage/profile/profileemployer/profileemployer.dart';
+import 'mainpage/registerpage/loginpageog.dart';
 import 'mainpage/spashscreen/spashscreen.dart';
 
 void main() {
@@ -34,6 +36,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      routes: {
+        "Dashborad" :(context) => const Dashborad(),
+        "Homepageifdatalocation" :(context) => const Homepageifdatalocation(),
+        "Searchlistapi" :(context) => const Searchlistapi(),
+        "GoogleSignInPage" :(context) => const GoogleSignInPage(),
+        "OnboardProfiles" :(context) => const OnboardProfiles(),
+        "Postedgigs" :(context) => const Postedgigs(),
+        "Premiumemployerpage" :(context) => Premiumemployerpage(),
+        "Profileemployer" :(context) => const Profileemployer(),
+        "Planusagenew" :(context) => const Planusagenew(),
+        "Companyinfo" :(context) => const Companyinfo(),
+        "Registerpage" :(context) =>  Registerpage(),
+        "Spashscreen" :(context) => const Spashscreen(),
+
+
+      },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

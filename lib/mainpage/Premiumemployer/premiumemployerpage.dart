@@ -156,7 +156,8 @@ class Premiumemployerpage extends StatelessWidget {
                                               padding: EdgeInsets.symmetric(
                                                 horizontal: width * 0.04,
                                                 vertical: height * 0.015,
-                                              ),                                              decoration: BoxDecoration(
+                                              ),
+                                              decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius: BorderRadius.circular(20),
                                                 boxShadow: [

@@ -12,6 +12,10 @@ class ApiConstants {
     return await _storage.read(key: 'token_local');
 
   }
+  static Future<String?> getusertype() async {
+    return await _storage.read(key: 'user_type');
+
+  }
 
   static Future<Map<String, String>> get headers async {
     final tokens = await _storage.read(key: 'token_local');

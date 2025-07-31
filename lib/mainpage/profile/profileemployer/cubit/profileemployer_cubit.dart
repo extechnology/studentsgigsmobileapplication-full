@@ -74,13 +74,17 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
     final tokens = await ApiConstants.getTokenOnly2();  // Await the second token as well
 
     if (token != null && token.isNotEmpty || tokens != null && tokens.isNotEmpty) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Dashborad()),
-      );
+      Navigator.pushNamed(context, 'Dashborad');
+
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(builder: (context) => Dashborad()),
+      // );
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => Registerpage()),
-      );
+      Navigator.pushNamed(context, 'Registerpage');
+
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(builder: (context) => Registerpage()),
+      // );
     }
   }
 

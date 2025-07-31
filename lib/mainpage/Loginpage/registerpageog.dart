@@ -422,7 +422,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                 InkWell(
                                   onTap: () {
                                     if(isChecked){
-                                      context.read<LoginCubit>().signIn(context, "employer"); // or "employer", "admin"
+                                      context.read<LoginCubit>().signIn(context); // or "employer", "admin"
 
                                     }else{
                                       ScaffoldMessenger.of(context).showSnackBar(
@@ -792,7 +792,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                 InkWell(
                                   onTap: () {
                                     if(isChecked){
-                                      context.read<LoginCubit>().signIn(context, "employer"); // or "employer", "admin"
+                                      context.read<LoginCubit>().signIn(context); // or "employer", "admin"
 
                                     }else{
                                       ScaffoldMessenger.of(context).showSnackBar(
@@ -1163,7 +1163,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                               InkWell(
                                 onTap: () {
                                   if(isChecked){
-                                    context.read<LoginCubit>().signIn(context, "employer"); // or "employer", "admin"
+                                    context.read<LoginCubit>().signIn(context); // or "employer", "admin"
 
                                   }else{
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -1417,9 +1417,10 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                       SizedBox(height: height * 0.022,),
 
                       Center(
-                        child: InkWell(
+                        child: GestureDetector(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Registerpage(),));
+                            Navigator.pushNamed(context, 'Registerpage');
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => Registerpage(),));
                           },
                           child: RichText(
                             text: TextSpan(

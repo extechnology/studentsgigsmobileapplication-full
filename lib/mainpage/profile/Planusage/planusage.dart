@@ -28,7 +28,7 @@ class Planusagenew extends StatelessWidget {
       create: (context) => PlanusageCubit(),
       child: BlocBuilder<PlanusageCubit, PlanusageState>(
         builder: (context, state) {
-    
+
           if (state is PlanusageIoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is Planusageerror) {
@@ -39,39 +39,39 @@ class Planusagenew extends StatelessWidget {
             final expiry = DateFormat('dd MMM yyyy').format(plan.planExpiryDate);
             final days = plan.planExpiryDate.difference(plan.planCreatedDate).inDays;
             final remaining = plan.planExpiryDate.difference(DateTime.now()).inDays;
-    
+
               int profileaccess = 0;
               double profileaccessPercent = 0;
               int profileaccess2 = 0;
               double profileaccess2Percent = 0;
-    
+
               if (plan.planFeatures.isNotEmpty) {
                 final limitStr = plan.planFeatures[0].limit.toString();
                 final usedStr = plan.planFeatures[0].used.toString();
-    
+
                 final limit = int.tryParse(limitStr);
                 final used = int.tryParse(usedStr);
-    
+
                 if (limit != null && used != null && limit > 0) {
                   profileaccess = limit - used;
                   profileaccessPercent = (used / limit) * 100;
                 }
-    
+
                 print("Feature 1 → Remaining: $profileaccess, Used: ${profileaccessPercent.toStringAsFixed(1)}%");
               }
-    
+
               if (plan.planFeatures.isNotEmpty) {
                 final limitStr = plan.planFeatures[1].limit.toString();
                 final usedStr = plan.planFeatures[1].used.toString();
-    
+
                 final limit = int.tryParse(limitStr);
                 final used = int.tryParse(usedStr);
-    
+
                 if (limit != null && used != null && limit > 0) {
                   profileaccess2 = limit - used;
                   profileaccess2Percent = (used / limit) * 100;
                 }
-    
+
                 print("Feature 2 → Remaining: $profileaccess2, Used: ${profileaccess2Percent.toStringAsFixed(1)}%");
               }
             return SafeArea(
@@ -83,7 +83,7 @@ class Planusagenew extends StatelessWidget {
                     children: [
                       SizedBox(height: height * 0.03),
                       SizedBox(height: height * 0.005),
-                  
+
                       Padding(
                         padding:  EdgeInsets.only(left: width *0.05),
                         child: Text(
@@ -99,7 +99,7 @@ class Planusagenew extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: height * 0.015),
-                  
+
                       Container(
 
 
@@ -280,9 +280,9 @@ class Planusagenew extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: height * 0.1,)
-                  
-                  
-                  
+
+
+
                     ],
                   ),
                 ),
@@ -332,7 +332,7 @@ Widget buildcontaner({ required BuildContext context ,required String text,requi
 
 
   ),
-  child: Row(
+  child: Row(crossAxisAlignment: CrossAxisAlignment.center,
     children: [
       SizedBox(width: width * 0.05,),
       Material(
@@ -355,6 +355,7 @@ Widget buildcontaner({ required BuildContext context ,required String text,requi
 
       Container(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             buildbox(text: text, color: Color(0xff3F414E),fontsize: 15),
             Text(

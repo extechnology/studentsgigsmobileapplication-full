@@ -320,8 +320,9 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     final jobPostingLimit = int.tryParse(usageData['plan']['job_posting'] ?? '0') ?? 0;
 
     if (!canPostJob || jobPostingLimit <= 0) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => Premiumemployerpage()));
+      Navigator.pushNamed(context,'Premiumemployerpage' );
+      // Navigator.of(context)
+      //     .push(MaterialPageRoute(builder: (context) => Premiumemployerpage()));
       return;
     }
     resetValidation();

@@ -133,7 +133,7 @@ class PaymentCubit extends Cubit<PaymentState> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(_context!).pop();
-                    Navigator.pushNamed(_context!, "PremiumPlansScreen");
+                    // Navigator.pushNamed(_context!, "PremiumPlansScreen");
                   },
                   child: const Text("OK"),
                 ),

@@ -16,14 +16,17 @@ class SpashCubit extends Cubit<SpashState> {
     final token = await ApiConstants.getTokenOnly();    // Await the future properly
     final tokens = await ApiConstants.getTokenOnly2();  // Await the second token as well
 
-    if (token != null && token.isNotEmpty || tokens != null && tokens.isNotEmpty) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => Dashborad()),
-      );
+    if (token != null && token.isNotEmpty || tokens != null && tokens.isNotEmpty ) {
+      Navigator.pushReplacementNamed(context, 'Dashborad');
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(builder: (_) => Dashborad()),
+      // );
     } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => Registerpage()),
-      );
+      Navigator.pushReplacementNamed(context, 'Registerpage');
+
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(builder: (_) => Registerpage()),
+      // );
     }
   }
 
