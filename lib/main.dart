@@ -1,3 +1,5 @@
+import 'package:anjalim/intro_screens/splash/splashscreen.dart';
+import 'package:anjalim/intro_screens/welcomescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -6,13 +8,9 @@ import 'mainpage/Loginpage/registerpageog.dart';
 import 'mainpage/Onboardprofile/onboardprofile4/onboardprofile4.dart';
 import 'mainpage/Premiumemployer/premiumemployerpage.dart';
 import 'mainpage/dashborad/dashborad.dart';
-import 'mainpage/homepageifdatalocation/component/homepagetextformdatahave/homepagetextformdatahave.dart';
 import 'mainpage/homepageifdatalocation/component/searchlistapi/searchlistapi.dart';
 import 'mainpage/homepageifdatalocation/homepageifdatalocation.dart';
-import 'mainpage/postedsisg/components/postjobgigsdetailpage/postjobgigsdetailpage.dart';
 import 'mainpage/postedsisg/postedgigs.dart';
-import 'mainpage/postyourjob/postyourjob/cubit/postyourjob_cubit.dart';
-import 'mainpage/postyourjob/postyourjob/postyourjob.dart';
 import 'mainpage/profile/Planusage/planusage.dart';
 import 'mainpage/profile/companyinfo/companyinfo.dart';
 import 'mainpage/profile/profileemployer/profileemployer.dart';
@@ -37,20 +35,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       routes: {
-        "Dashborad" :(context) => const Dashborad(),
-        "Homepageifdatalocation" :(context) => const Homepageifdatalocation(),
-        "Searchlistapi" :(context) => const Searchlistapi(),
-        "GoogleSignInPage" :(context) => const GoogleSignInPage(),
-        "OnboardProfiles" :(context) => const OnboardProfiles(),
-        "Postedgigs" :(context) => const Postedgigs(),
-        "Premiumemployerpage" :(context) => Premiumemployerpage(),
-        "Profileemployer" :(context) => const Profileemployer(),
-        "Planusagenew" :(context) => const Planusagenew(),
-        "Companyinfo" :(context) => const Companyinfo(),
-        "Registerpage" :(context) =>  Registerpage(),
-        "Spashscreen" :(context) => const Spashscreen(),
-
-
+        "Dashborad": (context) => const Dashborad(),
+        "Homepageifdatalocation": (context) => const Homepageifdatalocation(),
+        "Searchlistapi": (context) => const Searchlistapi(),
+        "GoogleSignInPage": (context) => const GoogleSignInPage(),
+        "OnboardProfiles": (context) => const OnboardProfiles(),
+        "Postedgigs": (context) => const Postedgigs(),
+        "Premiumemployerpage": (context) => Premiumemployerpage(),
+        "Profileemployer": (context) => const Profileemployer(),
+        "Planusagenew": (context) => const Planusagenew(),
+        "Companyinfo": (context) => const Companyinfo(),
+        "Registerpage": (context) => Registerpage(),
+        "Spashscreen": (context) => const Spashscreen(),
+        "WelcomeScreen": (context) => const Welcomescreen(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -66,10 +63,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('en'), // Add more locales if needed
       ],
-      home: Spashscreen(),
-
+      home: SplashScreen(),
     );
   }
 }
-
-
