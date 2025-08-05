@@ -637,6 +637,7 @@ class _RegisterpageState extends State<Registerpage> {
                             decoration:
                                 TextDecoration.underline, // Optional underline
                           ),
+
                         ),
                       ),
                     ),
@@ -869,7 +870,9 @@ class _RegisterpageState extends State<Registerpage> {
                   Center(
                     child: Container(
                       width: width * 0.85,
+
                       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                         children: [
                           RichText(
                             text: TextSpan(
@@ -887,6 +890,7 @@ class _RegisterpageState extends State<Registerpage> {
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
+
                                       showEmployerTermsDialog(context);                                    },
                                 ),
                               ],
@@ -1104,6 +1108,7 @@ Widget textform(
                 child: iconforsuffix),
             contentPadding: EdgeInsets.symmetric(
                 vertical: height * 0.025, horizontal: width * 0.039),
+
           ),
         ),
       ),
@@ -1207,9 +1212,12 @@ class BulletText extends StatelessWidget {
               text,
               style: const TextStyle(fontSize: 14, height: 1.4),
             ),
+
           ),
         ],
       ),
+
     );
   }
 }
+

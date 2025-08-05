@@ -1,3 +1,6 @@
+import 'package:anjalim/intro_screens/onboarding_Screens/onboardingscreen1.dart';
+import 'package:anjalim/intro_screens/onboarding_Screens/onboardingscreen2.dart';
+import 'package:anjalim/intro_screens/optionscreen.dart';
 import 'package:anjalim/intro_screens/splash/splashscreen.dart';
 import 'package:anjalim/intro_screens/welcomescreen.dart';
 import 'package:anjalim/student_Section/authentication/login/loginpage.dart';
@@ -50,7 +53,7 @@ class MyApp extends StatelessWidget {
         "Profileemployer": (context) => const Profileemployer(),
         "Planusagenew": (context) => const Planusagenew(),
         "Companyinfo": (context) => const Companyinfo(),
-        "Registerpage": (context) => Registerpage(),
+        "Registerpage": (context) => const Registerpage(),
         "Spashscreen": (context) => const Spashscreen(),
         "WelcomeScreen": (context) => const Welcomescreen(),
         "OptionScreen": (context) => const OptionScreen(),
@@ -73,7 +76,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('en'), // Add more locales if needed
       ],
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

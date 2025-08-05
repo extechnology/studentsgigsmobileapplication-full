@@ -252,6 +252,7 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
   Country? selectedCountry;
   String? selectedState;
   String? selectedCity;
+
   final secureStorage = FlutterSecureStorage();
 
   Future<void> pickImageFromGallery() async {
@@ -402,6 +403,7 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
 
     final url = "$baseurl/api/employer/employer-info/";
     final response = await http.get(Uri.parse(url), headers: {
+
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     });

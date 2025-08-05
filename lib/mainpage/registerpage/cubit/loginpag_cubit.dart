@@ -44,6 +44,7 @@ class LoginpagCubit extends Cubit<LoginpagState> {
         final token = data['access']; // or data['refresh'] if needed
 
         // ✅ Save token securely
+
         await secureStorage.write(key: 'access_token', value: token);
         await _storage.write(key: 'user_type', value: userType);
 
@@ -81,6 +82,7 @@ class LoginpagCubit extends Cubit<LoginpagState> {
 
     final url = "$baseurl/api/employer/employer-info/";
     final response = await http.get(Uri.parse(url), headers: {
+
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     });
