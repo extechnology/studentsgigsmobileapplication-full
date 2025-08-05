@@ -12,8 +12,6 @@ class CustomTypeAhead<T> extends StatefulWidget {
   final VoidCallback? onTap; // 👈 NEW
   final int? maxLength;
 
-
-
   const CustomTypeAhead({
     super.key,
     required this.controller,
@@ -25,9 +23,6 @@ class CustomTypeAhead<T> extends StatefulWidget {
     this.onTap, // 👈 NEW
     this.textStyle, // 👈 ADD THIS
     this.maxLength, // 👈 Add here
-
-
-
   });
 
   @override
@@ -67,7 +62,8 @@ class _CustomTypeAheadState<T> extends State<CustomTypeAhead<T>> {
     _removeOverlay();
 
     final overlay = Overlay.of(context);
-    final renderBox = _textFieldKey.currentContext!.findRenderObject() as RenderBox;
+    final renderBox =
+        _textFieldKey.currentContext!.findRenderObject() as RenderBox;
     final size = renderBox.size;
     final offset = renderBox.localToGlobal(Offset.zero);
 
@@ -128,13 +124,12 @@ class _CustomTypeAheadState<T> extends State<CustomTypeAhead<T>> {
   }
 
   void _ensureFieldVisible() {
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final context = _textFieldKey.currentContext;
       if (context != null) {
         Scrollable.ensureVisible(
           context,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           alignment: 0.3,
         );
       }
@@ -160,8 +155,6 @@ class _CustomTypeAheadState<T> extends State<CustomTypeAhead<T>> {
         decoration: widget.decoration ?? const InputDecoration(),
         onTap: widget.onTap, // 👈 CALL IT
         style: widget.textStyle, // 👈 APPLY THE TEXT COLOR HERE
-
-
       ),
     );
   }

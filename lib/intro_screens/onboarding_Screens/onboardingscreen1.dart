@@ -37,7 +37,7 @@ class OnboardingScreen1 extends StatelessWidget {
         flexibleSpace: Padding(
           padding: const EdgeInsets.only(top: 60),
           child: Image.asset(
-            "lib/assets/images/logos/image 1.png",
+            "assets/images/logos/image 1.png",
             // height: 69,
             // width: double.infinity,
             fit: BoxFit.contain,
@@ -66,7 +66,7 @@ class OnboardingScreen1 extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 30),
               child: Image.asset(
-                "lib/assets/images/onboard/image (4) (1) 2.png",
+                "assets/images/onboard/image (4) (1) 2.png",
                 width: 161,
                 height: 161,
                 fit: BoxFit.cover,

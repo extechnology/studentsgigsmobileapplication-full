@@ -13,10 +13,10 @@ class Spashscreen extends StatelessWidget {
       create: (context) => SpashCubit()..getToken(context),
       child: BlocBuilder<SpashCubit, SpashState>(
         builder: (context, state) {
-          return Scaffold(
+          return const Scaffold(
             body: Column(
               children: [
-                Text("Texting "),
+                const Text("Texting "),
               ],
             ),
           );
