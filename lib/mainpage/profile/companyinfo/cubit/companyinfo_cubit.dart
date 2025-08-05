@@ -15,16 +15,16 @@ import 'package:http_parser/http_parser.dart';
 import '../../../datapage/datapage.dart';
 import '../model/model.dart'; // <-- THIS IS THE IMPORTANT ONE
 
-
 part 'companyinfo_state.dart';
 
 class CompanyinfoCubit extends Cubit<CompanyinfoState> {
-  CompanyinfoCubit() : super(CompanyinfoInitial()){
-    Future.delayed(Duration(milliseconds: 300), () {
+  CompanyinfoCubit() : super(CompanyinfoInitial()) {
+    Future.delayed(const Duration(milliseconds: 300), () {
       getcompanyinfo();
     });
   }
-  CountryCode selectedCountryCode = CountryCode.fromCountryCode('IN'); // Default value
+  CountryCode selectedCountryCode =
+      CountryCode.fromCountryCode('IN'); // Default value
   final String baseurl = ApiConstants.baseUrl;
   // String getFullPhoneNumber() {
   //   return selectedCountryCode.dialCode! + profilephone.text;
@@ -236,7 +236,7 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
 
   File? selectedImage;
   String? networkImage;
-  String ? user;
+  String? user;
   TextEditingController countryController = TextEditingController();
   TextEditingController stateController = TextEditingController();
   TextEditingController cityController = TextEditingController();
@@ -253,14 +253,10 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
   Future pickImageFromGallery() async {
     final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
     selectedImage = File(returned!.path);
-    print("hey");
     emit(CompanyinfoInitial());
-
-
   }
 
   Future<void> updateEmployerProfile(int user) async {
-    print("Function is working");
     try {
       final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
       final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
@@ -271,7 +267,6 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
       final countryName = countryController.text.trim();
       final alpha2Code = countryNameToCode[countryName] ?? "";
 
-
       // Pass your Bearer token here
       request.headers['Authorization'] = 'Bearer ${token ?? token2}';
 
@@ -279,10 +274,11 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
       request.fields['company_name'] = profilecompanyname.text.trim();
       request.fields['company_info'] = profilecompanyinfo.text.trim();
       request.fields['email'] = profileemail.text.trim();
-      request.fields['phone_number'] = '$selectedCountryCode${profilephone.text.trim()}';
+      request.fields['phone_number'] =
+          '$selectedCountryCode${profilephone.text.trim()}';
       request.fields['street_address'] = profilestreet.text.trim();
-      request.fields['state'] = stateController.text.trim();  // ✅ FIXED
-      request.fields['city'] = cityController.text.trim();    // ✅ FIXED
+      request.fields['state'] = stateController.text.trim(); // ✅ FIXED
+      request.fields['city'] = cityController.text.trim(); // ✅ FIXED
       request.fields['postal_code'] = profilepostcode.text.trim();
       request.fields['country'] = jsonEncode({
         "value": alpha2Code,
@@ -292,9 +288,10 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
       // Handle optional image upload
       if (selectedImage != null) {
         final photoFile = await http.MultipartFile.fromPath(
-          'logo',  // <-- this must match your backend field name for image
+          'logo', // <-- this must match your backend field name for image
           selectedImage!.path,
-          contentType: MediaType('image', 'jpeg'), // or MediaType('image', 'png') based on your image type
+          contentType: MediaType('image',
+              'jpeg'), // or MediaType('image', 'png') based on your image type
         );
         request.files.add(photoFile);
       }
@@ -305,24 +302,15 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
       // Process response
       final responseBody = await response.stream.bytesToString();
       final data = json.decode(responseBody);
-      print(response.statusCode);
       if (response.statusCode == 200) {
-        print(response.statusCode);
-
-        print("Profile Updated Successfully");
-        print('Response: $data');
         cleartextedit();
         getcompanyinfo();
-      } else {
-        print('Failed: ${response.statusCode}');
-        print('Response: $data');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
+      } else {}
+      // ignore: empty_catches
+    } catch (e) {}
   }
-  cleartextedit(){
-    print("hey mamam");
+
+  cleartextedit() {
     profilecompanyname.clear();
     profileemail.clear();
     profilecompanyinfo.clear();
@@ -334,12 +322,8 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
     selectedCountry = null;
     selectedState = null;
     selectedCity = null;
-    print(selectedCity);
-    print(selectedState);
-    print(selectedCountry);
 
     emit(CompanyinfoInitial());
-
   }
 
   // void parsePhoneNumber(String? fullPhone) {
@@ -370,7 +354,7 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
     if (fullPhoneNumber.startsWith('+')) {
       // List of all country codes from the package
       final allCountryCodes =
-      codes.map((c) => CountryCode.fromJson(c)).toList();
+          codes.map((c) => CountryCode.fromJson(c)).toList();
 
       // Sort by length of dial code in descending order to match longest first
       allCountryCodes
@@ -378,7 +362,6 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
 
       for (final code in allCountryCodes) {
         if (fullPhoneNumber.startsWith(code.dialCode!)) {
-
           selectedCountryCode = code;
           profilephone.text = fullPhoneNumber.substring(code.dialCode!.length);
           return;
@@ -393,51 +376,37 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
     final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
-     final response = await http.get(Uri.parse(url),headers: {
-       'Authorization': 'Bearer ${token ?? token2}',
-       'Content-Type': 'application/json',
+    final response = await http.get(Uri.parse(url), headers: {
+      'Authorization': 'Bearer ${token ?? token2}',
+      'Content-Type': 'application/json',
+    });
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
+      final data = getcompanyinfoFromJson(response.body);
+      profilecompanyname.text = data.employer.companyName!;
+      profileemail.text = data.employer.email!;
+      profilecompanyinfo.text = data.employer.companyInfo!;
 
-     });
-     if(response.statusCode >= 200 && response.statusCode <= 299){
-       final data = getcompanyinfoFromJson(response.body);
-       print(token2);
-       print(data);
-       profilecompanyname.text = data.employer.companyName!;
-       profileemail.text = data.employer.email!;
-       profilecompanyinfo.text = data.employer.companyInfo!;
+      final phone = data.employer.phoneNumber ?? '+919999999999';
+      parsePhoneNumber(phone);
 
-       final phone = data.employer.phoneNumber ?? '+919999999999';
-       parsePhoneNumber(phone);
+      // profilephone.text = data.employer.phoneNumber!;
+      profilestreet.text = data.employer.streetAddress!;
+      profilepostcode.text = data.employer.postalCode!;
+      networkImage = data.employer.logo;
+      countryController.text = data.employer.country?.label ?? "";
 
+      stateController.text = cleanValue(data.employer.state);
+      cityController.text = cleanValue(data.employer.city);
+      user = data.employer.id.toString();
 
-       // profilephone.text = data.employer.phoneNumber!;
-       profilestreet.text = data.employer.streetAddress!;
-       profilepostcode.text = data.employer.postalCode!;
-       networkImage = data.employer.logo;
-       countryController.text = data.employer.country?.label ?? "";
-
-
-       stateController.text = cleanValue(data.employer.state);
-       cityController.text = cleanValue(data.employer.city);
-       print("hey moji");
-       user = data.employer.id.toString();
-       print("${user}");
-       print(token2);
-
-     print("networkurl$networkImage");
-
-
-       emit(CompanyinfoInitial());
-       Future.delayed(Duration(milliseconds: 5000), () {
-         // Trigger a fake user interaction
-         emit(CompanyinfoInitial()); // Ensure rebuild (if needed)
-       });
-
-     }else {
-       print("Something Wrong");
-     }
-
+      emit(CompanyinfoInitial());
+      Future.delayed(const Duration(milliseconds: 5000), () {
+        // Trigger a fake user interaction
+        emit(CompanyinfoInitial()); // Ensure rebuild (if needed)
+      });
+    } else {}
   }
+
   String cleanValue(String? raw) {
     if (raw == null) return '';
 
@@ -448,9 +417,8 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
       // Fallback: remove extra quotes, slashes manually
       return raw
           .replaceAll(RegExp(r'\\'), '') // remove all backslashes
-          .replaceAll('"', '')           // remove quotes
+          .replaceAll('"', '') // remove quotes
           .trim();
     }
   }
-
 }
