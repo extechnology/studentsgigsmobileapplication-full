@@ -63,8 +63,8 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
     "Vacation Gigs",
     "Project Based",
   ];
-  final String baseurl = ApiConstants.baseUrl;
-  final headers =  ApiConstants.headers;
+  final String baseurl = ApiConstantsemployer.baseUrl;
+  final headers =  ApiConstantsemployer.headers;
   Future<void> getthetextsuggestion() async {
     final url = "$baseurl/api/employer/category-and-title-view/";
     final response = await http.get(Uri.parse(url)
@@ -177,14 +177,14 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
       //   '$baseurl/api/employer/search-employee/'
       //       '?category=$category&location=$location&page=${counter ?? 1}',
       // );
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
 
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          'Authorization': 'Bearer ${token ?? token2}',
+          'Authorization': 'Bearer $token',
           'Accept': 'application/json',
         },
       );
@@ -225,7 +225,7 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
     // 🛰️ Otherwise, make API call
     final url = "$baseurl/api/employer/employer-plan/";
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
 
       final response = await http.get(
         Uri.parse(url),
@@ -252,7 +252,7 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
     cachedPlanUsage = null;
   }
   Future<void> postVisitedCount(String employeeId) async {
-    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
 
 
     print("yes");

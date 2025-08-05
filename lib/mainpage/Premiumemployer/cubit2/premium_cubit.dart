@@ -11,18 +11,18 @@ part 'premium_state.dart';
 
 class PremiumCubit extends Cubit<PremiumState> {
   PremiumCubit() : super(PremiumInitial());
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
 
   Future<void> fetchPremiumPlan() async {
-    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-    final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+    // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
     emit(PremiumLoading());
 
     final url = Uri.parse("$baseurl/api/employer/employer-plan/");
     final headers = {
-      'Authorization': 'Bearer ${token ?? token2}',
+      'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     };
 

@@ -11,7 +11,7 @@ class GetpostjobCubit extends Cubit<GetpostjobState> {
   GetpostjobCubit() : super(GetpostjobInitial()){
     fetchJobPosts();
   }
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
   Future<void> fetchJobPosts() async {
     emit(GetpostjobIoading());
@@ -21,13 +21,13 @@ class GetpostjobCubit extends Cubit<GetpostjobState> {
     );
 
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       final response = await http.get(
         url,
         headers: {
-          'Authorization': 'Bearer ${token ?? token2}',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );

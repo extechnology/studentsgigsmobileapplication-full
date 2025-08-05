@@ -14,8 +14,8 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
   DefaultsearchCubit() : super(DefaultsearchInitial()){
     getserch();
   }
-  final String baseurl = ApiConstants.baseUrl;
-  final headers =  ApiConstants.headers;
+  final String baseurl = ApiConstantsemployer.baseUrl;
+  final headers =  ApiConstantsemployer.headers;
 
   final TextEditingController locationsearchController = TextEditingController();
   bool isPaginationListenerAttached = false;
@@ -99,7 +99,7 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
     try {
       final request = http.MultipartRequest("POST", uri);
 
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
 
       request.fields["employee_id"] = employeeId;
       request.headers["Authorization"] = "Bearer $token";

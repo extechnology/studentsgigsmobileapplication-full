@@ -18,7 +18,7 @@ class PaymentCubit extends Cubit<PaymentState> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handleFailure);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
 
   late Razorpay _razorpay;
@@ -36,13 +36,13 @@ class PaymentCubit extends Cubit<PaymentState> {
      String url = "$baseurl/api/employer/create-order-employer/";
 
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       final response = await http.post(
         Uri.parse(url),
           headers: {
-            'Authorization': 'Bearer ${token ?? token2}',
+            'Authorization': 'Bearer $token',
             'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: {
@@ -99,7 +99,7 @@ class PaymentCubit extends Cubit<PaymentState> {
      String url = "$baseurl/api/employer/verify-payment-employer/";
 
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
 
       final verifyResponse = await http.post(
         Uri.parse(url),

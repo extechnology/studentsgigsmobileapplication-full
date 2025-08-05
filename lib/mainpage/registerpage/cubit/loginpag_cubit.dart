@@ -18,7 +18,7 @@ part 'loginpag_state.dart';
 
 class LoginpagCubit extends Cubit<LoginpagState> {
   LoginpagCubit() : super(LoginpagInitial());
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
   static const _storage = FlutterSecureStorage();
 
   String? user;
@@ -44,7 +44,7 @@ class LoginpagCubit extends Cubit<LoginpagState> {
         final token = data['access']; // or data['refresh'] if needed
 
         // ✅ Save token securely
-        await secureStorage.write(key: 'token_local', value: token);
+        await secureStorage.write(key: 'access_token', value: token);
         await _storage.write(key: 'user_type', value: userType);
 
         if (token!.isNotEmpty) {
@@ -76,12 +76,12 @@ class LoginpagCubit extends Cubit<LoginpagState> {
     await Future.delayed(
         const Duration(milliseconds: 3000)); // ⏳ 2-second delay
 
-    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-    final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+    // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
     final response = await http.get(Uri.parse(url), headers: {
-      'Authorization': 'Bearer ${token ?? token2}',
+      'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     });
     if (response.statusCode >= 200 && response.statusCode <= 299) {

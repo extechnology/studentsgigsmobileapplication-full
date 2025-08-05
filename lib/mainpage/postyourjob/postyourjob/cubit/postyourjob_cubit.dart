@@ -103,7 +103,7 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     "M.Tech - Computer Science",
     "M.Tech - Mechanical Engineering",
   ];
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
 
 
@@ -277,11 +277,11 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     final uri = Uri.parse('$baseurl/api/employer/employer-plan/');
 
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer ${token ?? token2}',
+        'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       });
 
@@ -406,14 +406,14 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
 
     try {
 
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       final request = http.MultipartRequest('POST', uri);
 
       // 👇 Replace with your actual token
 
-      request.headers['Authorization'] = 'Bearer ${token ?? token2}';
+      request.headers['Authorization'] = 'Bearer $token';
 
       request.fields['job_title'] = jobTitleController.text.trim();
       request.fields['category'] = categoryController.text.trim();

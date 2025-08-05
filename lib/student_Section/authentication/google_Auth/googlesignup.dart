@@ -25,7 +25,7 @@ class GoogleAuthService {
       }
 
       final response = await http.post(
-        Uri.parse("${ApiConstants.baseUrl}api/employee/api/google-auth/"),
+        Uri.parse("${ApiConstantsemployer.baseUrl}api/employee/api/google-auth/"),
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",

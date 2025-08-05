@@ -6,11 +6,13 @@ import 'package:csc_picker_plus/csc_picker_plus.dart'; // ✅ This exposes getAl
 import 'package:bloc/bloc.dart';
 import 'package:emoji_flag_converter/emoji_flag_converter.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:http_parser/http_parser.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../datapage/datapage.dart';
 import '../model/model.dart'; // <-- THIS IS THE IMPORTANT ONE
@@ -25,7 +27,7 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
   }
   CountryCode selectedCountryCode =
       CountryCode.fromCountryCode('IN'); // Default value
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
   // String getFullPhoneNumber() {
   //   return selectedCountryCode.dialCode! + profilephone.text;
   // }
@@ -250,16 +252,39 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
   Country? selectedCountry;
   String? selectedState;
   String? selectedCity;
-  Future pickImageFromGallery() async {
-    final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
-    selectedImage = File(returned!.path);
-    emit(CompanyinfoInitial());
+  final secureStorage = FlutterSecureStorage();
+
+  Future<void> pickImageFromGallery() async {
+    final status = await Permission.photos.request();
+
+    if (status.isGranted) {
+      // Store permission granted
+      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'true');
+
+      final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (returned != null) {
+        selectedImage = File(returned.path);
+        emit(CompanyinfoInitial());
+      }
+    } else if (status.isPermanentlyDenied) {
+      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'false');
+      openAppSettings();
+      emit(CompanyinfoInitial());
+    } else {
+      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'false');
+      emit(CompanyinfoInitial());
+    }
   }
+  // Future pickImageFromGallery() async {
+  //   final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   selectedImage = File(returned!.path);
+  //   emit(CompanyinfoInitial());
+  // }
 
   Future<void> updateEmployerProfile(int user) async {
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       var uri = Uri.parse('$baseurl/api/employer/employer-info/?pk=$user');
 
@@ -268,7 +293,7 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
       final alpha2Code = countryNameToCode[countryName] ?? "";
 
       // Pass your Bearer token here
-      request.headers['Authorization'] = 'Bearer ${token ?? token2}';
+      request.headers['Authorization'] = 'Bearer $token';
 
       // Form fields (update as per your form inputs)
       request.fields['company_name'] = profilecompanyname.text.trim();
@@ -372,12 +397,12 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
   }
 
   Future<void> getcompanyinfo() async {
-    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-    final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+    // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
     final response = await http.get(Uri.parse(url), headers: {
-      'Authorization': 'Bearer ${token ?? token2}',
+      'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     });
     if (response.statusCode >= 200 && response.statusCode <= 299) {

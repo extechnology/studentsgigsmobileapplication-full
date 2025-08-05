@@ -129,12 +129,12 @@ class Profileemployer extends StatelessWidget {
                          if (shouldLogout != true) return; // cancel pressed
 
                          // Proceed to log out
-                         final token = await ApiConstants.getTokenOnly();
-                         final token2 = await ApiConstants.getTokenOnly2();
+                         final token = await ApiConstantsemployer.getTokenOnly();
+                         // final token2 = await ApiConstants.getTokenOnly2();
 
                          const FlutterSecureStorage storage = FlutterSecureStorage();
                          await storage.delete(key: 'access_token');
-                         await storage.delete(key: 'token_local');
+                         // await storage.delete(key: 'token_local');
                          await storage.deleteAll();
 
                          print("🧹 Access token deleted. Logging out...");
@@ -146,14 +146,16 @@ class Profileemployer extends StatelessWidget {
                            //   context,
                            //   MaterialPageRoute(builder: (_) => Registerpage()),
                            // );
-                         } else if (token2 != null) {
-                           Navigator.pushNamed(context,'Registerpage' );
-
-                           // Navigator.pushReplacement(
-                           //   context,
-                           //   MaterialPageRoute(builder: (_) => Registerpage()),
-                           // );
-                         } else {
+                         }
+                         // else if (token2 != null) {
+                         //   Navigator.pushNamed(context,'Registerpage' );
+                         //
+                         //   // Navigator.pushReplacement(
+                         //   //   context,
+                         //   //   MaterialPageRoute(builder: (_) => Registerpage()),
+                         //   // );
+                         // }
+                         else {
                            print("yes");
                          }
                        },

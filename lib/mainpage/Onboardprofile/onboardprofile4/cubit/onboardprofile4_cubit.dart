@@ -4,6 +4,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:emoji_flag_converter/emoji_flag_converter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
@@ -11,6 +12,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../dashborad/dashborad.dart';
 import '../../../datapage/datapage.dart';
@@ -32,19 +34,34 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
   posted.Country? selectedCountry;
   String? selectedState;
   String? selectedCity;
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
   String ? user;
 
   File? selectedImage;
 
-  Future pickImageFromGallery() async {
-    final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
-    selectedImage = File(returned!.path);
-    print("hey");
-    emit(Onboardprofile4Initial());
+  final secureStorage = FlutterSecureStorage();
 
+  Future<void> pickImageFromGallery() async {
+    final status = await Permission.photos.request();
 
+    if (status.isGranted) {
+      // Store permission granted
+      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'true');
+
+      final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (returned != null) {
+        selectedImage = File(returned.path);
+        emit(Onboardprofile4Initial());
+      }
+    } else if (status.isPermanentlyDenied) {
+      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'false');
+      openAppSettings();
+      emit(Onboardprofile4Initial());
+    } else {
+      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'false');
+      emit(Onboardprofile4Initial());
+    }
   }
   Map<String, String> countryNameToCode = {
     'Aruba': 'AW',
@@ -296,8 +313,8 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
     print("Function is working $user");
 
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       var uri = Uri.parse('$baseurl/api/employer/employer-info/?pk=$user');
 
@@ -307,7 +324,7 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
 
 
       // Pass your Bearer token here
-      request.headers['Authorization'] = 'Bearer ${token ?? token2}';
+      request.headers['Authorization'] = 'Bearer $token';
 
       // Form fields (update as per your form inputs)
       request.fields['company_name'] = profilecompanyname.text.trim();
@@ -387,12 +404,12 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
   }
 
   Future<void> getcompanyinfo(BuildContext context) async {
-    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-    final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+    // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
     final response = await http.get(Uri.parse(url),headers: {
-      'Authorization': 'Bearer ${token ?? token2}',
+      'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
 
     });

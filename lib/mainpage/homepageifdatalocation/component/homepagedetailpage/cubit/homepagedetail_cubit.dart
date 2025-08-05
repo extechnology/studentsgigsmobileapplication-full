@@ -10,20 +10,20 @@ import '../model/model.dart';
   class HomepagedetailCubit extends Cubit<HomepagedetailState> {
     HomepagedetailCubit() : super(HomepagedetailInitial());
 
-    final String baseurl = ApiConstants.baseUrl;
-    final headers =  ApiConstants.headers;
+    final String baseurl = ApiConstantsemployer.baseUrl;
+    final headers =  ApiConstantsemployer.headers;
     Future<void> fetchEmployeeDetail({required int id}) async {
       emit(HomepagedetailLoding());
 
 
       try {
-        final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-        final tokens = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+        final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+        // final tokens = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
         final response = await http.get(
           Uri.parse('https://server.studentsgigs.com/api/employer/employee-data/?id=$id'),
           headers: {
-            'Authorization': 'Bearer ${token ?? tokens}',
+            'Authorization': 'Bearer $token',
             'Accept': 'application/json',
           },
         );

@@ -14,7 +14,7 @@ class SearchclassCubit extends Cubit<SearchclassState> {
 
   List<Map<String, dynamic>> allData = [];
   List<Map<String, dynamic>> filteredData = [];
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
 
   Future<void> getFunction() async {
