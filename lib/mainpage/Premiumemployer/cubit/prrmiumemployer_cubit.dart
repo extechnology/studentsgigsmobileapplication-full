@@ -12,7 +12,7 @@ part 'prrmiumemployer_state.dart';
 
 class PrrmiumemployerCubit extends Cubit<PrrmiumemployerState> {
   PrrmiumemployerCubit() : super(PrrmiumemployerInitial());
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
   Future<void> fetchPlans() async {
     emit(PrrmiumemployerIoading());
@@ -20,13 +20,13 @@ class PrrmiumemployerCubit extends Cubit<PrrmiumemployerState> {
     final url = Uri.parse('$baseurl/api/employer/employer-all-plans/');
 
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       final response = await http.get(
         url,
         headers: {
-          'Authorization': 'Bearer ${token ?? token2 }',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );

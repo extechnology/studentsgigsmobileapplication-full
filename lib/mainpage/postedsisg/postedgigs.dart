@@ -176,11 +176,11 @@ class Postedgigs extends StatelessWidget {
                                                 ),
                                                 InkWell(
                                                   onTap: () async {
-                                                    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-                                                    final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+                                                    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+                                                    // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
                                                     final tokens = token; // ✅ Replace with secure storage or cubit
-                                                    final token3 = token2; // ✅ Replace with secure storage or cubit
+                                                    // final token3 = token2; // ✅ Replace with secure storage or cubit
 
                                                     final deleteCubit = context.read<DeleteCubit>();
 
@@ -208,7 +208,7 @@ class Postedgigs extends StatelessWidget {
                                                       await deleteCubit.deleteJob(
                                                         type: job.jobType ?? "online",
                                                         pk: job.id!,
-                                                        token: tokens ?? token3!,
+                                                        token: tokens!,
                                                       );
 
                                                       final deleteState = deleteCubit.state;

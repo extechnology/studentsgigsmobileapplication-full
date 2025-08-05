@@ -9,7 +9,7 @@ part 'forget_state.dart';
 class ForgetCubit extends Cubit<ForgetState> {
   ForgetCubit() : super(ForgetInitial());
 
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
   Future<void> resetPassword({required String email}) async {
     emit(ForgetIoading());

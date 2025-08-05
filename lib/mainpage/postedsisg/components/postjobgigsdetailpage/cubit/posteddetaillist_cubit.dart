@@ -8,7 +8,7 @@ import '../model/model.dart';
 class DashboardCubit extends Cubit<DashboardState> {
   DashboardCubit() : super(DashboardInitial());
 
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
   Future<void> fetchApplications({
     required String jobType,
@@ -23,13 +23,13 @@ class DashboardCubit extends Cubit<DashboardState> {
     });
 
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       final response = await http.get(
         uri,
         headers: {
-          'Authorization': 'Bearer ${token ?? token2}',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );

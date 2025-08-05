@@ -637,6 +637,7 @@ class _RegisterpageState extends State<Registerpage> {
                             decoration:
                                 TextDecoration.underline, // Optional underline
                           ),
+
                         ),
                       ),
                     ),
@@ -869,7 +870,9 @@ class _RegisterpageState extends State<Registerpage> {
                   Center(
                     child: Container(
                       width: width * 0.85,
-                      child: Row(
+
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                         children: [
                           RichText(
                             text: TextSpan(
@@ -887,15 +890,15 @@ class _RegisterpageState extends State<Registerpage> {
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      // TODO: Open privacy policy URL or screen
-                                    },
+
+                                      showEmployerTermsDialog(context);                                    },
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            width: width * 0.24,
-                          ),
+                          // SizedBox(
+                          //   width: width * 0.24,
+                          // ),
                           StatefulBuilder(
                             builder: (context, setState) {
                               return Checkbox(
@@ -1105,9 +1108,116 @@ Widget textform(
                 child: iconforsuffix),
             contentPadding: EdgeInsets.symmetric(
                 vertical: height * 0.025, horizontal: width * 0.039),
+
           ),
         ),
       ),
     ),
   );
 }
+void showEmployerTermsDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text(
+        'Terms & Conditions for Employers',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text('(Effective Date: 8/4/2025)\n'),
+              Text('1. General Terms\n', style: TextStyle(fontWeight: FontWeight.bold)),
+              BulletText('By registering on StudentsGigs.com, you agree to follow these terms when posting jobs or hiring students.'),
+              BulletText('Employers must comply with local labor laws and ethical employment standards.'),
+              BulletText('StudentsGigs.com is not responsible for candidate behavior, job performance, or damages caused by students.'),
+
+              SizedBox(height: 12),
+              Text('2. Job Posting & Recruitment Policies\n', style: TextStyle(fontWeight: FontWeight.bold)),
+              BulletText('Employers must provide accurate job descriptions and salary details.'),
+              BulletText('Employers must not post misleading or false job advertisements.'),
+              BulletText('Employers must not demand money from students for job placements.'),
+              BulletText('Employers must not offer jobs that violate labor laws or involve unsafe working conditions.'),
+              BulletText('Employers must treat students professionally and fairly.'),
+
+              SizedBox(height: 12),
+              Text('3. Salary, Payments & Disputes\n', style: TextStyle(fontWeight: FontWeight.bold)),
+              BulletText('Employers are fully responsible for paying students on time and as agreed.'),
+              BulletText('StudentsGigs.com does not handle or guarantee salary payments.'),
+              BulletText('If salary disputes arise, the student and employer must resolve them directly.'),
+              BulletText('Non-payment complaints may result in employer account suspension.'),
+
+              SizedBox(height: 12),
+              Text('4. Workplace Conduct & Legal Compliance\n', style: TextStyle(fontWeight: FontWeight.bold)),
+              BulletText('Employers must provide a safe and respectful workplace.'),
+              BulletText('Employers must not engage in harassment, discrimination, or abuse towards students.'),
+              BulletText('Employers must not force unpaid labor or unethical working conditions.'),
+              BulletText('Employers must not collect personal data for non-job-related activities.'),
+              BulletText('Employers are liable for any legal actions due to labor law violations.'),
+
+              SizedBox(height: 12),
+              Text('5. Employer Responsibilities & Liabilities\n', style: TextStyle(fontWeight: FontWeight.bold)),
+              BulletText('If an employer misuses student contact details, they may face a ban from the platform.'),
+              BulletText('If a student causes damage to company property, the employer must handle the issue directly.'),
+              BulletText('StudentsGigs.com is not responsible for student misconduct or damage caused at the workplace.'),
+
+              SizedBox(height: 12),
+              Text('6. Platform Usage & Restrictions\n', style: TextStyle(fontWeight: FontWeight.bold)),
+              BulletText('Employers must not post illegal, inappropriate, or misleading job listings.'),
+              BulletText('Employers must not share student details with third parties.'),
+              BulletText('Employers must not use the platform for non-recruitment purposes.'),
+              BulletText('Repeated violations will result in a permanent ban from the platform.'),
+
+              SizedBox(height: 12),
+              Text('7. Dispute Resolution & Legal Disclaimer\n', style: TextStyle(fontWeight: FontWeight.bold)),
+              BulletText('Employers and students must resolve disputes between themselves.'),
+              BulletText('StudentsGigs.com only acts as an intermediary and is not responsible for disputes.'),
+              BulletText('Any legal claims must be directed towards the responsible party, not StudentsGigs.com.'),
+
+              SizedBox(height: 12),
+              Text('8. Agreement & Acknowledgment\n', style: TextStyle(fontWeight: FontWeight.bold)),
+              BulletText('By registering, you agree to these terms and acknowledge that StudentsGigs.com is not responsible for employment-related disputes.'),
+              BulletText('Click "Agree" to continue using the platform.'),
+              BulletText('Note: These terms and conditions are designed to protect both students and employers, ensuring a fair and safe environment on StudentsGigs.com.'),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+      ],
+    ),
+  );
+}
+class BulletText extends StatelessWidget {
+  final String text;
+  const BulletText(this.text, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('• ', style: TextStyle(fontSize: 16)),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 14, height: 1.4),
+            ),
+
+          ),
+        ],
+      ),
+
+    );
+  }
+}
+

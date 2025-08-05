@@ -8,7 +8,7 @@ part 'delete_state.dart';
 
 class DeleteCubit extends Cubit<DeleteState> {
   DeleteCubit() : super(DeleteInitial());
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
   Future<void> deleteJob({required String type, required int pk, required String token}) async {
     emit(DeleteLoading());
@@ -20,13 +20,13 @@ class DeleteCubit extends Cubit<DeleteState> {
     });
 
     try {
-      final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-      final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       final response = await http.delete(
         uri,
         headers: {
-          'Authorization': 'Bearer ${token ?? token2}',
+          'Authorization': 'Bearer $token',
           'Accept': 'application/json',
         },
       );

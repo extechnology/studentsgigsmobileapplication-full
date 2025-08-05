@@ -23,15 +23,15 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
   File? selectedImage;
   String? networkImage;
 
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
   Future<void> getcompanyinfo() async {
-    final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
-    final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+    // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
     final response = await http.get(Uri.parse(url),headers: {
-      'Authorization': 'Bearer ${token ?? token2}',
+      'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
 
     });
@@ -70,10 +70,10 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
 
   }
    getToken(BuildContext context) async {
-    final token = await ApiConstants.getTokenOnly();    // Await the future properly
-    final tokens = await ApiConstants.getTokenOnly2();  // Await the second token as well
+    final token = await ApiConstantsemployer.getTokenOnly();    // Await the future properly
+    // final tokens = await ApiConstants.getTokenOnly2();  // Await the second token as well
 
-    if (token != null && token.isNotEmpty || tokens != null && tokens.isNotEmpty) {
+    if (token != null && token.isNotEmpty ) {
       Navigator.pushNamed(context, 'Dashborad');
 
       // Navigator.of(context).pushReplacement(

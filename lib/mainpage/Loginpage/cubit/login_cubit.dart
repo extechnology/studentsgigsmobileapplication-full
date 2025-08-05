@@ -18,7 +18,7 @@ part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
-  final String baseurl = ApiConstants.baseUrl;
+  final String baseurl = ApiConstantsemployer.baseUrl;
 
   String ? user;
   static const _storage = FlutterSecureStorage();
@@ -119,12 +119,12 @@ class LoginCubit extends Cubit<LoginState> {
   //   }
   // }
   Future<void> getcompanyinfo(BuildContext context) async {
-    final token = await ApiConstants.getTokenOnly(); //  get actual token
-    final token2 = await ApiConstants.getTokenOnly2(); //  get actual token
+    final token = await ApiConstantsemployer.getTokenOnly(); //  get actual token
+    // final token2 = await ApiConstants.getTokenOnly2(); //  get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
     final response = await http.get(Uri.parse(url),headers: {
-      'Authorization': 'Bearer ${token ?? token2}',
+      'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
 
     });

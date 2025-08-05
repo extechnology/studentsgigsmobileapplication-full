@@ -13,10 +13,10 @@ class SpashCubit extends Cubit<SpashState> {
   SpashCubit() : super(SpashInitial());
 
   Future<void> getToken(BuildContext context) async {
-    final token = await ApiConstants.getTokenOnly();    // Await the future properly
-    final tokens = await ApiConstants.getTokenOnly2();  // Await the second token as well
+    final token = await ApiConstantsemployer.getTokenOnly();    // Await the future properly
+    // final tokens = await ApiConstants.getTokenOnly2();  // Await the second token as well
 
-    if (token != null && token.isNotEmpty || tokens != null && tokens.isNotEmpty ) {
+    if (token != null && token.isNotEmpty ) {
       Navigator.pushReplacementNamed(context, 'Dashborad');
       // Navigator.of(context).pushReplacement(
       //   MaterialPageRoute(builder: (_) => Dashborad()),

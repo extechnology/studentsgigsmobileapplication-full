@@ -154,7 +154,7 @@ class OnboardingScreen2 extends StatelessWidget {
                 ),
                 TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, "LoginPage");
+                      Navigator.pushNamed(context, "OptionScreen");
                     },
                     child: Text(
                       "Sign In",

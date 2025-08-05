@@ -13,7 +13,8 @@ class LoginRepository {
     required String password,
   }) async {
     // Student login endpoint
-    final Uri url = Uri.parse("${ApiConstants.baseUrl}api/employee/api/token/");
+
+    final Uri url = Uri.parse("${ApiConstantsemployer.baseUrl}api/employee/api/token/");
 
     try {
       final response = await http.post(
