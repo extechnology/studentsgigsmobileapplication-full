@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'; // ⬅️ Required for GlobalXxxLocalizations
+import 'intro_screens/onboarding_Screens/onboardingscreen1.dart';
+import 'intro_screens/onboarding_Screens/onboardingscreen2.dart';
+import 'intro_screens/option/optionscreen.dart';
 import 'mainpage/Loginpage/registerpageog.dart';
 import 'mainpage/Onboardprofile/onboardprofile4/onboardprofile4.dart';
 import 'mainpage/Premiumemployer/premiumemployerpage.dart';
@@ -48,6 +51,10 @@ class MyApp extends StatelessWidget {
         "Registerpage": (context) => Registerpage(),
         "Spashscreen": (context) => const Spashscreen(),
         "WelcomeScreen": (context) => const Welcomescreen(),
+        "OptionScreen": (context) => const OptionScreen(),
+        "OnboardingScreen1": (context) => const OnboardingScreen1(),
+        "OnboardingScreen2": (context) => const OnboardingScreen2(),
+
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
