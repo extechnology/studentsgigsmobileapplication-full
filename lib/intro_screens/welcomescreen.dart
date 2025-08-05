@@ -29,7 +29,7 @@ class Welcomescreen extends StatelessWidget {
               child: Container(
                 height: screenHeight * 0.08,
                 child: Image.asset(
-                  "lib/assets/images/logos/image 1.png",
+                  "assets/images/logos/image 1.png",
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
@@ -101,7 +101,7 @@ class Welcomescreen extends StatelessWidget {
                         child: AspectRatio(
                           aspectRatio: 1.2,
                           child: Image.asset(
-                            "lib/assets/images/onboard/image (2) 1.png",
+                            "assets/images/onboard/image (2) 1.png",
                             fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(

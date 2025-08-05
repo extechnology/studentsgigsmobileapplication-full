@@ -21,13 +21,13 @@ class LoginpagCubit extends Cubit<LoginpagState> {
   final String baseurl = ApiConstants.baseUrl;
   static const _storage = FlutterSecureStorage();
 
-  String ? user;
+  String? user;
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   static const String userType = "employer";
 
-  Future<void> loginUser( BuildContext context,String name, String password) async {
-    print("hey its working");
+  Future<void> loginUser(
+      BuildContext context, String name, String password) async {
     emit(LoginpagIoading());
 
     try {
@@ -40,18 +40,15 @@ class LoginpagCubit extends Cubit<LoginpagState> {
       );
 
       if (response.statusCode == 200) {
-        print(response.statusCode);
-
         final data = json.decode(response.body);
         final token = data['access']; // or data['refresh'] if needed
 
         // ✅ Save token securely
-        await secureStorage.write(key:'token_local', value: token);
+        await secureStorage.write(key: 'token_local', value: token);
         await _storage.write(key: 'user_type', value: userType);
 
         if (token!.isNotEmpty) {
           getcompanyinfo(context);
-
         } else {
           Navigator.pushNamed(context, 'GoogleSignInPage');
           // Navigator.of(context)
@@ -74,37 +71,34 @@ class LoginpagCubit extends Cubit<LoginpagState> {
       emit(Loginpagerror("Something went wrong: $e"));
     }
   }
+
   Future<void> getcompanyinfo(BuildContext context) async {
-    await Future.delayed(const Duration(milliseconds: 3000)); // ⏳ 2-second delay
+    await Future.delayed(
+        const Duration(milliseconds: 3000)); // ⏳ 2-second delay
 
     final token = await ApiConstants.getTokenOnly(); // ✅ get actual token
     final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
-    final response = await http.get(Uri.parse(url),headers: {
+    final response = await http.get(Uri.parse(url), headers: {
       'Authorization': 'Bearer ${token ?? token2}',
       'Content-Type': 'application/json',
-
     });
-    if(response.statusCode >= 200 && response.statusCode <= 299){
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
       final data = compantonboardingFromJson(response.body);
-      print(data);
 
-      print(token2);
       final email = data.employer!.user!.email;
       await _storage.write(key: 'user_email', value: email);
 
-
-
       if ((data.employer?.companyName ?? "").isNotEmpty) {
         // Navigate to dashboard if company name is empty
-        Navigator.pushReplacementNamed(context,'Dashborad' );
+        Navigator.pushReplacementNamed(context, 'Dashborad');
         // Navigator.pushReplacement(
         //   context,
         //   MaterialPageRoute(builder: (context) => Dashborad()),
         // );
       } else {
-        Navigator.pushNamed(context,'OnboardProfiles' );
+        Navigator.pushNamed(context, 'OnboardProfiles');
 
         // Navigator.pushReplacement(
         //   context,
@@ -126,17 +120,11 @@ class LoginpagCubit extends Cubit<LoginpagState> {
 
       // print("networkurl$networkImage");
 
-
       // emit(CompanyinfoInitial());
       // Future.delayed(Duration(milliseconds: 5000), () {
       //   // Trigger a fake user interaction
       //   emit(CompanyinfoInitial()); // Ensure rebuild (if needed)
       // });
-
-    }else {
-      print("Something Wrong");
-    }
-
+    } else {}
   }
-
 }

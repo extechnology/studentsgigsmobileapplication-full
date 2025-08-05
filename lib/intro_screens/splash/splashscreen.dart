@@ -175,7 +175,7 @@ class _AnimatedSplashLogoState extends State<AnimatedSplashLogo>
                   maxHeight: 200,
                 ),
                 child: Image.asset(
-                  "lib/assets/images/logos/image 1.png",
+                  "assets/images/logos/image 1.png",
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(

@@ -1,5 +1,10 @@
+import 'package:anjalim/intro_screens/onboarding_Screens/onboardingscreen1.dart';
+import 'package:anjalim/intro_screens/onboarding_Screens/onboardingscreen2.dart';
+import 'package:anjalim/intro_screens/optionscreen.dart';
 import 'package:anjalim/intro_screens/splash/splashscreen.dart';
 import 'package:anjalim/intro_screens/welcomescreen.dart';
+import 'package:anjalim/student_Section/authentication/login/loginpage.dart';
+import 'package:anjalim/student_Section/authentication/registration/std_Registration/registration_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -45,9 +50,14 @@ class MyApp extends StatelessWidget {
         "Profileemployer": (context) => const Profileemployer(),
         "Planusagenew": (context) => const Planusagenew(),
         "Companyinfo": (context) => const Companyinfo(),
-        "Registerpage": (context) => Registerpage(),
+        "Registerpage": (context) => const Registerpage(),
         "Spashscreen": (context) => const Spashscreen(),
         "WelcomeScreen": (context) => const Welcomescreen(),
+        "OptionScreen": (context) => const OptionScreen(),
+        "OnboardingScreen1": (context) => const OnboardingScreen1(),
+        "OnboardingScreen2": (context) => const OnboardingScreen2(),
+        "LoginPage": (context) => LoginPage(),
+        "RegisterPage": (context) => RegisterPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -63,7 +73,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('en'), // Add more locales if needed
       ],
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
