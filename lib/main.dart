@@ -5,13 +5,11 @@ import 'package:anjalim/intro_screens/splash/splashscreen.dart';
 import 'package:anjalim/intro_screens/welcomescreen.dart';
 import 'package:anjalim/student_Section/authentication/login/loginpage.dart';
 import 'package:anjalim/student_Section/authentication/registration/std_Registration/registration_screen.dart';
+import 'package:anjalim/student_Section/student_Screens/home_Screens/student_Homescreens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'; // ⬅️ Required for GlobalXxxLocalizations
-import 'intro_screens/onboarding_Screens/onboardingscreen1.dart';
-import 'intro_screens/onboarding_Screens/onboardingscreen2.dart';
-import 'intro_screens/optionscreen.dart';
 import 'mainpage/Loginpage/registerpageog.dart';
 import 'mainpage/Onboardprofile/onboardprofile4/onboardprofile4.dart';
 import 'mainpage/Premiumemployer/premiumemployerpage.dart';
@@ -61,6 +59,7 @@ class MyApp extends StatelessWidget {
         "OnboardingScreen2": (context) => const OnboardingScreen2(),
         "LoginPage": (context) => LoginPage(),
         "RegisterPage": (context) => RegisterPage(),
+        "StudentHomeScreens": (context) => const StudentHomeScreens(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

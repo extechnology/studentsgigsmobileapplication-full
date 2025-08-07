@@ -63,7 +63,7 @@ class SplashView extends StatelessWidget {
 
     switch (userType.toLowerCase()) {
       case 'student':
-        Navigator.pushReplacementNamed(context, 'Dashborad');
+        Navigator.pushReplacementNamed(context, 'StudentHomeScreens');
         break;
       case 'employer':
         Navigator.pushReplacementNamed(context, 'Dashborad');
@@ -84,7 +84,6 @@ class SplashView extends StatelessWidget {
   }
 }
 
-// Separate StatefulWidget for animations only
 class AnimatedSplashLogo extends StatefulWidget {
   final bool isAnimating;
 

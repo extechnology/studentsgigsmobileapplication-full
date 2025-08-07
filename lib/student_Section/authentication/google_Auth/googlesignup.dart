@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:anjalim/mainpage/datapage/datapage.dart';
+import 'package:anjalim/student_Section/services/apiconstant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -25,7 +25,7 @@ class GoogleAuthService {
       }
 
       final response = await http.post(
-        Uri.parse("${ApiConstantsemployer.baseUrl}api/employee/api/google-auth/"),
+        Uri.parse("${ApiConstants.baseUrl}api/employee/api/google-auth/"),
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -95,14 +95,14 @@ class GoogleAuthService {
       BuildContext context, String userType, Map<String, dynamic> userData) {
     switch (userType.toLowerCase()) {
       case 'student':
-        Navigator.of(context).pushReplacementNamed("DashBoard");
+        Navigator.of(context).pushReplacementNamed("StudentHomeScreens");
         break;
       case 'employer':
         Navigator.of(context).pushReplacementNamed("EmployerDashboard");
         break;
-      case 'admin':
-        Navigator.of(context).pushReplacementNamed("AdminDashboard");
-        break;
+      // case 'admin':
+      //   Navigator.of(context).pushReplacementNamed("AdminDashboard");
+      //   break;
       default:
         // Default navigation or onboarding
         Navigator.of(context).pushReplacementNamed("OptionScreen");

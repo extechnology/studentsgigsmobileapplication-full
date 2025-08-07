@@ -63,7 +63,7 @@ class LoginPage extends StatelessWidget {
                 if (state is LoginSuccess) {
                   Navigator.pushReplacementNamed(
                     context,
-                    'DashBoard',
+                    'StudentHomeScreens',
                     arguments: {"userName": userName.text},
                   );
                   _clearForm();

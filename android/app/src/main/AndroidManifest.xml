@@ -9,7 +9,7 @@
 
     <application
         android:requestLegacyExternalStorage="true"
-        android:label="studentsgigs"
+        android:label="Students Gigs"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

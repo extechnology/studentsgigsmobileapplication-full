@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:anjalim/mainpage/datapage/datapage.dart';
+import 'package:anjalim/student_Section/services/apiconstant.dart';
 import 'package:http/http.dart' as http;
 
 class RegisterRepository {
@@ -13,8 +14,7 @@ class RegisterRepository {
   }) async {
     try {
       final response = await http.post(
-
-        Uri.parse("${ApiConstantsemployer.baseUrl}api/employee/user/register/"),
+        Uri.parse("${ApiConstants.baseUrl}api/employee/user/register/"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           "email": email,
@@ -92,8 +92,7 @@ class RegisterRepository {
     try {
       final response = await http
           .post(
-
-            Uri.parse("${ApiConstantsemployer.baseUrl}api/employee/verify-otp/"),
+            Uri.parse("${ApiConstants.baseUrl}api/employee/verify-otp/"),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
               "email": email,
@@ -113,8 +112,7 @@ class RegisterRepository {
   Future<Map<String, dynamic>> resendOTP({required String email}) async {
     try {
       final response = await http.post(
-
-        Uri.parse("${ApiConstantsemployer.baseUrl}api/employee/resend-otp/"),
+        Uri.parse("${ApiConstants.baseUrl}api/employee/resend-otp/"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({"email": email}),
       );
@@ -147,8 +145,7 @@ class RegisterRepository {
     try {
       // Student registration endpoint (removed userType condition)
       final Uri registerUrl =
-
-          Uri.parse("${ApiConstantsemployer.baseUrl}api/employee/user/register/");
+          Uri.parse("${ApiConstants.baseUrl}api/employee/user/register/");
 
       final response = await http.post(
         registerUrl,
