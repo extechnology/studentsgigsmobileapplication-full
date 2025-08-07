@@ -1,11 +1,11 @@
 // login_repository.dart
 import 'dart:convert';
-import 'package:anjalim/mainpage/datapage/datapage.dart';
+import 'package:anjalim/student_Section/services/apiconstant.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class LoginRepository {
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+  FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   static const String _userType = 'student'; // Fixed user type for students
 
   Future<Map<String, dynamic>> loginUser({
@@ -14,7 +14,7 @@ class LoginRepository {
   }) async {
     // Student login endpoint
 
-    final Uri url = Uri.parse("${ApiConstantsemployer.baseUrl}api/employee/api/token/");
+    final Uri url = Uri.parse("${ApiConstants.baseUrl}api/employee/api/token/");
 
     try {
       final response = await http.post(
@@ -31,7 +31,6 @@ class LoginRepository {
         final String accessToken = data['access'];
         final String refreshToken = data['refresh'];
 
-        // Decode JWT (split and decode payload)
         final parts = accessToken.split('.');
         if (parts.length != 3) {
           throw Exception('Invalid token');
