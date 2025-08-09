@@ -141,7 +141,7 @@ class Profileemployer extends StatelessWidget {
 
                          if (token != null) {
                            context.read<LoginCubit>().signOut();
-                           Navigator.pushNamed(context,'Registerpage' );
+                           Navigator.pushReplacementNamed(context,'OptionScreen' );
                            // Navigator.pushReplacement(
                            //   context,
                            //   MaterialPageRoute(builder: (_) => Registerpage()),

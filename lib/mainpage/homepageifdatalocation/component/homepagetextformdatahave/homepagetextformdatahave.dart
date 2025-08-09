@@ -380,15 +380,36 @@ class Homepagetextformdatahave extends StatelessWidget {
                         onTap: () async {
                           final usageData = await cubit.fetchPlanUsage();
                           final usage = usageData?['usage'];
-                          final profileAccess = usage?['profile_access'] ?? false;
+                          final profileAccess = usage?['profile_access'] ?? true;
 
                           if (!profileAccess) {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) => Premiumemployerpage()))
-                                .then((_) {
-                              cubit.clearPlanUsageCache();
-                              cubit.fetchPlanUsage();
-                            });
+                            final shouldNavigate = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text("Upgrade Required"),
+                                content: const Text("You need a premium plan to view this profile. Do you want to upgrade now?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).pop(false),
+                                    child: const Text("Cancel"),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () => Navigator.of(context).pop(true),
+                                    child: const Text("Upgrade"),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (shouldNavigate == true) {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) => Premiumemployerpage()))
+                                  .then((_) {
+                                cubit.clearPlanUsageCache();
+                                cubit.fetchPlanUsage();
+                              });
+                            }
+
                             return;
                           }
 
@@ -397,8 +418,7 @@ class Homepagetextformdatahave extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  Homepagedetailpage(id: item.user),
+                              builder: (_) => Homepagedetailpage(id: item.user),
                             ),
                           );
 

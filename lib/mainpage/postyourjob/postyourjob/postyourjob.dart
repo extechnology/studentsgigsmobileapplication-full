@@ -46,6 +46,12 @@ class _PostyourjobState extends State<Postyourjob> {
   BlocListener<PostyourjobCubit, PostyourjobState>(
     listener: (context, state) {
       if (state is PostyourjobLoading) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Loading....."),
+            backgroundColor: Colors.green,
+          ),
+        );
         // Optionally show a loading spinner
       } else if (state is PostyourjobSuccess) {
         showDialog(
