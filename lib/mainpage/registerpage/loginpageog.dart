@@ -49,7 +49,34 @@ class _RegisterpageState extends State<Registerpage> {
       ],
       child: Scaffold(
         backgroundColor: Color(0xffF9F2ED),
-        body: SingleChildScrollView(
+        body: BlocListener<ResetpasswordCubit, ResetpasswordState>(
+          listener: (context, state) {
+
+            if (state is ResetpasswordIoaded) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            }
+            else if (state is ResetpasswordIoading) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Loading....."),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            }else if (state is Resetpassworderror) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+  child: SingleChildScrollView(
           child: BlocConsumer<LoginCubit, LoginState>(
             listener: (context, state) {
               if (state is LoginError && !state.message.contains('canceled')) {
@@ -1073,6 +1100,7 @@ class _RegisterpageState extends State<Registerpage> {
             },
           ),
         ),
+),
       ),
     );
   }

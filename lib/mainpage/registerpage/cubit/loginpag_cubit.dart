@@ -26,8 +26,21 @@ class LoginpagCubit extends Cubit<LoginpagState> {
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   static const String userType = "employer";
 
-  Future<void> loginUser(
-      BuildContext context, String name, String password) async {
+  Future<void> loginUser( BuildContext context,String name, String password) async {
+    // print("hey its working");
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(width: 20),
+            Text("Please wait, logging in..."),
+          ],
+        ),
+      ),
+    );
     emit(LoginpagIoading());
 
     try {
@@ -39,18 +52,25 @@ class LoginpagCubit extends Cubit<LoginpagState> {
         },
       );
 
+
       if (response.statusCode == 200) {
+        // print(response.statusCode);
+
         final data = json.decode(response.body);
         final token = data['access']; // or data['refresh'] if needed
-
+        // print(token);
         // ✅ Save token securely
-
-        await secureStorage.write(key: 'access_token', value: token);
+        await secureStorage.write(key:'access_token', value: token);
         await _storage.write(key: 'user_type', value: userType);
 
         if (token!.isNotEmpty) {
           getcompanyinfo(context);
+
+
         } else {
+          Navigator.pop(context); // ✅ Close the loading dialog
+
+
           Navigator.pushNamed(context, 'GoogleSignInPage');
           // Navigator.of(context)
           //     .push(MaterialPageRoute(builder: (context) => GoogleSignInPage()));
@@ -58,6 +78,8 @@ class LoginpagCubit extends Cubit<LoginpagState> {
 
         emit(LoginpagIoaded());
       } else {
+        Navigator.pop(context); // ✅ Close the loading dialog
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Check Password"),
@@ -72,35 +94,41 @@ class LoginpagCubit extends Cubit<LoginpagState> {
       emit(Loginpagerror("Something went wrong: $e"));
     }
   }
-
   Future<void> getcompanyinfo(BuildContext context) async {
-    await Future.delayed(
-        const Duration(milliseconds: 3000)); // ⏳ 2-second delay
+    await Future.delayed(const Duration(milliseconds: 3000)); // ⏳ 2-second delay
 
     final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
-    // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+    // final token2 = await ApiConstantsemployer.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
-    final response = await http.get(Uri.parse(url), headers: {
-
-      'Authorization': 'Bearer $token',
+    final response = await http.get(Uri.parse(url),headers: {
+      'Authorization': 'Bearer ${token}',
       'Content-Type': 'application/json',
-    });
-    if (response.statusCode >= 200 && response.statusCode <= 299) {
-      final data = compantonboardingFromJson(response.body);
 
+    });
+    if(response.statusCode >= 200 && response.statusCode <= 299){
+      final data = compantonboardingFromJson(response.body);
+      // print(data);
+
+      // print(token2);
       final email = data.employer!.user!.email;
       await _storage.write(key: 'user_email', value: email);
 
+
+
       if ((data.employer?.companyName ?? "").isNotEmpty) {
         // Navigate to dashboard if company name is empty
-        Navigator.pushReplacementNamed(context, 'Dashborad');
+        Navigator.pop(context); // ✅ Close the loading dialog
+
+        Navigator.pushReplacementNamed(context,'Dashborad' );
         // Navigator.pushReplacement(
         //   context,
         //   MaterialPageRoute(builder: (context) => Dashborad()),
         // );
       } else {
-        Navigator.pushNamed(context, 'OnboardProfiles');
+        Navigator.pop(context); // ✅ Close the loading dialog
+
+        Navigator.pushReplacementNamed(context,'OnboardProfiles' );
 
         // Navigator.pushReplacement(
         //   context,
@@ -122,11 +150,17 @@ class LoginpagCubit extends Cubit<LoginpagState> {
 
       // print("networkurl$networkImage");
 
+
       // emit(CompanyinfoInitial());
       // Future.delayed(Duration(milliseconds: 5000), () {
       //   // Trigger a fake user interaction
       //   emit(CompanyinfoInitial()); // Ensure rebuild (if needed)
       // });
-    } else {}
+
+    }else {
+      // print("Something Wrong");
+    }
+
   }
+
 }

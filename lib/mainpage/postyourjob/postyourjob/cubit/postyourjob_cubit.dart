@@ -320,11 +320,36 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     final jobPostingLimit = int.tryParse(usageData['plan']['job_posting'] ?? '0') ?? 0;
 
     if (!canPostJob || jobPostingLimit <= 0) {
-      Navigator.pushNamed(context,'Premiumemployerpage' );
-      // Navigator.of(context)
-      //     .push(MaterialPageRoute(builder: (context) => Premiumemployerpage()));
+      final shouldNavigate = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Upgrade Required"),
+          content: const Text("You have reached your job posting limit. Would you like to upgrade your plan?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text("Upgrade"),
+            ),
+          ],
+        ),
+      );
+
+      if (shouldNavigate == true) {
+        Navigator.pushNamed(context, 'Premiumemployerpage');
+      }
+
       return;
     }
+    // if (!canPostJob || jobPostingLimit <= 0) {
+    //   Navigator.pushNamed(context,'Premiumemployerpage' );
+    //   // Navigator.of(context)
+    //   //     .push(MaterialPageRoute(builder: (context) => Premiumemployerpage()));
+    //   return;
+    // }
     resetValidation();
 
     bool isValid = true;
@@ -339,9 +364,9 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
 
     }
     if (categoryController.text.trim().isEmpty) {
-       isCategoryValid = false;
-       emit(Postyourpost()); // ← add this line
-       scrollToField(categoryKey);
+      isCategoryValid = false;
+      emit(Postyourpost()); // ← add this line
+      scrollToField(categoryKey);
       isValid = false;
 
 
@@ -398,8 +423,8 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     final uri = Uri.parse(
         Online
 
-        ? "$baseurl/api/employer/online-job-info/"
-        :  "$baseurl/api/employer/offline-job-info/"
+            ? "$baseurl/api/employer/online-job-info/"
+            :  "$baseurl/api/employer/offline-job-info/"
 
     );
 
@@ -407,13 +432,13 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     try {
 
       final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
-      // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
+      // final token2 = await ApiConstantsemployer.getTokenOnly2(); // ✅ get actual token
 
       final request = http.MultipartRequest('POST', uri);
 
       // 👇 Replace with your actual token
 
-      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Authorization'] = 'Bearer ${token}';
 
       request.fields['job_title'] = jobTitleController.text.trim();
       request.fields['category'] = categoryController.text.trim();
@@ -444,17 +469,18 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
         );
 
         // ✅ Reset all validation flags if needed
-        print("success");
+        // print("success");
         emit(PostyourjobSuccess());
       } else {
-        print("fail");
+        // print("fail");
         emit(PostyourjobFailure(error: 'Server Error: ${response.statusCode}'));
       }
     } catch (e) {
-      print("fail");
+      // print("fail");
       emit(PostyourjobFailure(error: 'Exception: $e'));
     }
   }
+
 
   @override
   Future<void> close() {

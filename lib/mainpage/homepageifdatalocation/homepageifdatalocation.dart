@@ -122,31 +122,50 @@ class Homepageifdatalocation extends StatelessWidget {
                                         final profileAccess = usage?['profile_access'] ?? false;
 
                                         if (!profileAccess) {
-                                          Navigator.of(context)
-                                              .push(MaterialPageRoute(builder: (context) => Premiumemployerpage()))
-                                              .then((_) {
-                                            cubit.clearPlanUsageCache();
-                                            cubit.fetchPlanUsage();
-                                          });
+                                          final shouldNavigate = await showDialog<bool>(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              title: const Text("Premium Required"),
+                                              content: const Text("You need a premium plan to view this profile. Do you want to upgrade now?"),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(false),
+                                                  child: const Text("Cancel"),
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed: () => Navigator.of(context).pop(true),
+                                                  child: const Text("Upgrade"),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+
+                                          if (shouldNavigate == true) {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(builder: (context) => Premiumemployerpage()))
+                                                .then((_) {
+                                              cubit.clearPlanUsageCache();
+                                              cubit.fetchPlanUsage();
+                                            });
+                                          }
+
                                           return;
                                         }
 
                                         final employeeId = item["user"]?.toString();
                                         if (employeeId == null) {
                                           ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(content: Text("Invalid employee ID")),
+                                            const SnackBar(content: Text("Invalid employee ID")),
                                           );
                                           return;
                                         }
-                                        final userId = item["user"];
-                                        if (userId != null) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (_) => Homepagedetailpage(id: userId),
-                                            ),
-                                          );
-                                        }
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => Homepagedetailpage(id: item["user"]),
+                                          ),
+                                        );
 
                                         Future.microtask(() {
                                           cubit.postVisitedCount(employeeId);
@@ -155,8 +174,8 @@ class Homepageifdatalocation extends StatelessWidget {
                                       child: customBox(
                                         imageurl: "${item["profile"] ?? ""}",
                                         name: "${item["name"]}",
-                                        carrier: '${item["job_title"]}',
-                                        location: '${item["preferred_work_location"]}',
+                                        carrier: "${item["job_title"]}",
+                                        location: "${item["preferred_work_location"]}",
                                         context: context,
                                       ),
                                     );
