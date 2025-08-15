@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -25,7 +27,23 @@ class LoginpagCubit extends Cubit<LoginpagState> {
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   static const String userType = "employer";
+  late StreamSubscription<InternetStatus> _connectionSubscription;
+  bool isConnected = true;
+  void _monitorConnection() async {
+    // Immediate check on start
+    isConnected = await InternetConnection().hasInternetAccess;
+    if (!isConnected) {
+      emit(LoginpagInitial());
+    }
 
+    // Listen for future changes
+    _connectionSubscription = InternetConnection().onStatusChange.listen((status) {
+      isConnected = (status == InternetStatus.connected);
+      if (!isConnected) {
+        emit(LoginpagInitial());
+      }
+    });
+  }
   Future<void> loginUser( BuildContext context,String name, String password) async {
     // print("hey its working");
     showDialog(
@@ -91,6 +109,15 @@ class LoginpagCubit extends Cubit<LoginpagState> {
         emit(Loginpagerror("Invalid credentials"));
       }
     } catch (e) {
+      _monitorConnection();
+      Navigator.pop(context); // ✅ Close the loading dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:isConnected ? Text("Something went wrong: "): Text("Oops! We couldn’t load right now. \n Please check your network availability."),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
       emit(Loginpagerror("Something went wrong: $e"));
     }
   }

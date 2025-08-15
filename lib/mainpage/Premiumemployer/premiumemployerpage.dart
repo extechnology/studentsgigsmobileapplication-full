@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../widgets/neterror.dart';
 import 'cubit2/premium_cubit.dart';
 import 'cubit3/razerpay_cubit.dart';
 import 'model/model.dart';
@@ -18,251 +19,256 @@ class Premiumemployerpage extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     return MultiBlocProvider(
-  providers: [
-    BlocProvider(
-      create: (context) => PrrmiumemployerCubit()..fetchPlans(),
-    ),
-    BlocProvider(
-      create: (context) => PremiumCubit()..fetchPremiumPlan(),
-    ),
-    BlocProvider(
-      create: (context) => PaymentCubit(), // ✅ Added for Razorpay
-    ),
-  ],
-        child: BlocConsumer<PaymentCubit, PaymentState>(
-            listener: (context, paymentState) {
-              if (paymentState is PaymentError || paymentState is PaymentVerificationFailed) {
-                final message = paymentState is PaymentError
-                    ? paymentState.message
-                    : (paymentState as PaymentVerificationFailed).message;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(message), backgroundColor: Colors.red),
-                );
-              }
+      providers: [
+        BlocProvider(
+          create: (context) => PrrmiumemployerCubit()..fetchPlans(),
+        ),
+        BlocProvider(
+          create: (context) => PremiumCubit()..fetchPremiumPlan(),
+        ),
+        BlocProvider(
+          create: (context) => PaymentCubit(), // ✅ Added for Razorpay
+        ),
+      ],
+      child: BlocConsumer<PaymentCubit, PaymentState>(
+          listener: (context, paymentState) {
+            if (paymentState is PaymentError || paymentState is PaymentVerificationFailed) {
+              final message = paymentState is PaymentError
+                  ? paymentState.message
+                  : (paymentState as PaymentVerificationFailed).message;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message), backgroundColor: Colors.red),
+              );
+            }
 
-              if (paymentState is PaymentExternalWalletSelected) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Selected wallet: ${paymentState.walletName}")),
-                );
-              }
+            if (paymentState is PaymentExternalWalletSelected) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Selected wallet: ${paymentState.walletName}")),
+              );
+            }
 
-              if (paymentState is PaymentSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Payment Successful!")));
-                // ✅ FETCH THE LATEST PLAN
-                context.read<PremiumCubit>().fetchPremiumPlan();
-              }
-            },
-            builder: (context, paymentState) {
-              return
-                BlocBuilder<PrrmiumemployerCubit, PrrmiumemployerState>(
-                  builder: (context, state) {
-                    final cubit = context.read<PrrmiumemployerCubit>();
-                    return Scaffold(
-                      backgroundColor: const Color(0xffF9F2ED),
-                      body: SafeArea(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              bottom: MediaQuery
-                                  .of(context)
-                                  .viewInsets
-                                  .bottom + height * 0.1,
-                              right: width * 0.05,
-                              left: width * 0.05,
-                              top: MediaQuery
-                                  .of(context)
-                                  .viewInsets
-                                  .top + height * 0.003,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: height * 0.002),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    width: width * 0.15,   // 15% of screen width
-                                    height: height * 0.07, // 7%
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: const Color(0xffE3E3E3)),
-                                      color: const Color(0xffF9F2ED),
-                                    ),
-                                    child:  Center(
-                                      child: Icon(
-                                          Icons.arrow_back, color: Colors.black,
-                                        size: width * 0.06, // 6% of screen width ≈ 24 on 400px-wide screen
-                                      ),
-                                    ),
+            if (paymentState is PaymentSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Payment Successful!")));
+              // ✅ FETCH THE LATEST PLAN
+              context.read<PremiumCubit>().fetchPremiumPlan();
+            }
+          },
+          builder: (context, paymentState) {
+            return
+              BlocBuilder<PrrmiumemployerCubit, PrrmiumemployerState>(
+                builder: (context, state) {
+                  final cubit = context.read<PrrmiumemployerCubit>();
+                  return Scaffold(
+                    backgroundColor: const Color(0xffF9F2ED),
+                    body: SafeArea(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery
+                                .of(context)
+                                .viewInsets
+                                .bottom + height * 0.1,
+                            right: width * 0.05,
+                            left: width * 0.05,
+                            top: MediaQuery
+                                .of(context)
+                                .viewInsets
+                                .top + height * 0.003,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: height * 0.002),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  width: width * 0.15,   // 15% of screen width
+                                  height: height * 0.07, // 7%
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        color: const Color(0xffE3E3E3)),
+                                    color: const Color(0xffF9F2ED),
                                   ),
-                                ),
-                                ShaderMask(
-                                  shaderCallback: (Rect bounds) {
-                                    return const LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Color(0xffEB8125),
-                                        Color(0xffc55a5f),
-                                        Color(0xff004673),
-                                      ],
-                                    ).createShader(bounds);
-                                  },
-                                  blendMode: BlendMode.srcIn,
                                   child:  Center(
-                                    child: SizedBox(
-                                      width: width * 0.75,
-                                      child: Text(
-                                        "Upgrade Your Job Posting Experience",
-                                        style: TextStyle(
-                                          fontFamily: "Poppins",
-                                          fontSize: width * 0.06, // 6% of screen width (adjust as needed)
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.5,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
+                                    child: Icon(
+                                      Icons.arrow_back, color: Colors.black,
+                                      size: width * 0.06, // 6% of screen width ≈ 24 on 400px-wide screen
                                     ),
                                   ),
                                 ),
-                                 Center(
-                                  child: Text(
-                                    'Engage the most talented candidates with our premium\nfeatures',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'Sora',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize:  width * 0.025, // ≈ 10 for 400px width
-                                      height: 1.7,
-                                      letterSpacing: 0,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Container(
-                                  child:
-                                  BlocBuilder<PremiumCubit, PremiumState>(
-                                    builder: (context, state) {
-                                      if (state is PremiumLoading) {
-                                        return CircularProgressIndicator();
-                                      } else if (state is PremiumLoaded) {
-                                        return
-                                          Center(
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: width * 0.04,
-                                                vertical: height * 0.015,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.circular(20),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black12,
-                                                    blurRadius: 10,
-                                                    offset: Offset(0, 4),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  // Green dot
-                                                  Container(
-                                                    width: width * 0.03,  // around 12px on 400px wide screen
-                                                    height: width * 0.03,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.greenAccent,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: width * 0.02),
-                                                  // Texts
-                                                  Text(
-                                                    "Current Plan: ",
-                                                    style: TextStyle(
-                                                      fontSize: width * 0.025, // ~16px
-                                                      color: Color(0xFF1F2937), // dark grayish
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    state.premium.plan.name!.toUpperCase(),
-                                                    style: TextStyle(
-                                                      fontSize: width * 0.025, // ~16px
-                                                      color: Colors.pinkAccent,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    overflow: TextOverflow.ellipsis,
-
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );                                      } else if (state is PremiumError) {
-                                        return Text("Error: ${state.message}");
-                                      } else {
-                                        return SizedBox(); // or Text("No data loaded yet")
-                                      }
-                                    },
-                                  )
-                                  ,
-                                ),
-                                            
-                                if (state is PrrmiumemployerIoading) ...[
-                                  const Center(
-                                      child: CircularProgressIndicator()),
-                                ] else
-                                  if (state is PrrmiumemployerIoaded) ...[
-                                    SizedBox(
-                                      height: height * 0.85, // Approx. 700 on 820px height screens
-                                      width: double.infinity,
-                                      child: PageView.builder(
-                                        controller: controller,
-                                        itemCount: state.plans.length,
-                                        itemBuilder: (context, index) {
-                                          final plan = state.plans[index];
-                                          return _buildPlanCard(plan, context);
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(height: height * 0.02), // roughly equals 16 on an 800px screen
-                                    Center(
-                                      child: SmoothPageIndicator(
-                                        controller: controller,
-                                        count: state.plans.length,
-                                        effect: ExpandingDotsEffect(
-                                          activeDotColor: const Color(
-                                              0xffEB8125),
-                                          dotColor: Colors.grey.shade400,
-                                          dotHeight: 8,
-                                          dotWidth: 8,
-                                          expansionFactor: 3,
-                                        ),
-                                      ),
-                                    ),
-                                  ] else
-                                    if (state is PrrmiumemployerError) ...[
-                                      Center(child: Text(state.message)),
+                              ),
+                              ShaderMask(
+                                shaderCallback: (Rect bounds) {
+                                  return const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color(0xffEB8125),
+                                      Color(0xffc55a5f),
+                                      Color(0xff004673),
                                     ],
-                                            
+                                  ).createShader(bounds);
+                                },
+                                blendMode: BlendMode.srcIn,
+                                child:  Center(
+                                  child: SizedBox(
+                                    width: width * 0.75,
+                                    child: Text(
+                                      "Upgrade Your Job Posting Experience",
+                                      style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: width * 0.06, // 6% of screen width (adjust as needed)
+                                        fontWeight: FontWeight.w700,
+                                        height: 1.5,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  'Engage the most talented candidates with our premium\nfeatures',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'Sora',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize:  width * 0.025, // ≈ 10 for 400px width
+                                    height: 1.7,
+                                    letterSpacing: 0,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Container(
+                                child:
+                                BlocBuilder<PremiumCubit, PremiumState>(
+                                  builder: (context, state) {
+                                    final cubit1 = context.read<PremiumCubit>();
+                                    if (state is PremiumLoading) {
+                                      return CircularProgressIndicator();
+                                    } else if (state is PremiumLoaded) {
+                                      return
+                                        Center(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: width * 0.04,
+                                              vertical: height * 0.015,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(20),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black12,
+                                                  blurRadius: 10,
+                                                  offset: Offset(0, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                // Green dot
+                                                Container(
+                                                  width: width * 0.03,  // around 12px on 400px wide screen
+                                                  height: width * 0.03,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.greenAccent,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                                SizedBox(width: width * 0.02),
+                                                // Texts
+                                                Text(
+                                                  "Current Plan: ",
+                                                  style: TextStyle(
+                                                    fontSize: width * 0.025, // ~16px
+                                                    color: Color(0xFF1F2937), // dark grayish
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  state.premium.plan.name!.toUpperCase(),
+                                                  style: TextStyle(
+                                                    fontSize: width * 0.025, // ~16px
+                                                    color: Colors.pinkAccent,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  overflow: TextOverflow.ellipsis,
 
-                              ],
-                            ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                    } else if (state is PremiumError) {
+
+                                      return  cubit1.isConnected?
+                                      Center(child: Text(" ${state.message}"))
+                                          : NoInternetWidget();
+                                    } else {
+                                      return SizedBox(); // or Text("No data loaded yet")
+                                    }
+                                  },
+                                )
+                                ,
+                              ),
+
+                              if (state is PrrmiumemployerIoading) ...[
+                                const Center(
+                                    child: CircularProgressIndicator()),
+                              ] else
+                                if (state is PrrmiumemployerIoaded) ...[
+                                  SizedBox(
+                                    height: height * 0.85, // Approx. 700 on 820px height screens
+                                    width: double.infinity,
+                                    child: PageView.builder(
+                                      controller: controller,
+                                      itemCount: state.plans.length,
+                                      itemBuilder: (context, index) {
+                                        final plan = state.plans[index];
+                                        return _buildPlanCard(plan, context);
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(height: height * 0.02), // roughly equals 16 on an 800px screen
+                                  Center(
+                                    child: SmoothPageIndicator(
+                                      controller: controller,
+                                      count: state.plans.length,
+                                      effect: ExpandingDotsEffect(
+                                        activeDotColor: const Color(
+                                            0xffEB8125),
+                                        dotColor: Colors.grey.shade400,
+                                        dotHeight: 8,
+                                        dotWidth: 8,
+                                        expansionFactor: 3,
+                                      ),
+                                    ),
+                                  ),
+                                ] else
+                                  if (state is PrrmiumemployerError) ...[
+                                    Center(child: Text(state.message)),
+                                  ],
+
+
+                            ],
                           ),
                         ),
                       ),
-                    );
-                  },
-                );
-
-            } ),
-
+                    ),
+                  );
+                },
               );
+
+          } ),
+
+    );
   }
 
 
@@ -316,8 +322,8 @@ class Premiumemployerpage extends StatelessWidget {
               ),
             )
                 : Container(
-                    height: MediaQuery.of(context).size.height * 0.04,
-                    width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.04,
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: getPlanColor(plan.color!),
                 borderRadius: const BorderRadius.only(
@@ -326,30 +332,30 @@ class Premiumemployerpage extends StatelessWidget {
                 ),
               ),
 
-                ),
+            ),
 
             Padding(
               padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
               child:
               Text(
-                  plan.name!.toUpperCase(),
-                  style:  TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.045 ,
-                    fontFamily: 'Sora', // 👈 Apply Sora font
-                    fontWeight: FontWeight.w600, // or w700 for bold
+                plan.name!.toUpperCase(),
+                style:  TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.045 ,
+                  fontFamily: 'Sora', // 👈 Apply Sora font
+                  fontWeight: FontWeight.w600, // or w700 for bold
 
-                    color: Colors.black,
-                  ),
+                  color: Colors.black,
                 ),
+              ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01), // ~8 if height is around 800
-             Padding(
-               padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
-               child: Text(
-                 "${plan.price == '0' ? 'Free' : 'Rs.${plan.price}'}",
-                  style: const TextStyle(fontSize: 18, color: Colors.black,fontWeight: FontWeight.bold ),
-                ),
-             ),
+            Padding(
+              padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
+              child: Text(
+                "${plan.price == '0' ? 'Free' : 'Rs.${plan.price}'}",
+                style: const TextStyle(fontSize: 18, color: Colors.black,fontWeight: FontWeight.bold ),
+              ),
+            ),
             const Divider(color: Colors.white60),
             Expanded(
               child: ListView.builder(

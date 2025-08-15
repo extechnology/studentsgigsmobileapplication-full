@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
+import 'package:html_unescape/html_unescape.dart';
 import 'dart:io' as io show File, Directory;
 import 'package:path/path.dart' as path;
 
@@ -15,6 +16,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart'as http;
+import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
 
 import '../../../Premiumemployer/premiumemployerpage.dart';
 import '../../../datapage/datapage.dart';
@@ -309,6 +311,11 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     required GlobalKey maxAgeKey,
     required GlobalKey amount,}) async
   {
+    final deltaJson = quillController.document.toDelta().toJson();
+    final converter = QuillDeltaToHtmlConverter(deltaJson);
+    final html = converter.convert();
+    var unescape = HtmlUnescape();
+
     final usageData = await fetchPlanUsage();
 
     if (usageData == null) {
@@ -447,7 +454,10 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
       request.fields['preferred_academic_courses'] = preferredacademicController.text.trim();
       request.fields['pay_structure'] = amountcontroller.text.trim();
       request.fields['salary_type'] = compensationController.text.trim();
-      request.fields['job_description'] = quillController.document.toPlainText().trim();
+      request.fields['job_description']  = unescape.convert(html.trim());
+
+      // request.fields['job_description'] = quillController.document.toPlainText().trim();
+
       request.fields['job_location'] = locationController.text.trim();
 
       final response = await request.send();

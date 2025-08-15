@@ -17,17 +17,35 @@ class Dashborad extends StatefulWidget {
 }
 
 class _DashboradState extends State<Dashborad> {
-
+  late String? searchText;
   @override
+  void initState() {
+    super.initState();
+    searchText = widget.initialSearchText;
+  }
+
+  void resetSearch() {
+    setState(() {
+      searchText = null;
+    });
+  }
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
         backgroundColor: Color(0xffF9F2ED),
         bottomNavigationBar: Container(
           color: Color(0xffF9F2ED),
-          height: 70,
-          child: const TabBar(
+          height:  screenHeight * 0.085,
+          child:  TabBar(
+            onTap: (index) {
+              if (index == 0) {
+                // Home tab clicked, reset the search and show default homepage
+                resetSearch();
+              }
+            },
             tabs: [
               Tab(icon: Icon(Icons.home), text: "Home"),
               Tab(icon: Icon(Icons.work_outline ), text: "Posted"),
@@ -42,10 +60,10 @@ class _DashboradState extends State<Dashborad> {
         ),
         body: TabBarView(
           children: [
-            (widget.initialSearchText == null || widget.initialSearchText!.trim().isEmpty)
+            (searchText == null || searchText!.trim().isEmpty)
                 ? const Homepageifdatalocation()
                 : Homepagetextformdatahave(
-              searchText: widget.initialSearchText!.trim(),
+              searchText: searchText!.trim(),
             ),
             Postedgigs(),
             Postyourjob(),

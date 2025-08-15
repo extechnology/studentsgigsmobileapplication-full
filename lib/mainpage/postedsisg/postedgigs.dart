@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../datapage/datapage.dart';
+import '../widgets/neterror.dart';
 import 'components/postjobgigsdetailpage/postjobgigsdetailpage.dart';
 import 'cubit/getpostjob_cubit.dart';
 import 'cubit2/delete_cubit.dart';
@@ -47,31 +48,15 @@ class Postedgigs extends StatelessWidget {
                   buildFieldTitle("Posted Gigs",width,height),
                   SizedBox(height: height * 0.015,),
                   if (state is GetpostjobIoading)
-                    Center(child: SizedBox())
+                    Center(child: CircularProgressIndicator())
                   else if (state is Getpostjoberror)
-                    Text(state.message)
+                    const NoInternetWidget(
+
+                    )
                   else if (state is GetpostjobIoaded)
-                    if(state.jobs.isEmpty)
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "No jobs found......",
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                          SizedBox(height: 8),
-                          // ElevatedButton(
-                          //   onPressed: () {
-                          //     // Navigate to Add Job page or show dialog
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(builder: (_) => AddJobPage()), // 👈 Your add job page
-                          //     );
-                          //   },
-                          //   child: Text("Add Job"),
-                          // )
-                        ],
-                      )else
+                      if (state.jobs.isEmpty)
+                        buildEmptyState(context)
+                    else
 
                       ListView.builder(
                     shrinkWrap: true,
@@ -396,3 +381,54 @@ Widget buildFieldTitle(String title, double width,double height ) {
   );
 }
 
+Widget buildEmptyState(BuildContext context) {
+  return Center(
+    child: Container(
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.work_off_rounded,
+            size: 64,
+            color: Colors.orange[300],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            "You Haven’t Posted Any Jobs",
+            textAlign: TextAlign.center,
+
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey[800],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Post a job now to attract skilled employees and grow your company team.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.4,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    ),
+  );
+}
