@@ -5,9 +5,18 @@ import 'package:anjalim/intro_screens/splash/splashscreen.dart';
 import 'package:anjalim/intro_screens/welcomescreen.dart';
 import 'package:anjalim/student_Section/authentication/login/loginpage.dart';
 import 'package:anjalim/student_Section/authentication/registration/std_Registration/registration_screen.dart';
+import 'package:anjalim/student_Section/services/singlesearch.dart';
+import 'package:anjalim/student_Section/student_Screens/home_Screens/std_Searchscreens/SearchScreen1.dart';
+import 'package:anjalim/student_Section/student_Screens/home_Screens/std_Searchscreens/searchscreen2.dart';
 import 'package:anjalim/student_Section/student_Screens/home_Screens/student_Homescreens.dart';
+import 'package:anjalim/student_Section/student_Screens/profile_Screens/categoriesed.dart';
+import 'package:anjalim/student_Section/student_Screens/profile_Screens/technicalSkill.dart';
+import 'package:anjalim/student_Section/student_Screens/profile_Screens/updateprofile.dart';
+import 'package:anjalim/student_Section/student_Screens/profile_Screens/workPreference.dart';
+import 'package:anjalim/student_Section/student_blocs/search/search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'; // ⬅️ Required for GlobalXxxLocalizations
 import 'mainpage/Loginpage/registerpageog.dart';
@@ -28,7 +37,16 @@ void main() {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Allow only portrait mode
   ]).then((_) {
-    runApp(const MyApp());
+    runApp(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<SearchBloc>(
+            create: (context) => SearchBloc(SearchService()),
+          )
+        ],
+        child: const MyApp(),
+      ),
+    );
   });
 }
 
@@ -60,6 +78,12 @@ class MyApp extends StatelessWidget {
         "LoginPage": (context) => LoginPage(),
         "RegisterPage": (context) => RegisterPage(),
         "StudentHomeScreens": (context) => const StudentHomeScreens(),
+        "SearchScreen1": (context) => SearchScreen1(),
+        "SearchScreen2": (context) => const SearchScreen2(),
+        "ProfileEditScreen": (context) => const ProfileEditScreen(),
+        "WorkPreference": (context) => StudentWorkPreference(),
+        "CategoryDropdownFormField": (context) => CategoryDropdownFormField(),
+        "Technicalskill": (context) => const Technicalskill(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

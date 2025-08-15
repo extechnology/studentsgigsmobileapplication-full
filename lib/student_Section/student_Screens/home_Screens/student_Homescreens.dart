@@ -1,6 +1,7 @@
 import 'package:anjalim/student_Section/student_Screens/home_Screens/homepage.dart';
 import 'package:anjalim/student_Section/student_Screens/home_Screens/profilescreen.dart';
 import 'package:anjalim/student_Section/student_Screens/home_Screens/saved_JobScreen.dart';
+import 'package:anjalim/student_Section/student_Screens/home_Screens/std_Searchscreens/SearchScreen1.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,10 +18,8 @@ class _DashBoardState extends State<StudentHomeScreens>
 
   final List<Widget> _screens = [
     const EmployeeHome(),
-    const EmployeeHome(),
-    //SearchScreen1(),
+    const SearchScreen1(),
     const SavedJobScreen(),
-
     const ProfileScreen(),
   ];
 
