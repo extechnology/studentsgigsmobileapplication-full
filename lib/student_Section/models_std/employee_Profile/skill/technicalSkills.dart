@@ -1,16 +1,16 @@
-class TechnicalSkill {
+class TechnicalSkills {
   final int id;
   final String skills;
   final String level;
 
-  TechnicalSkill({
+  TechnicalSkills({
     required this.id,
     required this.skills,
     required this.level,
   });
 
-  factory TechnicalSkill.fromJson(Map<String, dynamic> json) {
-    return TechnicalSkill(
+  factory TechnicalSkills.fromJson(Map<String, dynamic> json) {
+    return TechnicalSkills(
       id: json['id'] ?? '',
       skills: json['technical_skill'] ?? '',
       level: json['technical_level'] ?? '',
