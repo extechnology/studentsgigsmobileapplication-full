@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import '../../../../datapage/datapage.dart';
@@ -16,9 +19,27 @@ class SearchclassCubit extends Cubit<SearchclassState> {
   List<Map<String, dynamic>> filteredData = [];
   final String baseurl = ApiConstantsemployer.baseUrl;
 
+  late StreamSubscription<InternetStatus> _connectionSubscription;
+  bool isConnected = true;
+  void _monitorConnection() async {
+    // Immediate check on start
+    isConnected = await InternetConnection().hasInternetAccess;
+    if (!isConnected) {
+      emit(SearchclassInitial());
+    }
 
+    // Listen for future changes
+    _connectionSubscription = InternetConnection().onStatusChange.listen((status) {
+      isConnected = (status == InternetStatus.connected);
+      if (!isConnected) {
+        emit(SearchclassInitial());
+      }
+    });
+  }
   Future<void> getFunction() async {
     emit(SearchclassLoading());
+    _monitorConnection();
+
 
     final url = "$baseurl/api/employer/category-and-title-view/";
     final response = await http.get(Uri.parse(url));

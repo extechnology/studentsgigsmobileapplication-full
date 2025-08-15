@@ -39,7 +39,7 @@ class PrrmiumemployerCubit extends Cubit<PrrmiumemployerState> {
         emit(PrrmiumemployerError("Failed with status: ${response.statusCode}"));
       }
     } catch (e) {
-      emit(PrrmiumemployerError("Error: $e"));
+      emit(PrrmiumemployerError(""));
     }
   }
 

@@ -29,7 +29,7 @@ class ForgetCubit extends Cubit<ForgetState> {
         emit(ForgetError("Failed: ${response.body}"));
       }
     } catch (e) {
-      emit(ForgetError("Error: ${e.toString()}"));
+      emit(ForgetError("Server error"));
     }
   }
 }

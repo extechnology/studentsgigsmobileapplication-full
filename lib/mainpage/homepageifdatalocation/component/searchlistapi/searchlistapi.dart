@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../dashborad/dashborad.dart';
+import '../../../widgets/neterror.dart';
 import '../homepagetextformdatahave/cubit/homepagetextformdatahave_cubit.dart';
 import '../homepagetextformdatahave/homepagetextformdatahave.dart';
 import 'cubit/searchclass_cubit.dart';
@@ -13,147 +14,162 @@ class Searchlistapi extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
+
     return MultiBlocProvider(
-  providers: [
-    BlocProvider(
-      create: (context) => SearchclassCubit()..getFunction(),
-    ),
+      providers: [
+        BlocProvider(
+          create: (context) => SearchclassCubit()..getFunction(),
+        ),
 
-  ],
-  child: Scaffold(
-    backgroundColor: const Color(0xffF9F2ED),
-    body: SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-        
-              SizedBox(height: height * 0.02),
-              BlocBuilder<SearchclassCubit, SearchclassState>(
-                builder: (context, state) {
-                  final cubit = context.read<SearchclassCubit>();
-                  return
-                    formField(
-                      onFieldSubmitted: (value) {
-                        final trimmedValue = value.trim(); // remove spaces from start/end
-                        if (trimmedValue.isEmpty) return; // don't proceed if input is blank
-        
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Dashborad(initialSearchText: trimmedValue),
-                          ),
-                        );
-        
-                      },
-        
-        
-                    prefixIcon: Icons.search,
-                    context: context,
-                    controller: cubit.searchController,
-                    onChanged: (value) => cubit.search(value),
-                    topLeft: height * 0.02,
-                    topRight: height * 0.02,
-                      bottomLeft: height * 0.02,
-                      bottomRight: height * 0.02,
-        
-                  );
-                },
-              ),
-        
-        
-              SizedBox(height: height * 0.02),
-        
-        
-                 BlocBuilder<SearchclassCubit, SearchclassState>(
-                  builder: (context, state) {
-                    if (state is SearchclassLoading) {
-                      return Center(
-                        child: CircularProgressIndicator(color: Color(0xff000000)), // customize color
-                      );
+      ],
+      child: Scaffold(
+        backgroundColor: const Color(0xffF9F2ED),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
 
 
+                  SizedBox(height: height * 0.02),
+                  BlocBuilder<SearchclassCubit, SearchclassState>(
+                    builder: (context, state) {
+                      final cubit = context.read<SearchclassCubit>();
 
-                    } else if (state is SearchclassLoaded) {
-                      if (state.data.isEmpty) {
-                        return const Center(child: Text("No matching data"));
-                      }
-                      return ListView.separated(
-                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-        
-                        itemCount: state.data.length,
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: height * 0.005),
-                        itemBuilder: (context, index) {
-                          final item = state.data[index];
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xffF9F2ED),
-                              borderRadius: BorderRadius.circular(height * 0.02),
-                            ),
-                            child: ListTile(
-                              leading: const Icon(Icons.history,color: Color(0xff3F414E),),
-                              title: Text(
-                                item['label'] ?? '',
-                                style: const TextStyle(color: Color(0xff3F414E)),
-                              ),
-                              onTap: () {
-                                final cubit = context.read<SearchclassCubit>();
-                                cubit.onItemSelected(item);
-                              },
+                      return cubit.isConnected ?
+                      formField(
+                        onFieldSubmitted: (value) {
+                          final trimmedValue = value.trim(); // remove spaces from start/end
+                          if (trimmedValue.isEmpty) return; // don't proceed if input is blank
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Dashborad(initialSearchText: trimmedValue),
                             ),
                           );
-                        },
-                      );
-                    } else if (state is SearchclassError) {
-                      return Center(child: Text(state.message));
-                    }
 
-                    return Center(
-                      child: CircularProgressIndicator(color: Color(0xff000000)), // customize color
-                    );
+                        },
+
+
+                        prefixIcon: Icons.search,
+                        context: context,
+                        controller: cubit.searchController,
+                        onChanged: (value) => cubit.search(value),
+                        topLeft: height * 0.02,
+                        topRight: height * 0.02,
+                        bottomLeft: height * 0.02,
+                        bottomRight: height * 0.02,
+
+                      )
+
+
+
+                          :SizedBox();
+
                     },
-                ),
-              SizedBox(height: height * 0.02),
-              SizedBox(height: height * 0.02),
-        
-              // SizedBox(
-              //   height: MediaQuery.of(context).size.height * 0.22,
-              //   child:
-              //   ListView.separated(
-              //     scrollDirection: Axis.horizontal,
-              //     itemCount: 5,
-              //     separatorBuilder: (context, index) => SizedBox(width: MediaQuery.of(context).size.width * 0.03), // <-- horizontal spacing
-              //     itemBuilder: (context, index) {
-              //       return customBox(
-              //         imageurl: '',
-              //         name: 'YOKESH V',
-              //         carrier: 'FRONTEND DEVELOPER',
-              //         location: 'Kozhikode, Kerala, India',
-              //         context: context,
-              //       );
-              //     },
-              //   ),
-              // ),
-        
-        
-        
-            ],
+                  ),
+
+
+                  SizedBox(height: height * 0.02),
+
+
+                  BlocBuilder<SearchclassCubit, SearchclassState>(
+                    builder: (context, state) {
+                      final cubit = context.read<SearchclassCubit>();
+
+                      if (state is SearchclassLoading) {
+
+                        return cubit.isConnected ?Center(
+                          child: CircularProgressIndicator(color: Color(0xff000000)), // customize color
+                        ): const NoInternetWidget();
+
+
+
+                      }
+                      else if (state is SearchclassLoaded) {
+                        if (state.data.isEmpty) {
+                          return const Center(child: Text("No matching data"));
+                        }
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+
+                          itemCount: state.data.length > 10 ? 10 : state.data.length,
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: height * 0.005),
+                          itemBuilder: (context, index) {
+                            final item = state.data[index];
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xffF9F2ED),
+                                borderRadius: BorderRadius.circular(height * 0.02),
+                              ),
+                              child: ListTile(
+                                leading: const Icon(Icons.history,color: Color(0xff3F414E),),
+                                title: Text(
+                                  item['label'] ?? '',
+                                  style: const TextStyle(color: Color(0xff3F414E)),
+                                ),
+                                onTap: () {
+                                  final cubit = context.read<SearchclassCubit>();
+                                  cubit.onItemSelected(item);
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      }
+                      else if (state is SearchclassError) {
+                        return Center(child: Text(state.message));
+                      }
+
+                      return cubit.isConnected
+                          ? const Center(
+                        child: CircularProgressIndicator(color: Color(0xff000000)),
+                      )
+                          : const NoInternetWidget();
+                    },
+                  ),
+                  SizedBox(height: height * 0.02),
+                  SizedBox(height: height * 0.02),
+
+                  // SizedBox(
+                  //   height: MediaQuery.of(context).size.height * 0.22,
+                  //   child:
+                  //   ListView.separated(
+                  //     scrollDirection: Axis.horizontal,
+                  //     itemCount: 5,
+                  //     separatorBuilder: (context, index) => SizedBox(width: MediaQuery.of(context).size.width * 0.03), // <-- horizontal spacing
+                  //     itemBuilder: (context, index) {
+                  //       return customBox(
+                  //         imageurl: '',
+                  //         name: 'YOKESH V',
+                  //         carrier: 'FRONTEND DEVELOPER',
+                  //         location: 'Kozhikode, Kerala, India',
+                  //         context: context,
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
+
+
+
+                ],
+              ),
+            ),
           ),
         ),
       ),
-    ),
-  ),
-);
+    );
   }
 }
 
 Widget formField({
   required BuildContext context,
   String? hintText,
-   TextEditingController ? controller,
+  TextEditingController ? controller,
   Function(String)? onChanged,
   Widget? child,
   IconData? prefixIcon,
@@ -229,13 +245,24 @@ Widget formField({
                   child: Icon(prefixIcon, color: Colors.black),
                 )
                     : null,
-
-                suffixIcon: suffixIcon != null
+                suffixIcon: (controller != null && controller.text.isNotEmpty)
                     ? GestureDetector(
-                  onTap: onSuffixTap,
-                  child: Icon(suffixIcon, color: Color(0xffF9F2ED)),
+                  onTap: () {
+                    controller?.clear();
+
+                    // Optional: Reset the search results after clearing
+                    final cubit = context.read<SearchclassCubit>();
+                    // cubit.search(''); // reset to full list
+                  },
+                  child: const Icon(Icons.close, color: Colors.black54),
                 )
                     : null,
+                // suffixIcon: suffixIcon != null
+                //     ? GestureDetector(
+                //   onTap: onSuffixTap,
+                //   child: Icon(suffixIcon, color: Color(0xffF9F2ED)),
+                // )
+                //     : null,
               ),
               onFieldSubmitted: onFieldSubmitted,
             ),
@@ -350,7 +377,7 @@ Widget fieldTitle({
   );
 }
 Widget customBox({
-   String ? imageurl,
+  String ? imageurl,
   required String name,
   required String carrier,
   required String location,

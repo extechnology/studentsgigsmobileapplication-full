@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:bloc/bloc.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:meta/meta.dart';
 
 import '../../../datapage/datapage.dart';
@@ -10,11 +13,30 @@ part 'planusage_state.dart';
 
 class PlanusageCubit extends Cubit<PlanusageState> {
   PlanusageCubit() : super(PlanusageInitial()){
+    _monitorConnection();
+
     fetchPlanUsage();
   }
 
   final String baseurl = ApiConstantsemployer.baseUrl;
+  // final storage = FlutterSecureStorage();
+  late StreamSubscription<InternetStatus> _connectionSubscription;
+  bool isConnected = true;
+  void _monitorConnection() async {
+    // Immediate check on start
+    isConnected = await InternetConnection().hasInternetAccess;
+    if (!isConnected) {
+      emit(PlanusageInitial());
+    }
 
+    // Listen for future changes
+    _connectionSubscription = InternetConnection().onStatusChange.listen((status) {
+      isConnected = (status == InternetStatus.connected);
+      if (!isConnected) {
+        emit(PlanusageInitial());
+      }
+    });
+  }
   Future<void> fetchPlanUsage() async {
     emit(PlanusageIoading());
 
@@ -40,7 +62,9 @@ class PlanusageCubit extends Cubit<PlanusageState> {
         emit(Planusageerror('Server Error: ${response.statusCode}'));
       }
     } catch (e) {
-      emit(Planusageerror('Exception: $e'));
+      // _monitorConnection();
+
+      emit(Planusageerror('Server error '));
     }
   }
 

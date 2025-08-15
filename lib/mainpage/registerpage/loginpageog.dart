@@ -332,7 +332,7 @@ class _RegisterpageState extends State<Registerpage> {
                                       parentContext
                                           .read<ResetpasswordCubit>()
                                           .resetPassword(
-                                            email: emailController.text.trim(),
+                                            email: emailController.text.trim(), context: context,
                                           );
                                       Navigator.pop(
                                           context); // Optionally close dialog after action
@@ -640,7 +640,7 @@ class _RegisterpageState extends State<Registerpage> {
                                       parentContext
                                           .read<ResetpasswordCubit>()
                                           .resetPassword(
-                                            email: emailController.text.trim(),
+                                            email: emailController.text.trim(), context: context,
                                           );
                                       Navigator.pop(
                                           context); // Optionally close dialog after action
@@ -1034,7 +1034,7 @@ class _RegisterpageState extends State<Registerpage> {
                                     parentContext
                                         .read<ResetpasswordCubit>()
                                         .resetPassword(
-                                          email: emailController.text.trim(),
+                                          email: emailController.text.trim(), context: context,
                                         );
                                     Navigator.pop(
                                         context); // Optionally close dialog after action
