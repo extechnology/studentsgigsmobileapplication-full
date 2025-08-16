@@ -69,6 +69,8 @@ dependencies:
   shimmer: ^3.0.0
   html_unescape: ^2.0.0
   internet_connection_checker_plus: ^2.7.2
+  file_picker: ^10.3.1
+  flutter_html: ^3.0.0
 
 
 

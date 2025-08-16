@@ -1,4 +1,4 @@
-class Experience {
+class Experiences {
   final int id;
   final String? companyName;
   final String? jobTitle;
@@ -7,7 +7,7 @@ class Experience {
   final bool? isCurrentlyWorking;
   final int? employee;
 
-  Experience({
+  Experiences({
     required this.id,
     this.companyName,
     this.jobTitle,
@@ -17,10 +17,10 @@ class Experience {
     this.employee,
   });
 
-  factory Experience.fromJson(Map<String, dynamic> json) {
+  factory Experiences.fromJson(Map<String, dynamic> json) {
     // Debug print
 
-    return Experience(
+    return Experiences(
       id: json['id'] ?? 0,
       companyName: json['exp_company_name']?.toString(),
       jobTitle: json['exp_job_title']?.toString(),

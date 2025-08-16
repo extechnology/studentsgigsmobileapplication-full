@@ -187,8 +187,8 @@ class _SavedJobView extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: InkWell(
                           onTap: () {
-                            // Navigator.pushNamed(context, "GigsDetailScreen",
-                            //     arguments: {"jobData": job});
+                            Navigator.pushNamed(context, "GigsDetailScreen",
+                                arguments: {"jobData": job});
                           },
                           child: JobCard(
                             id: job['id'].toString(),
