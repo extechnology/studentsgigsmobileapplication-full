@@ -1,3 +1,4 @@
+import 'package:anjalim/student_Section/services/profile_update_searvices/premiumplan1.dart';
 import 'package:flutter/material.dart';
 
 class JobCard extends StatelessWidget {
@@ -196,21 +197,21 @@ class JobCard extends StatelessWidget {
               // Save Button with Green Color
               GestureDetector(
                 onTap: () async {
-                  // final canSave = await PlanService().canUserSaveJobs();
-                  // if (canSave) {
-                  //   onSave();
-                  // } else {
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(
-                  //       content: Text('Upgrade your plan to save jobs'),
-                  //       backgroundColor: Colors.green,
-                  //       behavior: SnackBarBehavior.floating,
-                  //       shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(8),
-                  //       ),
-                  //     ),
-                  //   );
-                  // }
+                  final canSave = await PlanService().canUserSaveJobs();
+                  if (canSave) {
+                    onSave();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Upgrade your plan to save jobs'),
+                        backgroundColor: Colors.green,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    );
+                  }
                 },
                 child: Container(
                   padding: EdgeInsets.all(screenWidth * 0.02),

@@ -408,7 +408,7 @@ class ProfileEditScreen extends StatelessWidget {
                               return FloatingActionButton(
                                 onPressed: () {
                                   final form = Form.of(context);
-                                  if (form?.validate() ?? false) {}
+                                  if (form.validate() ?? false) {}
                                 },
                                 child: const Text(
                                   "Save",

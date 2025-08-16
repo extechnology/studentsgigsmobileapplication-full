@@ -1,11 +1,11 @@
-class AdditionalInformation {
+class AdditionalInformations {
   final int id;
   final String? resume;
   final List<String>? hobbies;
   final String? willingToRelocate;
   final String? testimonials;
 
-  AdditionalInformation({
+  AdditionalInformations({
     required this.id,
     this.resume,
     this.hobbies,
@@ -13,8 +13,8 @@ class AdditionalInformation {
     this.testimonials,
   });
 
-  factory AdditionalInformation.fromJson(Map<String, dynamic> json) {
-    return AdditionalInformation(
+  factory AdditionalInformations.fromJson(Map<String, dynamic> json) {
+    return AdditionalInformations(
       id: json['id'] ?? 0, // Default to 0 if null
       resume: json['resume'],
       hobbies: (json['hobbies_or_interests']?.toString().isNotEmpty ?? false)
@@ -30,8 +30,8 @@ class AdditionalInformation {
   }
 
   // Empty constructor for when no data exists
-  factory AdditionalInformation.empty() {
-    return AdditionalInformation(
+  factory AdditionalInformations.empty() {
+    return AdditionalInformations(
       id: 0,
       hobbies: [],
       willingToRelocate: null,

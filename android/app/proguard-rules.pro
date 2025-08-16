@@ -1,10 +1,12 @@
-# ==== Razorpay SDK Keep Rules ====
+# ========== Razorpay SDK Rules ==========
 -keep class com.razorpay.** { *; }
 -dontwarn com.razorpay.**
+-keep class proguard.annotation.KeepClassMembers
 
-# Keep annotations (needed by Razorpay and R8)
+# ========== Annotation Handling ==========
 -keepattributes *Annotation*
+-keepattributes InnerClasses
 
-# Optional - Fix common annotation warnings
+# ========== Warning Suppressions ==========
 -dontwarn androidx.annotation.**
 -dontwarn org.jetbrains.annotations.**
