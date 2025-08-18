@@ -128,7 +128,7 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
     );
     if (response.statusCode >= 200 && response.statusCode <= 299) {
       final data = getthetextsuggestionFromJson(response.body);
-      print(data);
+      // print(data);
       final mapped = data.map((item) {
         return {
           "id": item.id,
@@ -142,11 +142,11 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
       imagesData.addAll(mapped);
 
 
-      print("hey where$imagesData");
+      // print("hey where$imagesData");
 
       emit(PostyourjobInitial());
     } else {
-      print("statusCode${response.statusCode}");
+      // print("statusCode${response.statusCode}");
     }
   }
 
@@ -172,12 +172,12 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
         // ⚡️ REMOVE THIS EMIT
         // emit(PostyourjobInitial());
       } else {
-        print("Location fetch failed: ${response.statusCode}");
+        // print("Location fetch failed: ${response.statusCode}");
       }
     } on TimeoutException {
-      print("Location request timed out after 15 seconds");
+      // print("Location request timed out after 15 seconds");
     } catch (e) {
-      print("Location fetch error: $e");
+      // print("Location fetch error: $e");
     }
   }
   void initLocationListener() {
@@ -293,7 +293,7 @@ class PostyourjobCubit extends Cubit<PostyourjobState> {
         return null;
       }
     } catch (e) {
-      print('Failed to fetch plan usage: $e');
+      // print('Failed to fetch plan usage: $e');
       return null;
     }
   }

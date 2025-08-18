@@ -29,19 +29,19 @@ import '../model/model.dart';
         );
 
         if (response.statusCode == 200) {
-          print(response.statusCode);
-          print("bed");
+          // print(response.statusCode);
+          // print("bed");
           final data = empleedetailpageFromJson(response.body);
-          print("bed ${data.jobTitle}");
+          // print("bed ${data.jobTitle}");
 
           emit(HomepagedetailLoaded(data));
         } else {
-          print("its err");
+          // print("its err");
 
           emit(Homepagedetailerror('Failed: ${response.statusCode}'));
         }
       } catch (e) {
-        print("hey its error $e");
+        // print("hey its error $e");
 
         emit(Homepagedetailerror(e.toString()));
       }

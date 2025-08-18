@@ -377,7 +377,7 @@ class _PostyourjobState extends State<Postyourjob> {
                                 orElse: () => {'id': ''},
                               );
                               final locationId = selected['id'];
-                              print("Selected Location ID: $locationId");
+                              // print("Selected Location ID: $locationId");
 
                               Future.delayed(const Duration(milliseconds: 300), () {
                                 cubit.shouldListenToLocationChanges = true;
@@ -573,7 +573,7 @@ class _PostyourjobState extends State<Postyourjob> {
                         controller: cubit.minage,
                         minAge: 14,
                         onChanged: (value) {
-                          print("Age value changed: $value");
+                          // print("Age value changed: $value");
                         },
                       ),
                     );
@@ -609,7 +609,7 @@ class _PostyourjobState extends State<Postyourjob> {
                             controller: cubit.maxage,
                             minAge: 14,
                             onChanged: (value) {
-                              print("Age value changed: $value");
+                              // print("Age value changed: $value");
                             },
                           ),
                         ),

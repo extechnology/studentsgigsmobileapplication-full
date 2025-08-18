@@ -36,10 +36,10 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
 
     });
     if(response.statusCode >= 200 && response.statusCode <= 299){
-      print(response.statusCode);
+      // print(response.statusCode);
 
       final data = getcompanyinfoFromJson(response.body);
-      print(data);
+      // print(data);
       // profilecompanyname.text = data.employer.companyName;
       // profileemail.text = data.employer.email;
       // profilecompanyinfo.text = data.employer.companyInfo;
@@ -56,7 +56,7 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
       // print("hey moji");
       // print("networkurl$networkImage");
 
-      print(networkImage);
+      // print(networkImage);
 
       emit(ProfileemployerInitial());
       Future.delayed(Duration(milliseconds: 5000), () {
@@ -65,7 +65,7 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
       });
 
     }else {
-      print("Something Wrong");
+      // print("Something Wrong");
     }
 
   }

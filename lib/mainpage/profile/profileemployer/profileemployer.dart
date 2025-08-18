@@ -137,7 +137,7 @@ class Profileemployer extends StatelessWidget {
                          // await storage.delete(key: 'token_local');
                          await storage.deleteAll();
 
-                         print("🧹 Access token deleted. Logging out...");
+                         // print("🧹 Access token deleted. Logging out...");
 
                          if (token != null) {
                            context.read<LoginCubit>().signOut();
@@ -156,7 +156,7 @@ class Profileemployer extends StatelessWidget {
                          //   // );
                          // }
                          else {
-                           print("yes");
+                           // print("yes");
                          }
                        },
                        topRight: width * 0.042, topLeft: width * 0.042

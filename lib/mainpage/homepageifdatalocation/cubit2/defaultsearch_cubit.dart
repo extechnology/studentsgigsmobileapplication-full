@@ -66,7 +66,7 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
     );
    if(response.statusCode >= 200 && response.statusCode <= 299){
      final data = locationsearchFromJson(response.body);
-     print(data);
+     // print(data);
      imagesData.addAll(data.data.map((Datum) {
        return {
          "user":Datum.user,
@@ -99,7 +99,7 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
   Future<Map<String, dynamic>?> fetchPlanUsage() async {
     // ✅ If cached, return directly (fast)
     if (cachedPlanUsage != null) {
-      print("📦 Using cached plan data");
+      // print("📦 Using cached plan data");
       return cachedPlanUsage;
     }
 
@@ -116,21 +116,21 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
         cachedPlanUsage = data; // 🔁 Save to cache
         return data;
       } else {
-        print("❌ Failed to fetch plan: ${response.statusCode}");
+        // print("❌ Failed to fetch plan: ${response.statusCode}");
         return null;
       }
     } catch (e) {
-      print("❗ Exception during plan fetch: $e");
+      // print("❗ Exception during plan fetch: $e");
       return null;
     }
   }
   Future<void> postVisitedCount(String employeeId) async {
 
-    print("yes");
-    print("Employee ID: $employeeId");
+    // print("yes");
+    // print("Employee ID: $employeeId");
 
     final uri = Uri.parse("$baseurl/api/employer/employee-profile-access/");
-    print("Posting to: $uri");
+    // print("Posting to: $uri");
 
     try {
       final request = http.MultipartRequest("POST", uri);
@@ -144,12 +144,12 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
       final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode >= 200 && response.statusCode <= 299) {
-        print("✅ Visited count updated: $responseBody");
+        // print("✅ Visited count updated: $responseBody");
       } else {
-        print("❌ Failed to update visited count: ${response.statusCode}");
+        // print("❌ Failed to update visited count: ${response.statusCode}");
       }
     } catch (e) {
-      print("❗ Exception during visited count post: $e");
+      // print("❗ Exception during visited count post: $e");
     }
   }
 

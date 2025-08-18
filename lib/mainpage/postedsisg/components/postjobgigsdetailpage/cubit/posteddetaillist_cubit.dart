@@ -35,17 +35,17 @@ class DashboardCubit extends Cubit<DashboardState> {
       );
 
       if (response.statusCode == 200) {
-        print("statuscode ${response.statusCode}");
+        // print("statuscode ${response.statusCode}");
         final List<Postedpagelist> applications = postedpagelistFromJson(response.body); // ✅ ✅ ✅
-        print("${applications.length}");
-        print("data ${applications}");
+        // print("${applications.length}");
+        // print("data ${applications}");
 
         emit(DashboardLoaded(applications));
       } else {
         emit(DashboardError("Failed: ${response.statusCode}"));
       }
     } catch (e) {
-      print("eroor of e ${e}");
+      // print("eroor of e ${e}");
       emit(DashboardError("Error: $e"));
     }
   }

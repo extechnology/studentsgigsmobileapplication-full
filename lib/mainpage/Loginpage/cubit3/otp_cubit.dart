@@ -12,11 +12,11 @@ class OtpCubit extends Cubit<OtpState> {
     required String username,
     required String password,
 }) async {
-    print("its not verfyotp");
+    // print("its not verfyotp");
     emit(OtpIoading());
 
     try {
-      print("its not verfyotp2");
+      // print("its not verfyotp2");
 
       var uri = Uri.parse('https://server.studentsgigs.com/api/employer/verify-otp/');
       var request = http.MultipartRequest('POST', uri)
@@ -29,18 +29,18 @@ class OtpCubit extends Cubit<OtpState> {
       final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print(response.statusCode);
+        // print(response.statusCode);
 
-        print("OTP verification success: ${response.statusCode}");
+        // print("OTP verification success: ${response.statusCode}");
         emit(OtpIoaded(responseBody));
       } else {
 
-        print("OTP verification failed: ${response.statusCode}");
-        print("Response body: $responseBody");
+        // print("OTP verification failed: ${response.statusCode}");
+        // print("Response body: $responseBody");
         emit(Otperror('Failed: $responseBody'));
       }
     } catch (e) {
-      print("Exception during OTP verification: $e");
+      // print("Exception during OTP verification: $e");
       emit(Otperror('Exception: $e'));
     }
   }
