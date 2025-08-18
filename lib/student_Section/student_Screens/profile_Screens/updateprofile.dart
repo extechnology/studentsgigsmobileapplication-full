@@ -18,11 +18,14 @@ import 'package:anjalim/student_Section/student_blocs/profile_edit_std/profile_e
         ProfileEditState,
         ProfileEditLoading,
         LoadProfileData,
-        UpdateProfile;
+        UpdateProfile,
+        ProfileEditPermissionRequired,
+        RetryImagePicking;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ProfileEditScreen extends StatelessWidget {
   const ProfileEditScreen({super.key});
@@ -61,6 +64,11 @@ class ProfileEditScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.successMessage!)),
               );
+            } else if (state is ProfileEditPermissionRequired) {
+              // Show permission dialog when permission is required
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _showPermissionDialog(context, state);
+              });
             }
           },
           builder: (context, state) {
@@ -87,6 +95,9 @@ class ProfileEditScreen extends StatelessWidget {
             } else if (state is ProfileEditLocationSuggestions) {
               profileData = state.profileData;
               jobTitles = state.jobTitles;
+            } else if (state is ProfileEditPermissionRequired) {
+              profileData = state.profileData;
+              jobTitles = state.jobTitles;
             }
 
             return SingleChildScrollView(
@@ -103,6 +114,7 @@ class ProfileEditScreen extends StatelessWidget {
                         width: double.infinity,
                         child: Stack(
                           children: [
+                            // Cover Photo Section
                             state is ProfileEditUploading
                                 ? const Center(
                                     child: CircularProgressIndicator(
@@ -121,6 +133,10 @@ class ProfileEditScreen extends StatelessWidget {
                                         image:
                                             _getCoverPhotoProvider(profileData),
                                         fit: BoxFit.cover,
+                                        onError: (exception, stackTrace) =>
+                                            const AssetImage(
+                                          'assets/images/others/default-featured-image.png',
+                                        ),
                                       ),
                                     ),
                                     child: Padding(
@@ -147,6 +163,8 @@ class ProfileEditScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+
+                            // Profile Picture Section
                             Align(
                               alignment: Alignment.bottomLeft,
                               child: CircleAvatar(
@@ -154,6 +172,10 @@ class ProfileEditScreen extends StatelessWidget {
                                 backgroundColor: Colors.grey.shade300,
                                 backgroundImage:
                                     _getProfilePicProvider(profileData),
+                                onBackgroundImageError:
+                                    (exception, stackTrace) => const AssetImage(
+                                  'assets/images/others/default-featured-image.png',
+                                ),
                                 child: state is ProfileEditUploading
                                     ? const CircularProgressIndicator(
                                         valueColor:
@@ -408,8 +430,11 @@ class ProfileEditScreen extends StatelessWidget {
                               return FloatingActionButton(
                                 onPressed: () {
                                   final form = Form.of(context);
-                                  if (form.validate() ?? false) {}
+                                  if (form?.validate() ?? false) {
+                                    bloc.add(UpdateProfile(context: context));
+                                  }
                                 },
+                                backgroundColor: const Color(0xff004673),
                                 child: const Text(
                                   "Save",
                                   style: TextStyle(
@@ -417,7 +442,6 @@ class ProfileEditScreen extends StatelessWidget {
                                       color: Colors.white,
                                       fontSize: 16),
                                 ),
-                                backgroundColor: const Color(0xff004673),
                               );
                             },
                           ),
@@ -433,6 +457,61 @@ class ProfileEditScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Show permission explanation dialog and open app settings
+  Future<void> _showPermissionDialog(
+    BuildContext context,
+    ProfileEditPermissionRequired state,
+  ) async {
+    final bloc = context.read<ProfileEditBloc>();
+
+    final shouldOpenSettings = await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext dialogContext) {
+            return AlertDialog(
+              title: const Text("Permission Required"),
+              content:
+                  const Text("We need access to your photos to upload images"),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, false),
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, true),
+                  child: const Text("Open Settings"),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+
+    if (shouldOpenSettings) {
+      await openAppSettings();
+
+      // Wait a bit for user to return from settings
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Check permission status again
+      final status = await Permission.photos.status;
+
+      if (status.isGranted) {
+        // Retry picking image with the original event
+        bloc.add(RetryImagePicking(
+          originalEvent: state.originalPickEvent,
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Permission still not granted'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
   }
 
   Widget _buildSectionLabel(String text) {
@@ -483,9 +562,8 @@ class ProfileEditScreen extends StatelessWidget {
         profileData!.coverPhoto!.isNotEmpty) {
       return NetworkImage(profileData!.coverPhoto!);
     }
-    return const AssetImage(
-            "lib/assets/images/others/elementor-placeholder-image (1).webp")
-        as ImageProvider;
+    // Return default cover image
+    return const AssetImage('assets/images/others/default-featured-image.png');
   }
 
   ImageProvider _getProfilePicProvider(EmployeeProfile? profileData) {
@@ -493,8 +571,8 @@ class ProfileEditScreen extends StatelessWidget {
         profileData!.profilePic!.isNotEmpty) {
       return NetworkImage(profileData!.profilePic!);
     }
-    return const AssetImage("lib/assets/images/others/Group 69.png")
-        as ImageProvider;
+    // Return default profile image
+    return const AssetImage('assets/images/others/default-featured-image.png');
   }
 }
 

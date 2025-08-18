@@ -19,8 +19,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     SplashStarted event,
     Emitter<SplashState> emit,
   ) async {
-    print("=== SPLASH STARTED ===");
-
     // Emit animating state
     emit(const SplashAnimating());
 
@@ -36,8 +34,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     CheckAuthenticationStatus event,
     Emitter<SplashState> emit,
   ) async {
-    print("=== CHECKING AUTHENTICATION STATUS ===");
-
     try {
       emit(const SplashCheckingAuth());
 
@@ -47,19 +43,15 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       if (authData != null) {
         // Check if token is valid
         if (_authRepository.isTokenValid(authData.accessToken)) {
-          print("✅ Token is valid. User type: ${authData.userType}");
           emit(SplashAuthenticated(userType: authData.userType));
         } else {
-          print("❌ Token is expired. Clearing stored data.");
           await _authRepository.clearAuthData();
           emit(const SplashUnauthenticated());
         }
       } else {
-        print("❌ No authentication data found.");
         emit(const SplashUnauthenticated());
       }
     } catch (e) {
-      print('❌ Error checking authentication: $e');
       emit(SplashError(message: e.toString()));
       // Navigate to welcome screen on error
       emit(const SplashUnauthenticated());

@@ -93,7 +93,7 @@ class MyApp extends StatelessWidget {
         "LoginPage": (context) => LoginPage(),
         "RegisterPage": (context) => RegisterPage(),
         "StudentHomeScreens": (context) => const StudentHomeScreens(),
-        "SearchScreen1": (context) => SearchScreen1(),
+        "SearchScreen1": (context) => const SearchScreen1(),
         "SearchScreen2": (context) => const SearchScreen2(),
         "GigsDetailScreen": (context) => const GigsDetailScreen(),
         "ProfileEditScreen": (context) => const ProfileEditScreen(),

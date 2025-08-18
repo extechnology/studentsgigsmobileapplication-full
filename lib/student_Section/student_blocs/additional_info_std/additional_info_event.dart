@@ -47,11 +47,12 @@ class UpdateRelocationPreference extends AdditionalInfoEvent {
 
 class UploadResume extends AdditionalInfoEvent {
   final FilePickerResult? resume;
+  final BuildContext? context; // Added context for permission handling
 
-  const UploadResume(this.resume);
+  const UploadResume(this.resume, {this.context});
 
   @override
-  List<Object> get props => [resume ?? ''];
+  List<Object> get props => [resume ?? '', context ?? ''];
 }
 
 class SaveAdditionalInfo extends AdditionalInfoEvent {}
@@ -63,4 +64,22 @@ class ViewResume extends AdditionalInfoEvent {
 
   @override
   List<Object> get props => [isLocalFile];
+}
+
+class RequestResumePermission extends AdditionalInfoEvent {
+  final BuildContext context;
+
+  const RequestResumePermission(this.context);
+
+  @override
+  List<Object> get props => [context];
+}
+
+class ResumePermissionRequired extends AdditionalInfoEvent {
+  final BuildContext context;
+
+  const ResumePermissionRequired(this.context);
+
+  @override
+  List<Object> get props => [context];
 }

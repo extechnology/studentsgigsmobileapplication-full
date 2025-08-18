@@ -2,6 +2,7 @@ import 'package:anjalim/student_Section/student_blocs/additional_info_std/additi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AdditionalInformationScreen extends StatelessWidget {
   const AdditionalInformationScreen({super.key});
@@ -65,17 +66,15 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
   Widget build(BuildContext context) {
     return BlocConsumer<AdditionalInfoBloc, AdditionalInfoState>(
       listener: (context, state) {
-        if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage!)),
-          );
-        }
-
-        // Initialize controllers with state values
-        if (state.additionalInfo != null &&
-            _referencesController.text.isEmpty &&
-            state.additionalInfo!.testimonials != null) {
-          _referencesController.text = state.additionalInfo!.testimonials!;
+        if (state.errorMessage != null) {
+          if (state.errorMessage ==
+              'Storage permission is permanently denied') {
+            _showPermissionDialog(context);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage!)),
+            );
+          }
         }
       },
       builder: (context, state) {
@@ -171,17 +170,10 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),
                         backgroundColor: Colors.white),
-                    onPressed: () async {
-                      final result = await FilePicker.platform.pickFiles(
-                        type: FileType.custom,
-                        allowedExtensions: ['pdf'],
-                        allowMultiple: false,
-                      );
-                      if (result != null) {
-                        context
-                            .read<AdditionalInfoBloc>()
-                            .add(UploadResume(result));
-                      }
+                    onPressed: () {
+                      context.read<AdditionalInfoBloc>().add(
+                            UploadResume(null, context: context),
+                          );
                     },
                     icon: const Icon(
                       Icons.upload_file,
@@ -273,6 +265,30 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
         );
       },
     );
+  }
+
+  Future<void> _showPermissionDialog(BuildContext context) async {
+    final shouldOpenSettings = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Permission Required'),
+        content: Text('Please enable storage permission in app settings'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Open Settings'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldOpenSettings == true) {
+      await openAppSettings();
+    }
   }
 
   String _getFileNameFromUrl(String url) {

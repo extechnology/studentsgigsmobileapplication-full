@@ -57,7 +57,6 @@ class TechnicalSkillBloc
 
         await _skillsService.postSkills(
             event.skill, event.level, event.context);
-        print("success in skill----${event.skill} at ${event.level} level");
 
         // Fetch fresh data from server
         final updatedSkills = await _skillsService.fetchSkills(event.context);
@@ -85,7 +84,6 @@ class TechnicalSkillBloc
           errorMessage = 'Unknown error occurred: ${e.toString()}';
         }
 
-        print("Error in add skill----$e");
         emit(TechnicalSkillError(
           message: errorMessage,
           currentSkills: currentSkills,
@@ -111,7 +109,6 @@ class TechnicalSkillBloc
 
       try {
         await _skillsService.deleteSkill(event.id, event.context);
-        print("success in delete skill----${event.id}");
 
         // Fetch fresh data from server to ensure consistency
         final updatedSkills = await _skillsService.fetchSkills(event.context);
@@ -119,7 +116,6 @@ class TechnicalSkillBloc
         // Emit the loaded state - no success state needed
         emit(TechnicalSkillLoaded(loadedSkills: updatedSkills));
       } catch (e) {
-        print("Error in delete skill----$e");
         // Revert to original state on error
         emit(TechnicalSkillError(
           message: 'Failed to delete skill: ${e.toString()}',

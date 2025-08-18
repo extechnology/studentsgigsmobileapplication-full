@@ -19,6 +19,15 @@ class PickImage extends ProfileEditEvent {
   List<Object> get props => [isProfileImage];
 }
 
+class RetryImagePicking extends ProfileEditEvent {
+  final PickImage originalEvent;
+
+  const RetryImagePicking({required this.originalEvent});
+
+  @override
+  List<Object> get props => [originalEvent];
+}
+
 class UpdateProfile extends ProfileEditEvent {
   final BuildContext context;
 
