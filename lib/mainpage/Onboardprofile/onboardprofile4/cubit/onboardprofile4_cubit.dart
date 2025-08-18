@@ -309,8 +309,8 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
     }
 
 
-    print("Function is working");
-    print("Function is working $user");
+    // print("Function is working");
+    // print("Function is working $user");
 
     try {
       final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
@@ -356,20 +356,20 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       // Process response
       final responseBody = await response.stream.bytesToString();
       final data = json.decode(responseBody);
-      print(response.statusCode);
+      // print(response.statusCode);
       if (response.statusCode == 200) {
-        print(response.statusCode);
-
-        print("Profile Updated Successfully");
-        print('Response: $data');
+        // print(response.statusCode);
+        //
+        // print("Profile Updated Successfully");
+        // print('Response: $data');
         Navigator.pushReplacementNamed(context,"Dashborad" );
         // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashborad(),));
       } else {
-        print('Failed: ${response.statusCode}');
-        print('Response: $data');
+        // print('Failed: ${response.statusCode}');
+        // print('Response: $data');
       }
     } catch (e) {
-      print('Error: $e');
+      // print('Error: $e');
     }
   }
   void scrollToField(GlobalKey key) {
@@ -415,7 +415,7 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
     });
     if(response.statusCode >= 200 && response.statusCode <= 299){
       final data = posted.compantonboardingFromJson(response.body);
-      print(data);
+      // print(data);
 
       if (data.employer?.companyName?.isNotEmpty == true) {
         // Navigate to dashboard if company name is empty
@@ -425,8 +425,8 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
         );
       } else {
 
-        print("object no va");
-        print("1${user}");
+        // print("object no va");
+        // print("1${user}");
 
 
       }
@@ -442,9 +442,9 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       // cityController.text = cleanValue(data.employer.city);
       // print("hey moji");
       user = data.employer!.id.toString();
-      print(" 2${  user}");
+      // print(" 2${  user}");
       profileemail.text = data.employer?.user?.email ?? "";
-      print(data.employer?.user?.email);
+      // print(data.employer?.user?.email);
       // print("networkurl$networkImage");
 
 
@@ -455,7 +455,7 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       // });
 
     }else {
-      print("Something Wrong");
+      // print("Something Wrong");
     }
 
   }

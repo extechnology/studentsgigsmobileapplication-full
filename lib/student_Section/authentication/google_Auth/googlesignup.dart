@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class GoogleAuthService {
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
     serverClientId:
-        "15124092057-q7saopofjt97svqnsd47t12n7ckn29qi.apps.googleusercontent.com",
+    '15124092057-q7saopofjt97svqnsd47t12n7ckn29qi.apps.googleusercontent.com',
     scopes: ['email', 'profile'],
   );
 

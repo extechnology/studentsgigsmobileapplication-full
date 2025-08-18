@@ -41,7 +41,7 @@ class Homepagetextformdatahave extends StatelessWidget {
           // Check if more pages are available
           if (state is HomepagetextformdatahaveIoaded) {
             if (cubit.counter >= state.data.totalPages) {
-              print("🔚 No more pages to fetch.");
+              // print("🔚 No more pages to fetch.");
               return; // Stop fetching more pages
             }
 
@@ -223,7 +223,7 @@ class Homepagetextformdatahave extends StatelessWidget {
                       orElse: () => {'id': ''},
                     );
                     final locationId = selected['id'];
-                    print("Selected Location ID: $locationId");
+                    // print("Selected Location ID: $locationId");
 
                     Future.delayed(const Duration(milliseconds: 300), () {
                       cubit.shouldListenToLocationChanges = true;

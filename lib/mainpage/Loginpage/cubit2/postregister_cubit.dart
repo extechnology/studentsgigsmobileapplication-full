@@ -52,7 +52,7 @@ class PostregisterCubit extends Cubit<PostregisterState> {
       final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print(response.statusCode);
+        // print(response.statusCode);
         emit(Postregisterloaded(responseBody));
       }  else {
         // print("fnbsmdmsdmsc");

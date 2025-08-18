@@ -37,21 +37,21 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginIoading());
 
     try {
-      print("🚫1. Starting Google Sign-In for userType: $userType");
+      // print("🚫1. Starting Google Sign-In for userType: $userType");
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         emit(LoginInitial()); // user canceled
         return;
       }
 
-      print("🚫2. Getting authentication");
+      // print("🚫2. Getting authentication");
       final googleAuth = await googleUser.authentication;
 
       if (googleAuth.accessToken == null || googleAuth.idToken == null) {
         throw Exception("Google token missing");
       }
 
-      print("🚫3. Calling backend API with userType: $userType");
+      // print("🚫3. Calling backend API with userType: $userType");
       final response = await http.post(
         Uri.parse("https://server.studentsgigs.com/api/employer/api/google-auth/"),
         headers: {
@@ -66,10 +66,10 @@ class LoginCubit extends Cubit<LoginState> {
         }),
       );
 
-      print("🚫4. Response status: ${response.statusCode}");
+      // print("🚫4. Response status: ${response.statusCode}");
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("🚫Response Body: $data");
+        // print("🚫Response Body: $data");
         await _storage.write(key: 'auth_token', value: data['token']);
         await _storage.write(key: 'access_token', value: data['access']);
         await _storage.write(key: 'refresh_token', value: data['refresh_token']);
@@ -95,7 +95,7 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LoginError('Server error: ${response.body}'));
       }
     } catch (e) {
-      print("🚫 Authentication error: $e");
+      // print("🚫 Authentication error: $e");
       emit(LoginError('Login failed: ${e.toString()}'));
     }
   }
@@ -130,7 +130,7 @@ class LoginCubit extends Cubit<LoginState> {
     });
     if(response.statusCode >= 200 && response.statusCode <= 299){
       final data = compantonboardingFromJson(response.body);
-      print(data);
+      // print(data);
 
       if ((data.employer?.companyName ?? "").isNotEmpty) {
         // Navigate to dashboard if company name is empty
@@ -170,7 +170,7 @@ class LoginCubit extends Cubit<LoginState> {
       // });
 
     }else {
-      print("Something Wrong");
+      // print("Something Wrong");
     }
 
   }

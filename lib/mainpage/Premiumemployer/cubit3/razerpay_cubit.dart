@@ -53,7 +53,7 @@ class PaymentCubit extends Cubit<PaymentState> {
       );
 
       if (response.statusCode == 200) {
-        print(" hey error ${response.statusCode}");
+        // print(" hey error ${response.statusCode}");
         final data = json.decode(response.body);
         String orderId = data['id'];
         int orderAmount = data['amount'];
@@ -88,11 +88,11 @@ class PaymentCubit extends Cubit<PaymentState> {
 
   void _handleSuccess(PaymentSuccessResponse response) async {
     final paymentData = response.data;
-    print(" hey error ${response.data}");
+    // print(" hey error ${response.data}");
 
-    print("✅ Payment ID: ${paymentData!['razorpay_payment_id']}");
-    print("📦 Order ID: ${paymentData['razorpay_order_id']}");
-    print("🔐 Signature: ${paymentData['razorpay_signature']}");
+    // print("✅ Payment ID: ${paymentData!['razorpay_payment_id']}");
+    // print("📦 Order ID: ${paymentData['razorpay_order_id']}");
+    // print("🔐 Signature: ${paymentData['razorpay_signature']}");
 
     emit(PaymentSuccessVerifying());
 
@@ -111,7 +111,7 @@ class PaymentCubit extends Cubit<PaymentState> {
       );
 
       if (verifyResponse.statusCode == 200) {
-        print(" hey bro ${verifyResponse.statusCode}");
+        // print(" hey bro ${verifyResponse.statusCode}");
 
         emit(PaymentVerified());
 
@@ -142,13 +142,13 @@ class PaymentCubit extends Cubit<PaymentState> {
           );
         }
       } else {
-        print("hey eror ${verifyResponse.body} ");
+        // print("hey eror ${verifyResponse.body} ");
         emit(PaymentVerificationFailed("Verification failed: ${verifyResponse.body}")
 
     );
       }
     } catch (e) {
-      print("hey eror $e ");
+      // print("hey eror $e ");
 
       emit(PaymentVerificationFailed("Network error: $e"));
     }

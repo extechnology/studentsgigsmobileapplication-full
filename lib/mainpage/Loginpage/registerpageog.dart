@@ -243,7 +243,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
            BlocListener<OtpCubit, OtpState>(
         listener: (context, state) {
           if (state is OtpIoaded){
-            print("hey shamil");
+            // print("hey shamil");
             Navigator.pop(context);
 
             showDialog(

@@ -72,7 +72,7 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
     );
     if (response.statusCode >= 200 && response.statusCode <= 299) {
       final data = homepagecategoryFromJson(response.body);
-      print(data);
+      // print(data);
       final mapped = data.map((item) {
         return {
           "id": item.id,
@@ -86,11 +86,11 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
       imagesData.addAll(mapped);
 
 
-      print("hey where$imagesData");
+      // print("hey where$imagesData");
 
       emit(HomepagetextformdatahaveInitial());
     } else {
-      print("statusCode${response.statusCode}");
+      // print("statusCode${response.statusCode}");
     }
   }
 
@@ -116,12 +116,12 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
         // ⚡️ REMOVE THIS EMIT
         // emit(PostyourjobInitial());
       } else {
-        print("Location fetch failed: ${response.statusCode}");
+        // print("Location fetch failed: ${response.statusCode}");
       }
     } on TimeoutException {
-      print("Location request timed out after 15 seconds");
+      // print("Location request timed out after 15 seconds");
     } catch (e) {
-      print("Location fetch error: $e");
+      // print("Location fetch error: $e");
     }
   }
 
@@ -155,7 +155,7 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
      String ? category,
      String ? location,
   }) async {
-    print("hey its working ");
+    // print("hey its working ");
     emit(HomepagetextformdatahaveIoading());
 
     try {
@@ -172,7 +172,7 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
         url += '&location=${Uri.encodeComponent(location.trim())}';
       }
 
-      print("Final URL: $url");
+      // print("Final URL: $url");
       // final uri = Uri.parse(
       //   '$baseurl/api/employer/search-employee/'
       //       '?category=$category&location=$location&page=${counter ?? 1}',
@@ -191,10 +191,10 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
 
       if (response.statusCode == 200) {
         final seachdata = seachdataFromJson(response.body);
-        print(response.statusCode);
-        print(url);
-        print(seachdata.data.length);
-        print(seachdata.data);
+        // print(response.statusCode);
+        // print(url);
+        // print(seachdata.data.length);
+        // print(seachdata.data);
 
 
         // ✅ Add new data to the allEmployees list
@@ -203,12 +203,12 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
 
         emit(HomepagetextformdatahaveIoaded(seachdata));
       } else {
-        print(response.statusCode);
+        // print(response.statusCode);
 
         emit(Homepagetextformdatahaveerror('Failed with code: ${response.statusCode}'));
       }
     } catch (e) {
-      print(e);
+      // print(e);
 
       emit(Homepagetextformdatahaveerror('Error: ${e.toString()}'));
     }
@@ -218,7 +218,7 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
   Future<Map<String, dynamic>?> fetchPlanUsage() async {
     // ✅ If cached, return directly (fast)
     if (cachedPlanUsage != null) {
-      print("📦 Using cached plan data");
+      // print("📦 Using cached plan data");
       return cachedPlanUsage;
     }
 
@@ -240,11 +240,11 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
         cachedPlanUsage = data; // 🔁 Save to cache
         return data;
       } else {
-        print("❌ Failed to fetch plan: ${response.statusCode}");
+        // print("❌ Failed to fetch plan: ${response.statusCode}");
         return null;
       }
     } catch (e) {
-      print("❗ Exception during plan fetch: $e");
+      // print("❗ Exception during plan fetch: $e");
       return null;
     }
   }
@@ -255,12 +255,12 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
     final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
 
 
-    print("yes");
-    print("Token: $token");
-    print("Employee ID: $employeeId");
+    // print("yes");
+    // print("Token: $token");
+    // print("Employee ID: $employeeId");
 
     final uri = Uri.parse("$baseurl/api/employer/employee-profile-access/");
-    print("Posting to: $uri");
+    // print("Posting to: $uri");
 
     try {
       final request = http.MultipartRequest("POST", uri);
@@ -272,12 +272,12 @@ class HomepagetextformdatahaveCubit extends Cubit<HomepagetextformdatahaveState>
       final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode >= 200 && response.statusCode <= 299) {
-        print("✅ Visited count updated: $responseBody");
+        // print("✅ Visited count updated: $responseBody");
       } else {
-        print("❌ Failed to update visited count: ${response.statusCode}");
+        // print("❌ Failed to update visited count: ${response.statusCode}");
       }
     } catch (e) {
-      print("❗ Exception during visited count post: $e");
+      // print("❗ Exception during visited count post: $e");
     }
   }
 
