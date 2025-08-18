@@ -183,9 +183,9 @@ class OptionScreen extends StatelessWidget {
 
   // Navigation method
   void _navigateToLogin(BuildContext context, String userType) {
-    print("🚀 Navigating to login with user type: $userType");
+    // print("🚀 Navigating to login with user type: $userType");
 
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => Registerpage(),

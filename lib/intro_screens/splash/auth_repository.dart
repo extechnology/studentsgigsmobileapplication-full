@@ -13,10 +13,6 @@ class AuthRepository {
       final accessToken = await _secureStorage.read(key: "access_token");
       final userType = await _secureStorage.read(key: "user_type");
 
-      print("Retrieved data:");
-      print("  - accessToken: $accessToken");
-      print("  - userType: $userType");
-
       if (accessToken != null && userType != null) {
         return AuthData(
           accessToken: accessToken,
@@ -25,7 +21,6 @@ class AuthRepository {
       }
       return null;
     } catch (e) {
-      print('Error getting auth data: $e');
       return null;
     }
   }
@@ -35,7 +30,6 @@ class AuthRepository {
     try {
       final parts = token.split('.');
       if (parts.length != 3) {
-        print("Invalid token format");
         return false;
       }
 
@@ -46,22 +40,17 @@ class AuthRepository {
 
       final exp = payloadMap['exp'];
       if (exp == null) {
-        print("No expiration claim in token");
         return false;
       }
 
       final expirationDate = DateTime.fromMillisecondsSinceEpoch(exp * 1000);
       final now = DateTime.now();
 
-      print("Token expires at: $expirationDate");
-
       const bufferTime = Duration(minutes: 5);
       final isValid = now.isBefore(expirationDate.subtract(bufferTime));
 
-      print("Token is ${isValid ? 'valid' : 'expired'}");
       return isValid;
     } catch (e) {
-      print('Error validating JWT token: $e');
       return false;
     }
   }
@@ -77,10 +66,7 @@ class AuthRepository {
         _secureStorage.delete(key: "user_id"),
         _secureStorage.delete(key: "user_email"),
       ]);
-      print("Authentication data cleared.");
-    } catch (e) {
-      print("Error clearing auth data: $e");
-    }
+    } catch (e) {}
   }
 }
 

@@ -48,12 +48,24 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
   void _filterJobTitles(String query, List<Map<String, String>> allJobTitles) {
     setState(() {
       if (query.isEmpty) {
-        filteredJobTitles = allJobTitles;
+        // Remove duplicates by converting to Set and back to List
+        final uniqueJobTitles = <String, Map<String, String>>{};
+        for (var job in allJobTitles) {
+          uniqueJobTitles[job['value']!] = job;
+        }
+        filteredJobTitles = uniqueJobTitles.values.toList();
         isSearching = false;
       } else {
-        filteredJobTitles = allJobTitles.where((job) {
+        final filtered = allJobTitles.where((job) {
           return job['label']!.toLowerCase().contains(query.toLowerCase());
         }).toList();
+
+        // Remove duplicates from filtered results
+        final uniqueFiltered = <String, Map<String, String>>{};
+        for (var job in filtered) {
+          uniqueFiltered[job['value']!] = job;
+        }
+        filteredJobTitles = uniqueFiltered.values.toList();
         isSearching = true;
       }
     });
@@ -152,7 +164,13 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
 
           List<Map<String, String>> jobTitles = [];
           if (state is JobTitlesLoaded) {
-            jobTitles = state.jobTitles;
+            // Remove duplicates from the original job titles
+            final uniqueJobTitles = <String, Map<String, String>>{};
+            for (var job in state.jobTitles) {
+              uniqueJobTitles[job['value']!] = job;
+            }
+            jobTitles = uniqueJobTitles.values.toList();
+
             if (filteredJobTitles.isEmpty) {
               filteredJobTitles = jobTitles;
             }
@@ -275,16 +293,6 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
                               ? null
                               : () {
                                   // Debug: Print all form data before validation
-                                  print("=== FORM DEBUG INFO ===");
-                                  print(
-                                      "Selected Job Title: $selectedJobTitle");
-                                  print("Company Name: ${companyName.text}");
-                                  print("Start Date: ${startDate.text}");
-                                  print("End Date: ${endtDate.text}");
-                                  print("Is Working: $isWorking");
-                                  print(
-                                      "Form Valid: ${_formKey.currentState?.validate()}");
-                                  print("=====================");
 
                                   if (_formKey.currentState!.validate()) {
                                     if (selectedJobTitle == null ||
@@ -329,14 +337,6 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
                                     }
 
                                     // All validations passed, proceed with adding experience
-                                    print("=== SENDING TO BLOC ===");
-                                    print("Company: ${companyName.text}");
-                                    print("Job Title: $selectedJobTitle");
-                                    print("Start Date: ${startDate.text}");
-                                    print(
-                                        "End Date: ${isWorking ? '' : endtDate.text}");
-                                    print("Is Working: $isWorking");
-                                    print("=====================");
 
                                     context.read<ExperienceBloc>().add(
                                           AddExperience(
@@ -350,9 +350,7 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
                                             isWorking: isWorking,
                                           ),
                                         );
-                                  } else {
-                                    print("Form validation failed!");
-                                  }
+                                  } else {}
                                 },
                           child: state is ExperienceLoading
                               ? const SizedBox(
@@ -387,39 +385,39 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
       value: selectedJobTitle,
       items: [
         // Search field as the first item
-        DropdownMenuItem<String>(
-          enabled: false,
-          value: '__search__',
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: TextFormField(
-              controller: searchController,
-              focusNode: searchFocusNode,
-              decoration: InputDecoration(
-                hintText: 'Search job titles...',
-                border: InputBorder.none,
-                suffixIcon: searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear, size: 18),
-                        onPressed: () {
-                          searchController.clear();
-                          _filterJobTitles('', jobTitles);
-                        },
-                      )
-                    : null,
-              ),
-              onChanged: (value) {
-                _filterJobTitles(value, jobTitles);
-              },
-            ),
-          ),
-        ),
+        // DropdownMenuItem<String>(
+        //   enabled: false,
+        //   value: '__search__',
+        //   child: Container(
+        //     padding: const EdgeInsets.symmetric(horizontal: 8),
+        //     child: TextFormField(
+        //       controller: searchController,
+        //       focusNode: searchFocusNode,
+        //       decoration: InputDecoration(
+        //         hintText: 'Search job titles...',
+        //         border: InputBorder.none,
+        //         suffixIcon: searchController.text.isNotEmpty
+        //             ? IconButton(
+        //                 icon: const Icon(Icons.clear, size: 18),
+        //                 onPressed: () {
+        //                   searchController.clear();
+        //                   _filterJobTitles('', jobTitles);
+        //                 },
+        //               )
+        //             : null,
+        //       ),
+        //       onChanged: (value) {
+        //         _filterJobTitles(value, jobTitles);
+        //       },
+        //     ),
+        //   ),
+        // ),
         // Divider
-        const DropdownMenuItem<String>(
-          enabled: false,
-          value: '__divider__',
-          child: Divider(height: 1),
-        ),
+        // const DropdownMenuItem<String>(
+        //   enabled: false,
+        //   value: '__divider__',
+        //   child: Divider(height: 1),
+        // ),
         // Loading state
         if (state is JobTitlesLoading)
           DropdownMenuItem<String>(

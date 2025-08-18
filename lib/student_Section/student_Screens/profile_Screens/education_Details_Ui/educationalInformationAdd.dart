@@ -189,6 +189,14 @@ class _EducationAddPageState extends State<EducationAddPage> {
       appBar: AppBar(
         title: const Text('Add Education'),
         backgroundColor: const Color(0xffF9F2ED),
+        leading: IconButton(
+          onPressed: () {
+            // Reset to initial state and reload education details
+            context.read<EducationBloc>().add(LoadEducationDetails());
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios_new),
+        ),
       ),
       body: BlocConsumer<EducationBloc, EducationState>(
         listener: (context, state) {
@@ -393,7 +401,12 @@ class _EducationAddPageState extends State<EducationAddPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        context
+                            .read<EducationBloc>()
+                            .add(LoadEducationDetails());
+                        Navigator.pop(context);
+                      },
                       child: const Text("Cancel"),
                     ),
                     const SizedBox(width: 12),

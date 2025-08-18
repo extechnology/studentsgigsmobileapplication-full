@@ -41,6 +41,25 @@ class ProfileEditLoaded extends ProfileEditState {
   List<Object> get props => [jobTitles, showSuccess];
 }
 
+class ProfileEditPermissionRequired extends ProfileEditState {
+  final EmployeeProfile? profileData;
+  final List<dynamic> jobTitles;
+  final bool isProfileImage;
+  final BuildContext context;
+  final PickImage originalPickEvent;
+
+  const ProfileEditPermissionRequired({
+    this.profileData,
+    required this.jobTitles,
+    required this.isProfileImage,
+    required this.context,
+    required this.originalPickEvent, // Add this line
+  });
+
+  @override
+  List<Object> get props => [jobTitles, isProfileImage];
+}
+
 class ProfileEditLocationSuggestions extends ProfileEditState {
   final List<String> locations;
   final EmployeeProfile? profileData;

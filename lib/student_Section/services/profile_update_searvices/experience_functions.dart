@@ -14,7 +14,6 @@ class ExperienceService {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        print("Experience get---${response.body}");
 
         if (data.isEmpty) {
           return [];
@@ -49,17 +48,9 @@ class ExperienceService {
       String formattedStartDate = _convertToBackendDateFormat(startDate);
       String? formattedEndDate;
 
-      print("Original start date: '$startDate'");
-      print("Formatted start date: '$formattedStartDate'");
-
       if (!expWork && endDate.isNotEmpty) {
         formattedEndDate = _convertToBackendDateFormat(endDate);
-        print("Original end date: '$endDate'");
-        print("Formatted end date: '$formattedEndDate'");
-      } else {
-        print(
-            "End date not included (currently working: $expWork, end date empty: ${endDate.isEmpty})");
-      }
+      } else {}
 
       // Handle end date properly - if currently working, don't send end_date field
       final body = <String, dynamic>{
@@ -74,21 +65,13 @@ class ExperienceService {
         body["exp_end_date"] = formattedEndDate;
       }
 
-      print("Posting experience with data: ${jsonEncode(body)}");
-      print("Headers: $headers");
-      print("URL: $url");
-
       final response = await http.post(
         url,
         headers: headers,
         body: jsonEncode(body),
       );
 
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
-
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("Experience Post Success---${response.body}");
       } else {
         // Parse error response if available
         String errorMessage = 'Failed to add experience';
@@ -109,7 +92,6 @@ class ExperienceService {
         throw Exception(errorMessage);
       }
     } catch (e) {
-      print("Error in postExperience: $e");
       if (e is Exception) {
         rethrow; // Re-throw the original exception
       } else {
@@ -126,14 +108,10 @@ class ExperienceService {
         headers: await ApiConstants.headers,
       );
 
-      print("Delete response status: ${response.statusCode}");
-      print("Delete response body: ${response.body}");
-
       // 204 means successful deletion with no content returned
       // 200 might also be valid depending on your API
       return response.statusCode == 204 || response.statusCode == 200;
     } catch (e) {
-      print("Error deleting experience: $e");
       return false;
     }
   }
@@ -174,7 +152,6 @@ class ExperienceService {
       // Convert to backend format (YYYY-MM-DD)
       return DateFormat('yyyy-MM-dd').format(parsedDate);
     } catch (e) {
-      print('Error converting date format: $dateString -> $e');
       // Return original string if conversion fails
       return dateString;
     }

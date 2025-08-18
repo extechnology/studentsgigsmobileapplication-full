@@ -93,7 +93,7 @@ class SearchService {
       //
 
       if (response.statusCode == 200) {
-        print('Response search result: ${response.body}');
+        // print('Response search result: ${response.body}');
         return jsonDecode(response.body);
       } else {
         throw Exception('Failed with status ${response.statusCode}');

@@ -18,8 +18,6 @@ class Experiences {
   });
 
   factory Experiences.fromJson(Map<String, dynamic> json) {
-    // Debug print
-
     return Experiences(
       id: json['id'] ?? 0,
       companyName: json['exp_company_name']?.toString(),

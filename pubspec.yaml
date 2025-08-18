@@ -52,7 +52,7 @@ dependencies:
   razorpay_flutter: ^1.4.0
   url_launcher: ^6.2.5  # use latest
   flutter_cached_pdfview: ^0.4.2
-  device_info_plus: ^10.1.0
+  device_info_plus: ^11.5.0
   open_file: ^3.3.2
   share_plus: ^7.2.1
   country_state_city_pro: ^0.0.6

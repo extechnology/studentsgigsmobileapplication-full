@@ -69,13 +69,27 @@ class _PremiumPlansView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Membership Plans',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Poppins',
-                          color: Color(0xffde2e7e),
+                      ShaderMask(
+                        shaderCallback: (Rect bounds) {
+                          return const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xffEB8125),
+                              Color(0xffc55a5f),
+                              Color(0xff004673)
+                            ],
+                          ).createShader(bounds);
+                        },
+                        blendMode: BlendMode.srcIn,
+                        child: const Text(
+                          "Unlock Your Full Potential With Premium",
+                          style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              height: 1.5),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -238,13 +252,13 @@ class _PremiumPlansView extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.green,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.check_circle, color: Colors.white, size: 16),
+              Icon(Icons.check_circle, color: Colors.green, size: 16),
               SizedBox(width: 6),
               Text(
                 'Current Plan: $currentPlanName',
@@ -252,7 +266,7 @@ class _PremiumPlansView extends StatelessWidget {
                   fontFamily: 'Poppins',
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: Color(0xffFF9500),
                 ),
               ),
             ],
