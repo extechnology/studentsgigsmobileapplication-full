@@ -101,9 +101,38 @@ class RegisterRepository {
               "password": password,
             }),
           )
-          .timeout(Duration(seconds: 10)); // timeout added
+          .timeout(Duration(seconds: 10));
 
-      return response.statusCode == 200;
+      if (response.statusCode == 201) {
+        // Parse the response body to check for actual success/error
+        final data = jsonDecode(response.body);
+
+        // Check for error fields first
+        if (data.containsKey('non_field_errors') ||
+            data.containsKey('error') ||
+            data.containsKey('errors')) {
+          return false;
+        }
+
+        // Check for success indicators
+        if (data.containsKey('success')) {
+          return data['success'] == true;
+        }
+
+        // Check for success message
+        if (data.containsKey('message')) {
+          String message = data['message'].toString().toLowerCase();
+          bool isSuccess = message.contains('verified') ||
+              message.contains('created') ||
+              message.contains('success');
+          return isSuccess;
+        }
+
+        // If no clear indicators, assume success since status is 200
+        return true;
+      }
+
+      return false;
     } catch (e) {
       return false;
     }

@@ -133,10 +133,6 @@ class ProfileEditScreen extends StatelessWidget {
                                         image:
                                             _getCoverPhotoProvider(profileData),
                                         fit: BoxFit.cover,
-                                        onError: (exception, stackTrace) =>
-                                            const AssetImage(
-                                          'assets/images/others/default-featured-image.png',
-                                        ),
                                       ),
                                     ),
                                     child: Padding(
@@ -172,10 +168,6 @@ class ProfileEditScreen extends StatelessWidget {
                                 backgroundColor: Colors.grey.shade300,
                                 backgroundImage:
                                     _getProfilePicProvider(profileData),
-                                onBackgroundImageError:
-                                    (exception, stackTrace) => const AssetImage(
-                                  'assets/images/others/default-featured-image.png',
-                                ),
                                 child: state is ProfileEditUploading
                                     ? const CircularProgressIndicator(
                                         valueColor:
@@ -207,7 +199,6 @@ class ProfileEditScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-
                       // Name Field
                       _buildSectionLabel("Name"),
                       CustomTextField(
@@ -560,19 +551,21 @@ class ProfileEditScreen extends StatelessWidget {
   ImageProvider _getCoverPhotoProvider(EmployeeProfile? profileData) {
     if (profileData?.coverPhoto != null &&
         profileData!.coverPhoto!.isNotEmpty) {
-      return NetworkImage(profileData!.coverPhoto!);
+      return NetworkImage(profileData.coverPhoto!);
     }
-    // Return default cover image
-    return const AssetImage('assets/images/others/default-featured-image.png');
+    // Return default cover image when null or empty
+    return const AssetImage(
+        'assets/images/others/default-featured-image.png.jpg');
   }
 
   ImageProvider _getProfilePicProvider(EmployeeProfile? profileData) {
     if (profileData?.profilePic != null &&
         profileData!.profilePic!.isNotEmpty) {
-      return NetworkImage(profileData!.profilePic!);
+      return NetworkImage(profileData.profilePic!);
     }
-    // Return default profile image
-    return const AssetImage('assets/images/others/default-featured-image.png');
+    // Return default profile image when null or empty
+    return const AssetImage(
+        'assets/images/others/default-featured-image.png.jpg');
   }
 }
 

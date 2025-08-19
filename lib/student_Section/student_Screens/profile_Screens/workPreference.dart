@@ -73,7 +73,8 @@ class StudentWorkPreference extends StatelessWidget {
                       children: [
                         _buildSectionLabel("Interested Job Type"),
                         buildDropdownbuttonFormField(
-                          value: state.selectedJobType,
+                          value: _getValidDropdownValue(state.selectedJobType,
+                              ["Online", "Offline", "Both"]),
                           items: ["Online", "Offline", "Both"].map((jobtype) {
                             return DropdownMenuItem<String>(
                                 value: jobtype, child: Text(jobtype));
@@ -89,7 +90,9 @@ class StudentWorkPreference extends StatelessWidget {
                         ),
                         _buildSectionLabel("Transportation Availability"),
                         buildDropdownbuttonFormField(
-                          value: state.selectedTransportationType,
+                          value: _getValidDropdownValue(
+                              state.selectedTransportationType,
+                              ["Own Vehicle", "Public Transport", "None"]),
                           items: ["Own Vehicle", "Public Transport", "None"]
                               .map((t) {
                             return DropdownMenuItem<String>(
@@ -108,7 +111,14 @@ class StudentWorkPreference extends StatelessWidget {
                         ),
                         _buildSectionLabel("Availability"),
                         buildDropdownbuttonFormField(
-                          value: state.selectedAvailability,
+                          value: _getValidDropdownValue(
+                              state.selectedAvailability, [
+                            "Hourly Rate",
+                            "All-Day Gigs",
+                            "Weekend Gigs",
+                            "Vacation Gigs",
+                            "Project Based"
+                          ]),
                           items: [
                             "Hourly Rate",
                             "All-Day Gigs",
@@ -171,6 +181,22 @@ class StudentWorkPreference extends StatelessWidget {
         },
       ),
     );
+  }
+
+  // Helper method to ensure dropdown value is valid
+  String? _getValidDropdownValue(
+      String? currentValue, List<String> validItems) {
+    if (currentValue == null || currentValue.isEmpty) {
+      return null;
+    }
+
+    // Check if the current value exists in the valid items list
+    if (validItems.contains(currentValue)) {
+      return currentValue;
+    }
+
+    // If not found, return null to show no selection
+    return null;
   }
 
   Widget _buildSectionLabel(String text) {

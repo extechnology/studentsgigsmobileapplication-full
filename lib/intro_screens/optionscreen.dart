@@ -94,7 +94,7 @@ class OptionScreen extends StatelessWidget {
                             backgroundColor: const Color(0xff004673),
                             imagePath: "assets/images/others/Ellipse 1498.png",
                             onPressed: () {
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => LoginPage(),
@@ -117,7 +117,7 @@ class OptionScreen extends StatelessWidget {
                             backgroundColor: const Color(0xffEB8125),
                             imagePath: "assets/images/others/Ellipse 1497.png",
                             onPressed: () {
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const Registerpage(),
