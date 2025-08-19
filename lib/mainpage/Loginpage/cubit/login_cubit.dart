@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-
 import '../../Onboardprofile/onboardprofile4/model/model.dart';
 import '../../Onboardprofile/onboardprofile4/onboardprofile4.dart';
 import '../../dashborad/dashborad.dart';
@@ -20,15 +19,14 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
   final String baseurl = ApiConstantsemployer.baseUrl;
 
-  String ? user;
+  String? user;
   static const _storage = FlutterSecureStorage();
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
-    serverClientId: '15124092057-q7saopofjt97svqnsd47t12n7ckn29qi.apps.googleusercontent.com',
+    serverClientId:
+        '15124092057-q7saopofjt97svqnsd47t12n7ckn29qi.apps.googleusercontent.com',
   );
-
-
 
   // static const _storage = FlutterSecureStorage();
   static const String userType = "employer";
@@ -53,7 +51,8 @@ class LoginCubit extends Cubit<LoginState> {
 
       // print("🚫3. Calling backend API with userType: $userType");
       final response = await http.post(
-        Uri.parse("https://server.studentsgigs.com/api/employer/api/google-auth/"),
+        Uri.parse(
+            "https://server.studentsgigs.com/api/employer/api/google-auth/"),
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -61,7 +60,7 @@ class LoginCubit extends Cubit<LoginState> {
         body: jsonEncode({
           // "id_token": googleAuth.idToken,
           "email": googleUser.email,
-          "username": googleUser.displayName ,
+          "username": googleUser.displayName,
           // "access_token": googleAuth.accessToken,
         }),
       );
@@ -72,7 +71,8 @@ class LoginCubit extends Cubit<LoginState> {
         // print("🚫Response Body: $data");
         await _storage.write(key: 'auth_token', value: data['token']);
         await _storage.write(key: 'access_token', value: data['access']);
-        await _storage.write(key: 'refresh_token', value: data['refresh_token']);
+        await _storage.write(
+            key: 'refresh_token', value: data['refresh_token']);
         await _storage.write(key: 'user_type', value: userType);
         await _storage.write(key: 'user_email', value: googleUser.email);
 
@@ -85,12 +85,11 @@ class LoginCubit extends Cubit<LoginState> {
         //     ),
         //   );
         // }
-print("🚫${googleUser.displayName}");
-        print(googleUser.email);
-        print(data["token"]);
-        print(data["access"]);
-        print(data["refresh_token"]);
-
+// print("🚫${googleUser.displayName}");
+//         print(googleUser.email);
+//         print(data["token"]);
+//         print(data["access"]);
+//         print(data["refresh_token"]);
 
         emit(LoginIoaded(
           name: googleUser.displayName ?? '',
@@ -125,16 +124,16 @@ print("🚫${googleUser.displayName}");
   //   }
   // }
   Future<void> getcompanyinfo(BuildContext context) async {
-    final token = await ApiConstantsemployer.getTokenOnly(); //  get actual token
+    final token =
+        await ApiConstantsemployer.getTokenOnly(); //  get actual token
     // final token2 = await ApiConstants.getTokenOnly2(); //  get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
-    final response = await http.get(Uri.parse(url),headers: {
+    final response = await http.get(Uri.parse(url), headers: {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
-
     });
-    if(response.statusCode >= 200 && response.statusCode <= 299){
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
       final data = compantonboardingFromJson(response.body);
       // print(data);
 
@@ -168,23 +167,19 @@ print("🚫${googleUser.displayName}");
 
       // print("networkurl$networkImage");
 
-
       // emit(CompanyinfoInitial());
       // Future.delayed(Duration(milliseconds: 5000), () {
       //   // Trigger a fake user interaction
       //   emit(CompanyinfoInitial()); // Ensure rebuild (if needed)
       // });
-
-    }else {
+    } else {
       // print("Something Wrong");
     }
-
   }
-
 
   Future<void> signOut() async {
     await _googleSignIn.disconnect();
-    await _storage.deleteAll();    // delete all secure tokens
+    await _storage.deleteAll(); // delete all secure tokens
 
     emit(LoginInitial());
   }

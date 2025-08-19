@@ -34,8 +34,8 @@ class _OTPVerificationBlocWidgetState extends State<OTPVerificationBlocWidget> {
   Widget build(BuildContext context) {
     return BlocListener<RegisterBloc, RegisterState>(
       listener: (context, state) {
-        if (state is VerifyOTPSuccess) {
-          Navigator.of(context).pop(true); // OTP verified successfully
+        if (state is RegisterSuccess) {
+          Navigator.of(context).pop(true);
         } else if (state is VerifyOTPFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -51,15 +51,15 @@ class _OTPVerificationBlocWidgetState extends State<OTPVerificationBlocWidget> {
             ),
           );
         } else if (state is ResendOTPFailure) {
+          // Debug log
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.error),
               backgroundColor: Colors.red,
             ),
           );
-        } else if (state is RegisterSuccess) {
-          Navigator.of(context).pop(true); // Registration completed
         } else if (state is RegisterFailure) {
+          // Debug log
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.error),
@@ -105,17 +105,21 @@ class _OTPVerificationBlocWidgetState extends State<OTPVerificationBlocWidget> {
         actions: [
           BlocBuilder<RegisterBloc, RegisterState>(
             builder: (context, state) {
+              // Debug log
+
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: state is ResendOTPLoading
-                        ? null
-                        : () {
-                            context.read<RegisterBloc>().add(
-                                  ResendOTPRequested(email: widget.email),
-                                );
-                          },
+                    onPressed:
+                        (state is ResendOTPLoading || state is VerifyOTPLoading)
+                            ? null
+                            : () {
+                                // Debug log
+                                context.read<RegisterBloc>().add(
+                                      ResendOTPRequested(email: widget.email),
+                                    );
+                              },
                     child: state is ResendOTPLoading
                         ? SizedBox(
                             width: 16,
@@ -131,26 +135,35 @@ class _OTPVerificationBlocWidgetState extends State<OTPVerificationBlocWidget> {
                           ),
                   ),
                   ElevatedButton(
-                    onPressed: state is VerifyOTPLoading
+                    onPressed: (state is VerifyOTPLoading ||
+                            state is ResendOTPLoading)
                         ? null
                         : () {
-                            if (_otpController.text.trim().isNotEmpty) {
-                              context.read<RegisterBloc>().add(
-                                    VerifyOTPRequested(
-                                      email: widget.email,
-                                      otp: _otpController.text.trim(),
-                                      username: widget.username,
-                                      password: widget.password,
-                                    ),
-                                  );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Please enter OTP"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
+                            // Add a small delay to ensure text input is complete
+                            Future.delayed(Duration(milliseconds: 100), () {
+                              final otpText = _otpController.text.trim();
+                              // Debug log
+
+                              if (otpText.isNotEmpty && otpText.length >= 4) {
+                                // Debug log
+                                context.read<RegisterBloc>().add(
+                                      VerifyOTPRequested(
+                                        email: widget.email,
+                                        otp: otpText,
+                                        username: widget.username,
+                                        password: widget.password,
+                                      ),
+                                    );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        "Please enter a valid OTP (at least 4 digits)"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            });
                           },
                     child: state is VerifyOTPLoading
                         ? SizedBox(

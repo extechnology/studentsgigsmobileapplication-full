@@ -44,23 +44,30 @@ class _DashBoardState extends State<StudentHomeScreens>
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    // Get the bottom padding (system navigation bar height)
+    double bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Scaffold(
       body: TabBarView(
         controller: _tabController,
         children: _screens,
       ),
       bottomNavigationBar: Container(
-        height: 70,
+        // Only add padding if there's actually a system navigation bar
+        padding: EdgeInsets.only(
+          bottom: bottomPadding,
+        ),
+        height: screenHeight * 0.085 + bottomPadding,
         color: const Color(0xffF9F2ED),
         child: TabBar(
           controller: _tabController,
-          isScrollable: false, // Changed to false for even spacing
-          indicatorColor: Colors.transparent, // Hide the underline
+          isScrollable: false,
+          indicatorColor: Colors.transparent,
           labelColor: const Color(0xffEB8125),
           unselectedLabelColor: const Color(0xff4d4747),
           indicatorSize: TabBarIndicatorSize.tab,
-          labelPadding: const EdgeInsets.symmetric(
-              horizontal: 20.0), // Add spacing between icons
+          labelPadding: const EdgeInsets.symmetric(horizontal: 20.0),
           tabs: _tabs,
         ),
       ),

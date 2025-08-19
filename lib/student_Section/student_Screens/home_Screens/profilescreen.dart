@@ -474,7 +474,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Enter your email address to receive password reset instructions.",
+                "Enter your email address to receive password reset link.",
                 style: TextStyle(
                   fontFamily: "Poppins",
                   color: Colors.grey.shade600,
@@ -484,6 +484,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: forgotPassword,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: "Email Address",
                   border: OutlineInputBorder(
@@ -493,6 +494,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Color(0xffEB8125)),
                   ),
+                  prefixIcon: const Icon(Icons.email_outlined),
                 ),
               ),
             ],
@@ -509,17 +511,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () {
                 String email = forgotPassword.text.trim();
                 if (email.isNotEmpty) {
-                  Navigator.of(context).pop();
-                  await resetPassword(email, context);
-                  forgotPassword.clear();
+                  // Validate email format
+                  if (_isValidEmail(email)) {
+                    // Close dialog first
+                    Navigator.of(context).pop();
+
+                    // Show success message immediately
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            const Icon(Icons.check_circle_outline,
+                                color: Colors.white),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text(
+                                    "Reset link sent successfully!",
+                                    style: TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    "Check your email: $email",
+                                    style: const TextStyle(
+                                      fontFamily: "Poppins",
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        backgroundColor: Colors.green,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        duration: const Duration(seconds: 5),
+                        margin: const EdgeInsets.all(16),
+                      ),
+                    );
+
+                    // Call the actual reset password function in background
+                    resetPassword(email, context);
+
+                    // Clear the text field
+                    forgotPassword.clear();
+                  } else {
+                    // Show error for invalid email
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Row(
+                          children: [
+                            Icon(Icons.error_outline, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text(
+                              "Please enter a valid email address",
+                              style: TextStyle(fontFamily: "Poppins"),
+                            ),
+                          ],
+                        ),
+                        backgroundColor: Colors.red,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        margin: const EdgeInsets.all(16),
+                      ),
+                    );
+                  }
                 } else {
+                  // Show error for empty email
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Please enter your email address."),
-                      backgroundColor: Colors.red,
+                    SnackBar(
+                      content: const Row(
+                        children: [
+                          Icon(Icons.warning_outlined, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text(
+                            "Please enter your email address",
+                            style: TextStyle(fontFamily: "Poppins"),
+                          ),
+                        ],
+                      ),
+                      backgroundColor: Colors.orange,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      margin: const EdgeInsets.all(16),
                     ),
                   );
                 }
@@ -531,7 +623,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               child: const Text(
-                "Send Reset Link",
+                "Send",
                 style: TextStyle(
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w500,
@@ -542,6 +634,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+// Keep this email validation helper method
+  bool _isValidEmail(String email) {
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
 
   @override

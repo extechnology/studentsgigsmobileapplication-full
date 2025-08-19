@@ -141,7 +141,7 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
 
               // Willingness to Relocate
               DropdownButtonFormField<String>(
-                value: state.relocate,
+                value: _getValidDropdownValue(state.relocate, ['Yes', 'No']),
                 decoration: InputDecoration(
                   labelText: 'Willing to Relocate',
                   border: OutlineInputBorder(
@@ -265,6 +265,21 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
         );
       },
     );
+  }
+
+  String? _getValidDropdownValue(
+      String? currentValue, List<String> validItems) {
+    if (currentValue == null || currentValue.isEmpty) {
+      return null;
+    }
+
+    // Check if the current value exists in the valid items list
+    if (validItems.contains(currentValue)) {
+      return currentValue;
+    }
+
+    // If not found, return null to show no selection
+    return null;
   }
 
   Future<void> _showPermissionDialog(BuildContext context) async {

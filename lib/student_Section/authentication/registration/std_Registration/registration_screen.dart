@@ -91,15 +91,6 @@ class RegisterPage extends StatelessWidget {
                       backgroundColor: Colors.red,
                     ),
                   );
-                } else if (state is RegisterSuccess) {
-                  Navigator.pushReplacementNamed(context, 'LoginPage');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Registration successful! Please login."),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                  _clearForm();
                 } else if (state is RegisterFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -214,14 +205,15 @@ class RegisterPage extends StatelessWidget {
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text("Please accept terms and conditions")),
+                    const SnackBar(
+                        content:
+                            const Text("Please accept terms and conditions")),
                   );
                 }
               },
               child: authState is GoogleAuthLoading
-                  ? CircularProgressIndicator()
-                  : CircleAvatar(
+                  ? const CircularProgressIndicator()
+                  : const CircleAvatar(
                       radius: 30,
                       backgroundColor: Color(0xffF9F2ED),
                       backgroundImage:
@@ -258,7 +250,7 @@ class RegisterPage extends StatelessWidget {
                     WidgetSpan(
                       child: GestureDetector(
                         onTap: () => TermsAndConditionsDialog.show(context),
-                        child: Text(
+                        child: const Text(
                           "Terms & Conditions",
                           style: TextStyle(
                             fontFamily: "Poppins",
@@ -314,7 +306,7 @@ class RegisterPage extends StatelessWidget {
                   : null,
               child: (registerState is RegisterLoading ||
                       registerState is SendOTPLoading)
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
@@ -384,17 +376,35 @@ class RegisterPage extends StatelessWidget {
       barrierDismissible: false,
       builder: (dialogContext) => BlocProvider.value(
         value: context.read<RegisterBloc>(),
-        child: OTPVerificationBlocWidget(
-          email: state.email,
-          username: state.username,
-          password: state.password,
+        child: BlocListener<RegisterBloc, RegisterState>(
+          listener: (context, state) {
+            if (state is RegisterSuccess) {
+              // Close the dialog first
+              Navigator.of(dialogContext).pop(true);
+
+              // Then navigate to login page
+              Navigator.pushReplacementNamed(context, 'LoginPage');
+
+              // Show success message
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Registration successful! Please login."),
+                  backgroundColor: Colors.green,
+                ),
+              );
+
+              // Clear the form
+              _clearForm();
+            }
+          },
+          child: OTPVerificationBlocWidget(
+            email: state.email,
+            username: state.username,
+            password: state.password,
+          ),
         ),
       ),
-    ).then((isVerified) {
-      if (isVerified == true) {
-        _clearForm();
-      }
-    });
+    );
   }
 
   void _clearForm() {
