@@ -128,8 +128,7 @@ class Homepageifdatalocation extends StatelessWidget {
                                     final usageData = await cubit
                                         .fetchPlanUsage();
                                     final usage = usageData?['usage'];
-                                    final profileAccess = usage?['profile_access'] ??
-                                        false;
+                                    final profileAccess = usage?['profile_access'] ?? false;
 
                                     if (!profileAccess) {
                                       final shouldNavigate = await showDialog<

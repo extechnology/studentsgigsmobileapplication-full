@@ -31,6 +31,7 @@ class _DashboradState extends State<Dashborad> {
   }
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return DefaultTabController(
       length: 4,
@@ -38,7 +39,8 @@ class _DashboradState extends State<Dashborad> {
         backgroundColor: Color(0xffF9F2ED),
         bottomNavigationBar: Container(
           color: Color(0xffF9F2ED),
-          height:  screenHeight * 0.085,
+          height:  screenHeight * 0.085 + bottomPadding,
+
           child:  TabBar(
             onTap: (index) {
               if (index == 0) {

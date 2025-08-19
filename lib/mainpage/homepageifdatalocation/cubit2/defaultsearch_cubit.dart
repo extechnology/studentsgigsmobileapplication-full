@@ -106,6 +106,7 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
     // 🛰️ Otherwise, make API call
     final url = "$baseurl/api/employer/employer-plan/";
     try {
+      // print(url);
       final response = await http.get(
         Uri.parse(url),
         headers:  await headers
@@ -116,10 +117,14 @@ class DefaultsearchCubit extends Cubit<DefaultsearchState> {
         cachedPlanUsage = data; // 🔁 Save to cache
         return data;
       } else {
+        // print(url);
+
         // print("❌ Failed to fetch plan: ${response.statusCode}");
         return null;
       }
     } catch (e) {
+      // print(url);
+
       // print("❗ Exception during plan fetch: $e");
       return null;
     }
