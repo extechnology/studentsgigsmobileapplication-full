@@ -36,7 +36,6 @@ class SplashView extends StatelessWidget {
               _navigateToWelcomeScreen(context);
             } else if (state is SplashError) {
               // Handle error state if needed
-              print("Splash Error: ${state.message}");
             }
           },
           child: BlocBuilder<SplashBloc, SplashState>(
@@ -59,8 +58,6 @@ class SplashView extends StatelessWidget {
   }
 
   void _navigateToUserDashboard(BuildContext context, String userType) {
-    print("🚀 Navigating to dashboard for user type: $userType");
-
     switch (userType.toLowerCase()) {
       case 'student':
         Navigator.pushReplacementNamed(context, 'StudentHomeScreens');
@@ -72,14 +69,12 @@ class SplashView extends StatelessWidget {
       //   Navigator.pushReplacementNamed(context, 'AdminDashboard');
       //   break;
       default:
-        print("Unknown user type: $userType, navigating to welcome screen");
         _navigateToWelcomeScreen(context);
         break;
     }
   }
 
   void _navigateToWelcomeScreen(BuildContext context) {
-    print("🏠 Navigating to welcome screen");
     Navigator.pushReplacementNamed(context, 'WelcomeScreen');
   }
 }

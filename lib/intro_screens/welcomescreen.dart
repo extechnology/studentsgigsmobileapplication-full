@@ -219,7 +219,7 @@ class Welcomescreen extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              print("sign In");
+              // print("sign In");
               // Navigate to sign in screen
               Navigator.pushNamed(context, "OptionScreen");
             },

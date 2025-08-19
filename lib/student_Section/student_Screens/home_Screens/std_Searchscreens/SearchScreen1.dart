@@ -34,8 +34,13 @@ class _SearchScreen1State extends State<SearchScreen1> {
   void _onJobTitleSelected(String? value) {
     if (value != null && value != "Loading fields...") {
       setState(() => selectJobTitle = value);
-      Navigator.pushNamed(context, "SearchScreen2",
-          arguments: {"selectJobTitle": value});
+      Navigator.pushNamed(
+        context,
+        "SearchScreen2",
+        arguments: {
+          'selectJobTitle': selectJobTitle, // Make sure this is not null
+        },
+      );
     }
   }
 

@@ -68,7 +68,11 @@ class RegisterPage extends StatelessWidget {
             BlocListener<GoogleAuthBloc, GoogleAuthState>(
               listener: (context, state) {
                 if (state is GoogleAuthSuccess) {
-                  Navigator.pushReplacementNamed(context, "OnboardProfile");
+                  Navigator.pushReplacementNamed(
+                    context,
+                    'StudentHomeScreens',
+                    arguments: {"userName": "Google User"},
+                  );
                 } else if (state is GoogleAuthFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(state.error)),
@@ -197,27 +201,34 @@ class RegisterPage extends StatelessWidget {
 
   Widget _buildGoogleSignInButton(BuildContext context) {
     return BlocBuilder<TermsBloc, TermsState>(
-      builder: (context, state) {
-        return GestureDetector(
-          onTap: () {
-            if (state.isAccepted) {
-              context.read<GoogleAuthBloc>().add(
-                    GoogleSignInRequested(context, 'student'),
+      builder: (context, termsState) {
+        return BlocBuilder<GoogleAuthBloc, GoogleAuthState>(
+          builder: (context, authState) {
+            return GestureDetector(
+              onTap: () {
+                if (termsState.isAccepted) {
+                  if (authState is! GoogleAuthLoading) {
+                    context
+                        .read<GoogleAuthBloc>()
+                        .add(GoogleSignInRequested(context, 'student'));
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text("Please accept terms and conditions")),
                   );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Please accept the terms and conditions"),
-                ),
-              );
-            }
+                }
+              },
+              child: authState is GoogleAuthLoading
+                  ? CircularProgressIndicator()
+                  : CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Color(0xffF9F2ED),
+                      backgroundImage:
+                          AssetImage("assets/images/logos/Group 6807.png"),
+                    ),
+            );
           },
-          child: CircleAvatar(
-            radius: 30,
-            backgroundColor: const Color(0xffF9F2ED),
-            backgroundImage:
-                const AssetImage("assets/images/logos/Group 6807.png"),
-          ),
         );
       },
     );

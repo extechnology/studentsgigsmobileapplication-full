@@ -87,7 +87,6 @@ class _DropdownExampleState extends State<DropdownExample> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Method 1: Using the fixed builder function
             buildDropdownButtonFormField(
               value: selectedSkill,
               items: createDropdownItems(skillOptions),

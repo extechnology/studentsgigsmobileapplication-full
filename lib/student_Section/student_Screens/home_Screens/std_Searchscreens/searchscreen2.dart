@@ -15,7 +15,7 @@ class SearchScreen2 extends StatefulWidget {
 
 class _SearchScreen2State extends State<SearchScreen2>
     with TickerProviderStateMixin {
-  TextEditingController location = TextEditingController();
+  late TextEditingController location = TextEditingController();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   final ScrollController _scrollController = ScrollController();
@@ -28,6 +28,8 @@ class _SearchScreen2State extends State<SearchScreen2>
   @override
   void initState() {
     super.initState();
+    // Initialize the TextEditingController properly
+    location = TextEditingController();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -45,8 +47,16 @@ class _SearchScreen2State extends State<SearchScreen2>
       final args =
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
       if (args != null && args['selectJobTitle'] != null) {
-        selectJobTitle = args['selectJobTitle'];
-        _performSearch(resetPagination: true);
+        setState(() {
+          selectJobTitle = args['selectJobTitle'];
+        });
+        // Perform search immediately with the passed job title
+        context.read<SearchBloc>().add(SearchJobsEvent(
+              selectJobTitle: args['selectJobTitle'],
+              selectedLocation: null,
+              selectedSalaryType: null,
+              resetPagination: true,
+            ));
       }
       _animationController.forward();
     });
@@ -341,10 +351,22 @@ class _SearchScreen2State extends State<SearchScreen2>
                             },
                             fieldViewBuilder: (context, textEditingController,
                                 focusNode, onFieldSubmitted) {
-                              location = textEditingController;
+                              // Don't reassign the controller, use the existing one
+                              // Copy the text from the autocomplete controller to our controller
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                if (textEditingController.text !=
+                                    location.text) {
+                                  location.text = textEditingController.text;
+                                }
+                              });
+
                               return TextField(
-                                controller: textEditingController,
+                                controller: location, // Use our own controller
                                 focusNode: focusNode,
+                                onChanged: (value) {
+                                  // Keep the autocomplete controller in sync
+                                  textEditingController.text = value;
+                                },
                                 style: const TextStyle(
                                   color: Colors.black87,
                                   fontWeight: FontWeight.w500,
@@ -491,6 +513,28 @@ class _SearchScreen2State extends State<SearchScreen2>
       ],
     );
   }
+
+  // // Add a method to reset the screen when navigating back
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+
+  //   // Clear search results and reset fields when coming back to this screen
+  //   final args =
+  //       ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+  //   if (args == null || args['selectJobTitle'] == null) {
+  //     // If no arguments, this means we're coming back from another screen
+  //     // Reset the search state
+  //     setState(() {
+  //       selectJobTitle = null;
+  //       selectedLocation = null;
+  //       selectedSalaryType = null;
+  //       location.clear();
+  //     });
+  //     // Clear the search results in the bloc
+  //     context.read<SearchBloc>().add(ClearFiltersEvent());
+  //   }
+  // }
 
   InputDecoration _getInputDecoration(String hintText, IconData icon) {
     return InputDecoration(

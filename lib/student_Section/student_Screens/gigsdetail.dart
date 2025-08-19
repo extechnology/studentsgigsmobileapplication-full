@@ -14,7 +14,7 @@ class GigsDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    print("JobData---$args");
+    // print("JobData---$args");
 
     final jobData = args['jobData'] as Map<String, dynamic>? ?? args;
     final jobId = jobData['id']?.toString() ?? '';
@@ -355,7 +355,6 @@ class GigsDetailScreen extends StatelessWidget {
                 ),
 
                 // Job Description Section
-                // Job Description Section
                 if (jobDescription.isNotEmpty) ...[
                   Text(
                     "Job Description",
@@ -521,37 +520,6 @@ class GigsDetailScreen extends StatelessWidget {
                     ),
                   const SizedBox(height: 20),
                 ],
-                // About Company Section - Only show if content exists
-                if ((companyDescription?.isNotEmpty ?? false) ||
-                    (companyInfo?.isNotEmpty ?? false))
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "About Company",
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          color: Color(0xff000000),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 10.8),
-                      Text(
-                        companyDescription?.isNotEmpty ?? false
-                            ? companyDescription!
-                            : companyInfo!,
-                        style: const TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: Color(0xff000000),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
-
                 // Responsibilities Section
                 if (responsibilities.isNotEmpty) ...[
                   const Text(

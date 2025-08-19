@@ -11,8 +11,7 @@ class GoogleAuthBloc extends Bloc<GoogleAuthEvent, GoogleAuthState> {
       emit(GoogleAuthLoading());
       try {
         final result = await GoogleAuthService.signInWithGoogle(
-            event.context, event.userType // Pass userType to service
-            );
+            event.context, event.userType);
         if (result != null) {
           emit(GoogleAuthSuccess(result));
         } else {

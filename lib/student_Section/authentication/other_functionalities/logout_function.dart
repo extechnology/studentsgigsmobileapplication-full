@@ -25,7 +25,7 @@ Future<void> logout(BuildContext context) async {
       );
     }
   } catch (e) {
-    print('Error during logout: $e');
+    // print('Error during logout: $e');
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
