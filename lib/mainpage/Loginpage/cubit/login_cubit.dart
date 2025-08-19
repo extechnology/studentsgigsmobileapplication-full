@@ -59,10 +59,10 @@ class LoginCubit extends Cubit<LoginState> {
           "Accept": "application/json",
         },
         body: jsonEncode({
-          "id_token": googleAuth.idToken,
+          // "id_token": googleAuth.idToken,
           "email": googleUser.email,
-          "username": googleUser.displayName ?? "",
-          "access_token": googleAuth.accessToken,
+          "username": googleUser.displayName ,
+          // "access_token": googleAuth.accessToken,
         }),
       );
 
@@ -85,6 +85,12 @@ class LoginCubit extends Cubit<LoginState> {
         //     ),
         //   );
         // }
+print("🚫${googleUser.displayName}");
+        print(googleUser.email);
+        print(data["token"]);
+        print(data["access"]);
+        print(data["refresh_token"]);
+
 
         emit(LoginIoaded(
           name: googleUser.displayName ?? '',
