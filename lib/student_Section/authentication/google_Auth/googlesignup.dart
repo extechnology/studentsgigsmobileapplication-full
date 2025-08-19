@@ -31,10 +31,10 @@ class GoogleAuthService {
           "Accept": "application/json",
         },
         body: jsonEncode({
-          "id_token": googleAuth.idToken,
+          // "id_token": googleAuth.idToken,
           "email": googleUser.email,
           "username": googleUser.displayName ?? "",
-          "access_token": googleAuth.accessToken,
+          // "access_token": googleAuth.accessToken,
           // "user_type": userType, // Include userType in API request
         }),
       );
