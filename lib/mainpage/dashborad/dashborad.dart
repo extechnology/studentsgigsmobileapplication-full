@@ -31,33 +31,36 @@ class _DashboradState extends State<Dashborad> {
   }
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return DefaultTabController(
       length: 4,
       child: Scaffold(
         backgroundColor: Color(0xffF9F2ED),
-        bottomNavigationBar: Container(
-          color: Color(0xffF9F2ED),
-          height:  screenHeight * 0.085 + bottomPadding,
-
-          child:  TabBar(
-            onTap: (index) {
-              if (index == 0) {
-                // Home tab clicked, reset the search and show default homepage
-                resetSearch();
-              }
-            },
-            tabs: [
-              Tab(icon: Icon(Icons.home), text: "Home"),
-              Tab(icon: Icon(Icons.work_outline ), text: "Posted"),
-              Tab(icon: Icon(Icons.add), text: "Post Job"),
-              Tab(icon: Icon(Icons.person), text: "Profile"),
-
-            ],
-            unselectedLabelColor: Colors.black,
-            labelColor: Color(0xffEB8125),
-            indicatorColor: Colors.transparent,
+        bottomNavigationBar: SafeArea(
+          child: Container(
+          
+          
+            color: Color(0xffF9F2ED),
+            height: kBottomNavigationBarHeight + screenHeight * 0.025  ,
+          
+            child:  TabBar(
+              onTap: (index) {
+                if (index == 0) {
+                  // Home tab clicked, reset the search and show default homepage
+                  resetSearch();
+                }
+              },
+              tabs: [
+                Tab(icon: Icon(Icons.home), text: "Home"),
+                Tab(icon: Icon(Icons.work_outline ), text: "Posted"),
+                Tab(icon: Icon(Icons.add), text: "Post Job"),
+                Tab(icon: Icon(Icons.person), text: "Profile"),
+          
+              ],
+              unselectedLabelColor: Colors.black,
+              labelColor: Color(0xffEB8125),
+              indicatorColor: Colors.transparent,
+            ),
           ),
         ),
         body: TabBarView(
