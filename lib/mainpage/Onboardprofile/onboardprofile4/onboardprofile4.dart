@@ -35,9 +35,13 @@ class _OnboardProfilesState extends State<OnboardProfiles> {
 
             return Scaffold(
               backgroundColor: const Color(0xffF9F2ED),
-              body: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.08),
-                child: SingleChildScrollView(
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: width * 0.08,
+                    right: width * 0.08,
+                    bottom: 108.0 + MediaQuery.of(context).padding.bottom,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

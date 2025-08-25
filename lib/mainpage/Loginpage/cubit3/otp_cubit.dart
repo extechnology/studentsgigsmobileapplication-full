@@ -33,6 +33,7 @@ class OtpCubit extends Cubit<OtpState> {
 
         // print("OTP verification success: ${response.statusCode}");
         emit(OtpIoaded(responseBody));
+
       } else {
 
         // print("OTP verification failed: ${response.statusCode}");
