@@ -73,6 +73,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                listeners: [
                BlocListener<PostregisterCubit, PostregisterState>(
                 listener: (context, state) {
+
                   if (state is Postregisterloaded) {
                     int secondsRemaining = 0;
                     bool isTimerActive = false;
@@ -92,7 +93,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                               timer?.cancel();
                               setState(() {
                                 isTimerActive = true;
-                                secondsRemaining = 5;
+                                secondsRemaining = 30;
                               });
 
                               timer = Timer.periodic(Duration(seconds: 1), (t) {
@@ -177,7 +178,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                       },
                                       icon:  Icon(Icons.verified, size: width * 0.045),
                                       label: Text(
-                                        isTimerActive ? "Wait ${secondsRemaining}s" : "Verify",
+                                        isTimerActive ? "Verify" : "Verify",
                                       ),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: const Color(0xFFF1E8FF),
@@ -289,7 +290,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Transaction Completed Successfully!',
+                            'Registered Completed Successfully!',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 14,
@@ -325,7 +326,12 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                 ),
               ),
             );
-          }else if (state is Otperror){
+            Future.delayed(Duration(seconds: 3), () {
+              Navigator.pushNamed(context, 'Registerpage');
+            });
+
+          }
+          else if (state is Otperror){
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.error ),
@@ -510,7 +516,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                   obscureText: obscureText,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'Enter password...',
+                                    hintText: ' password...',
                                     contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
                                     suffixIcon: Padding(
                                       padding: EdgeInsets.only(right: width * 0.02), // 👈 Adjust padding here
@@ -550,7 +556,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                   obscureText: obscureTextconformpassword,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'conform password...',
+                                    hintText: 'confirm password',
                                     contentPadding: EdgeInsets.symmetric(
                                       vertical: height * 0.02,  // ~16 on 800px height
                                       horizontal: width * 0.03, // ~12 on 400px width
@@ -1093,375 +1099,384 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                     );
 
 
-                  return Column(crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: height * 0.03,),
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: 108.0 + MediaQuery.of(context).padding.bottom,
+                    ),                    child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: height * 0.03,),
 
 
-                      Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: width * 0.055),
-                    child: Container(
-                      width: width * 0.63,
-                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: circleSize,
-                            height: circleSize,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              border: Border.all(
-                                width: 1,
-                                color: Color(0xffE3E3E3),
+                        Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: width * 0.055),
+                      child: Container(
+                        width: width * 0.63,
+                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                width: circleSize,
+                                height: circleSize,
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Color(0xffE3E3E3),
+                                  ),
+                                  borderRadius: BorderRadius.circular(circleSize / 2), // perfectly circular
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_left_outlined,
+                                    size: circleSize * 0.45, // responsive icon size
+                                    color: Color(0xff313131),
+                                  ),
+                                ),
                               ),
-                              borderRadius: BorderRadius.circular(circleSize / 2), // perfectly circular
                             ),
-                            child: Center(
-                              child: Icon(
-                                Icons.keyboard_arrow_left_outlined,
-                                size: circleSize * 0.45, // responsive icon size
-                                color: Color(0xff313131),
+                            Container(
+                              width: width * 0.4,
+                              height: height * 0.07,
+
+                              decoration: BoxDecoration(
                               ),
-                            ),
-                          ),
-                          Container(
-                            width: width * 0.4,
-                            height: height * 0.07,
+                              child:  Image.asset(
+                                "assets/images/logos/image 1.png",
+                                fit: BoxFit.contain,
+                              ),
 
-                            decoration: BoxDecoration(
-                            ),
-                            child:  Image.asset(
-                              "assets/images/logos/image 1.png",
-                              fit: BoxFit.contain,
                             ),
 
-                          ),
-
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                      SizedBox(height: height * 0.042,),
-                      Center(
-                        child: Text(
-                          "Create your account ",
-                          style: TextStyle(
-                            fontFamily: 'Sora',
-                            fontWeight: FontWeight.w600, // SemiBold
-                            fontSize: width * 0.065,
-                            height: 32 / 26, // line-height ÷ font-size = 1.23
-                            letterSpacing: 0, // 0%
+                        SizedBox(height: height * 0.042,),
+                        Center(
+                          child: Text(
+                            "Create your account ",
+                            style: TextStyle(
+                              fontFamily: 'Sora',
+                              fontWeight: FontWeight.w600, // SemiBold
+                              fontSize: width * 0.065,
+                              height: 32 / 26, // line-height ÷ font-size = 1.23
+                              letterSpacing: 0, // 0%
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: height * 0.04,),
+                        SizedBox(height: height * 0.04,),
 
-                      Center(
-                        child: Container(
-                          width: width * 0.35,
-                          child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  if(isChecked){
-                                    context.read<LoginCubit>().signIn(context); // or "employer", "admin"
-
-                                  }else{
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text("Please accept the Privacy Policy to continue."),
-                                        backgroundColor: Colors.redAccent,
-                                        behavior: SnackBarBehavior.floating,
-                                        duration: Duration(seconds: 2),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                    );
-
-                                  }
-
-                                },
-                                child: Container(
-
-                                  width: circleSize,
-                                  height: circleSize,
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    border: Border.all(
-                                      width: 1,
-                                      color: Color(0xffE3E3E3),
-                                    ),
-                                    borderRadius: BorderRadius.circular(circleSize / 2), // perfectly circular
-                                  ),
-                                  child: Center(
-                                    child: Image.asset("assets/images/logos/google.png")
-
-                                  ),
-                                ),
-                              ),
-
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.04,),
-
-                      Center(
-                        child: Text(
-                          "OR LOG IN WITH EMAIL",
-                          style: TextStyle(
-                            color: Color(0xffA1A4B2),
-                            fontFamily: 'Sora',
-                            fontWeight: FontWeight.w400, // Regular
-                            fontSize: width * 0.035,
-                            height: 1.43, // Approx. "Title Medium" line-height: ~20px / 14px = 1.43
-                            letterSpacing: 14 * 0.05, // 5% of font size = 0.7
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.04,),
-
-
-                      Center(child: textform(hint: "Name",iconforsuffix: Icon(Icons.keyboard_arrow_right),
-                  controllers : usernameController, context: context,
-                  )),
-                      SizedBox(height: height * 0.028,),
-
-                      Center(child: textform(hint: "Email",iconforsuffix: Icon(Icons.keyboard_arrow_right),controllers: emailController, context: context,
-                  )),
-                      SizedBox(height: height * 0.028,),
-
-
-                      Center(
-                        child: Material(
-                          elevation: 1,
-                          borderRadius: BorderRadius.circular(15),
-
+                        Center(
                           child: Container(
-                            width: width * 0.85,
-                            height: height * 0.065,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: TextFormField(
-                                controller: passwordController,
-                                obscureText: obscureText,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Enter password...',
-                                  contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
-                                  suffixIcon: Padding(
-                                    padding: EdgeInsets.only(right: width * 0.02), // 👈 Adjust padding here
-                                    child: IconButton(
-                                      icon: Icon(
-                                        obscureText ? Icons.visibility_off : Icons.visibility,
-                                        color: Color(0xff3F414E),
-                                      ),
-                                      onPressed: toggleVisibility,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.018,),
-
-
-                      Center(
-                        child: Material(
-                          elevation: 1,
-                          borderRadius: BorderRadius.circular(15),
-
-                          child: Container(
-                            width: width * 0.85,
-                            height: height * 0.07,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: TextFormField(
-                                controller: confirmPasswordController,
-                                obscureText: obscureTextconformpassword,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'conform password...',
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: height * 0.02,  // ~16 on 800px height
-                                    horizontal: width * 0.03, // ~12 on 400px width
-                                  ),                                  suffixIcon: Padding(
-                                    padding: EdgeInsets.only(right: width * 0.02), // 👈 Adjust padding here
-                                    child: IconButton(
-                                      icon: Icon(
-                                        obscureTextconformpassword ? Icons.visibility_off : Icons.visibility,
-                                        color: Color(0xff3F414E),
-                                      ),
-                                      onPressed: toggleVisibilityconformpasswrd,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.018,),
-
-                      Center(
-                        child: Container(
-                          width: width * 0.85,
-                          // color: Colors.red,
-                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  style: TextStyle(color: Colors.black, fontFamily: 'Sora',fontSize: width * 0.038),
-                                  children: [
-                                    TextSpan(text: 'I have read the '),
-                                    TextSpan(
-                                      text: 'Privacy Policy',
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          showEmployerTermsDialog(context);                                        },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // SizedBox(width: width * 0.22,),
-                              StatefulBuilder(
-                                builder: (context, setState) {
-                                  return Checkbox(
-
-                                    value: isChecked,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        isChecked = value ?? false;
-                                      });
-                                    },
-                                    activeColor: Color(0xffEB8125), // Fill color when checked
-                                    checkColor: Colors.white, // Tick color
-                                    side: BorderSide(color: Color(0xffEB8125), ), // Border color when unchecked
-                                  );
-                                },
-                              ),
-
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.03,),
-
-                      Center(
-                        child: Material(
-                          elevation: 1,
-                          borderRadius: BorderRadius.circular(16),
-
-                          child: InkWell(
-
-                            onTap: () {
-                              if(isChecked){
-                                context.read<PostregisterCubit>().registerUser(conformpassword:confirmPasswordController.text.trim(),email: emailController.text.trim(),password: passwordController.text.trim(),username: usernameController.text.trim() );
-                              }
-                              else {
-                                // Show alert if not checked
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Please accept the Privacy Policy to continue."),
-                                    backgroundColor: Colors.redAccent,
-                                    behavior: SnackBarBehavior.floating,
-                                    duration: Duration(seconds: 2),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                );
-
-                              }
-                            },
-                            child: Container(
-                              width: width * 0.85,
-                              height: height * 0.07,
-                              padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.02),
-                              decoration: BoxDecoration(
-                                color: Color(0xff004673), // Full opacity
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child:Center(
-                                 child: Text(
-                                   "REGISTER",
-                                   style: TextStyle(
-                                     color:Color(0xffFFFFFF) ,
-                                     fontFamily: 'Sora',
-                                     fontWeight: FontWeight.w600, // 600 = SemiBold
-                                     fontSize: width * 0.04,
-                                     height: 1.5, // 150% line height = 1.5
-                                     letterSpacing: 0, // 0% letter spacing
-                                   ),
-                                 ),
-
-                              )
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: height * 0.022,),
-
-                      Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, 'Registerpage');
-                            // Navigator.push(context, MaterialPageRoute(builder: (context) => Registerpage(),));
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Already have an account? ',
-                              style: TextStyle(
-                                fontFamily: 'Sora',
-                                fontSize: width * 0.045,
-                                fontWeight: FontWeight.w400, // normal weight
-                                color: Colors.black,
-                              ),
+                            width: width * 0.35,
+                            child: Row(mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                TextSpan(
-                                  text: 'Sign In',
-                                  style: TextStyle(
-                                    fontFamily: 'Sora',
-                                    fontSize: width * 0.045,
-                                    fontWeight: FontWeight.w600, // semi-bold
-                                    color: Color(0xffEB8125), // orange
-                                    decoration: TextDecoration.underline,
+                                InkWell(
+                                  onTap: () {
+                                    if(isChecked){
+                                      context.read<LoginCubit>().signIn(context); // or "employer", "admin"
+
+                                    }else{
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text("Please accept the Privacy Policy to continue."),
+                                          backgroundColor: Colors.redAccent,
+                                          behavior: SnackBarBehavior.floating,
+                                          duration: Duration(seconds: 2),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                      );
+
+                                    }
+
+                                  },
+                                  child: Container(
+
+                                    width: circleSize,
+                                    height: circleSize,
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Color(0xffE3E3E3),
+                                      ),
+                                      borderRadius: BorderRadius.circular(circleSize / 2), // perfectly circular
+                                    ),
+                                    child: Center(
+                                      child: Image.asset("assets/images/logos/google.png")
+
+                                    ),
                                   ),
                                 ),
+
                               ],
                             ),
                           ),
                         ),
-                      ),
+                        SizedBox(height: height * 0.04,),
 
-                      SizedBox(height: height * 0.03,),
+                        Center(
+                          child: Text(
+                            "OR LOG IN WITH EMAIL",
+                            style: TextStyle(
+                              color: Color(0xffA1A4B2),
+                              fontFamily: 'Sora',
+                              fontWeight: FontWeight.w400, // Regular
+                              fontSize: width * 0.035,
+                              height: 1.43, // Approx. "Title Medium" line-height: ~20px / 14px = 1.43
+                              letterSpacing: 14 * 0.05, // 5% of font size = 0.7
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.04,),
+
+
+                        Center(child: textform(hint: "Name",
+                    controllers : usernameController, context: context,
+                    )),
+                        SizedBox(height: height * 0.028,),
+
+                        Center(child: textform(hint: "Email",controllers: emailController, context: context,
+                    )),
+                        SizedBox(height: height * 0.028,),
+
+
+                        Center(
+                          child: Material(
+                            elevation: 1,
+                            borderRadius: BorderRadius.circular(15),
+
+                            child: Container(
+                              width: width * 0.85,
+                              height: height * 0.065,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: TextFormField(
+                                  controller: passwordController,
+                                  obscureText: obscureText,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Password',
+                                    contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+                                    suffixIcon: Padding(
+                                      padding: EdgeInsets.only(right: width * 0.02), // 👈 Adjust padding here
+                                      child: IconButton(
+                                        icon: Icon(
+                                          obscureText ? Icons.visibility_off : Icons.visibility,
+                                          color: Color(0xff3F414E),
+                                        ),
+                                        onPressed: toggleVisibility,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.018,),
+
+
+                        Center(
+                          child: Material(
+                            elevation: 1,
+                            borderRadius: BorderRadius.circular(15),
+
+                            child: Container(
+                              width: width * 0.85,
+                              height: height * 0.07,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: TextFormField(
+                                  controller: confirmPasswordController,
+                                  obscureText: obscureTextconformpassword,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Confirm password',
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: height * 0.02,  // ~16 on 800px height
+                                      horizontal: width * 0.03, // ~12 on 400px width
+                                    ),                                  suffixIcon: Padding(
+                                      padding: EdgeInsets.only(right: width * 0.02), // 👈 Adjust padding here
+                                      child: IconButton(
+                                        icon: Icon(
+                                          obscureTextconformpassword ? Icons.visibility_off : Icons.visibility,
+                                          color: Color(0xff3F414E),
+                                        ),
+                                        onPressed: toggleVisibilityconformpasswrd,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.018,),
+
+                        Center(
+                          child: Container(
+                            width: width * 0.85,
+                            // color: Colors.red,
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(color: Colors.black, fontFamily: 'Sora',fontSize: width * 0.038),
+                                    children: [
+                                      TextSpan(text: 'I have read the '),
+                                      TextSpan(
+                                        text: 'Privacy Policy',
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            showEmployerTermsDialog(context);                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // SizedBox(width: width * 0.22,),
+                                StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return Checkbox(
+
+                                      value: isChecked,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isChecked = value ?? false;
+                                        });
+                                      },
+                                      activeColor: Color(0xffEB8125), // Fill color when checked
+                                      checkColor: Colors.white, // Tick color
+                                      side: BorderSide(color: Color(0xffEB8125), ), // Border color when unchecked
+                                    );
+                                  },
+                                ),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.03,),
+
+                        Center(
+                          child: Material(
+                            elevation: 1,
+                            borderRadius: BorderRadius.circular(16),
+
+                            child: InkWell(
+
+                              onTap: () {
+                                if(isChecked){
+                                  context.read<PostregisterCubit>().registerUser(conformpassword:confirmPasswordController.text.trim(),email: emailController.text.trim(),password: passwordController.text.trim(),username: usernameController.text.trim() );
+                                }
+                                else {
+                                  // Show alert if not checked
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Please accept the Privacy Policy to continue."),
+                                      backgroundColor: Colors.redAccent,
+                                      behavior: SnackBarBehavior.floating,
+                                      duration: Duration(seconds: 2),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                  );
+
+                                }
+                              },
+                              child: Container(
+                                width: width * 0.85,
+                                height: height * 0.07,
+                                padding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.02),
+                                decoration: BoxDecoration(
+                                  color: Color(0xff004673), // Full opacity
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child:Center(
+                                   child: Text(
+                                     "REGISTER",
+                                     style: TextStyle(
+                                       color:Color(0xffFFFFFF) ,
+                                       fontFamily: 'Sora',
+                                       fontWeight: FontWeight.w600, // 600 = SemiBold
+                                       fontSize: width * 0.04,
+                                       height: 1.5, // 150% line height = 1.5
+                                       letterSpacing: 0, // 0% letter spacing
+                                     ),
+                                   ),
+
+                                )
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: height * 0.022,),
+
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, 'Registerpage');
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => Registerpage(),));
+                            },
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Already have an account? ',
+                                style: TextStyle(
+                                  fontFamily: 'Sora',
+                                  fontSize: width * 0.045,
+                                  fontWeight: FontWeight.w400, // normal weight
+                                  color: Colors.black,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: 'Sign In',
+                                    style: TextStyle(
+                                      fontFamily: 'Sora',
+                                      fontSize: width * 0.045,
+                                      fontWeight: FontWeight.w600, // semi-bold
+                                      color: Color(0xffEB8125), // orange
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: height * 0.03,),
 
 
 
-                      // Text("Not signed in"),
-                      // SizedBox(height: height * 0.0125),
-                      // ElevatedButton.icon(
-                      //   icon: const Icon(Icons.login),
-                      //   label: const Text("Sign in with Google"),
-                      //   onPressed: () {
-                      //     context.read<LoginCubit>().signIn(context, "employer"); // or "employer", "admin"
-                      //   },
-                      // ),
-                    ],
+                        // Text("Not signed in"),
+                        // SizedBox(height: height * 0.0125),
+                        // ElevatedButton.icon(
+                        //   icon: const Icon(Icons.login),
+                        //   label: const Text("Sign in with Google"),
+                        //   onPressed: () {
+                        //     context.read<LoginCubit>().signIn(context, "employer"); // or "employer", "admin"
+                        //   },
+                        // ),
+                      ],
+                    ),
                   );
                 },
               ),

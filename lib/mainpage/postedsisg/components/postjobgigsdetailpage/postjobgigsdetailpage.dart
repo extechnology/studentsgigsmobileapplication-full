@@ -25,7 +25,9 @@ class Postjobgigsdetailpage extends StatelessWidget {
         body: SafeArea(
 
           child: Padding(
-            padding:  EdgeInsets.only(top: height * 0.02,bottom:height * 0.05,left: width * 0.024,right: width * 0.024 ),
+            padding:  EdgeInsets.only(top: height * 0.02,
+                bottom: 108.0 + MediaQuery.of(context).padding.bottom,
+                left: width * 0.024,right: width * 0.024 ),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Container(

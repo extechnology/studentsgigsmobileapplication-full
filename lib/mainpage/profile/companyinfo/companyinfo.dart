@@ -30,164 +30,168 @@ class Companyinfo extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: width * 0.07),
                 child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: height * 0.05),
-                  
-                      Center(child: buildFieldTitle(title: 'Update Profile', context: context)),
-                      Center(
-                        child: Container(
-                          child:
-                               Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        cubit.pickImageFromGallery();
-                  
-                                      },
-                                      child:
-                                      Material(
-                  
-                  
-                                        elevation: 4,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(100), // makes it very round
-                                        ),
-                  
-                                        child: Container(
-                                          width: width * 0.35,
-                                          height: width * 0.35,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: const Color(0xff004673),
+                  child: Padding(
+                    padding:  EdgeInsets.only( bottom: 108.0 + MediaQuery.of(context).padding.bottom,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: height * 0.05),
+
+                        Center(child: buildFieldTitle(title: 'Update Profile', context: context)),
+                        Center(
+                          child: Container(
+                            child:
+                                 Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          cubit.pickImageFromGallery();
+
+                                        },
+                                        child:
+                                        Material(
+
+
+                                          elevation: 4,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(100), // makes it very round
                                           ),
-                                          child: ClipOval(
-                                            child: cubit.selectedImage != null
-                                                ? Image.file(cubit.selectedImage!, fit: BoxFit.cover)
-                                                : (cubit.networkImage != null && cubit.networkImage!.isNotEmpty
-                                                ? Image.network(
-                                              cubit.networkImage!,
-                                              fit: BoxFit.cover,
-                                            )
-                                                : Icon(
-                                              Icons.person,
-                                              size: 48, // set your desired size
-                                              color: Colors.grey, // optional color
-                                            )
+
+                                          child: Container(
+                                            width: width * 0.35,
+                                            height: width * 0.35,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: const Color(0xff004673),
                                             ),
-                                        ),
+                                            child: ClipOval(
+                                              child: cubit.selectedImage != null
+                                                  ? Image.file(cubit.selectedImage!, fit: BoxFit.cover)
+                                                  : (cubit.networkImage != null && cubit.networkImage!.isNotEmpty
+                                                  ? Image.network(
+                                                cubit.networkImage!,
+                                                fit: BoxFit.cover,
+                                              )
+                                                  : Icon(
+                                                Icons.person,
+                                                size: 48, // set your desired size
+                                                color: Colors.grey, // optional color
+                                              )
+                                              ),
+                                          ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                  
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child:  Container(
-                                        width: width * 0.1,
-                                        height: width * 0.1,
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xffEB8125),
-                                          shape: BoxShape.circle,
+
+                                      Positioned(
+                                        bottom: 0,
+                                        right: 0,
+                                        child:  Container(
+                                          width: width * 0.1,
+                                          height: width * 0.1,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xffEB8125),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child:  Center(
+                                            child: Icon(Icons.edit,color: Color(0xffFFFFFF),)
+                                          ),
+
                                         ),
-                                        child:  Center(
-                                          child: Icon(Icons.edit,color: Color(0xffFFFFFF),)
-                                        ),
-                  
+
+
                                       ),
-                  
-                  
-                                    ),
-                  
-                  
-                                  ],
-                                ),
-                  
-                  
-                        ),
-                      ),
-                  
-                  
-                      SizedBox(height: height * 0.05),
-                      buildField(title: 'Company Name',controller: cubit.profilecompanyname, context: context,max: 40, texr: TextInputAction.done),
-                      buildField(title: 'Email',controller: cubit.profileemail, context: context,max: 40, texr: TextInputAction.done),
-                      buildField(title: 'Company Info',controller: cubit.profilecompanyinfo, context: context,line: 20,fix: height* 0.2 ,texr: TextInputAction.newline),
-                      buildField(title: 'Phone',controller: cubit.profilephone, context: context,max: 15, phonekeyboard: TextInputType.number, ),
-                      buildField(title: 'Street',controller: cubit.profilestreet, context: context,max: 60, texr: TextInputAction.done),
-                      SizedBox(height: height * 0.02),
-                      buildFieldTitle(title: 'Location', context: context),
-                      SizedBox(height: height * 0.01),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(height * 0.02),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: width * 0.02,   // 8 is 2% of 400
-                          vertical: height * 0.005,   // 4 is 0.5% of 800
-                        ),                        child:
-                        CountryStateCityPicker(
-                          country: cubit.countryController,
-                          state: cubit.stateController,
-                          city: cubit.cityController,
-                          textFieldDecoration: InputDecoration(
-                            border: InputBorder.none, // 🔥 Remove underline
-                            enabledBorder: InputBorder.none, // 🔥 Remove underline when enabled
-                            focusedBorder: InputBorder.none, //
-                  
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintStyle: TextStyle(
-                              fontSize: width * 0.035, // 14 is 3.5% of 400
-                              color: Colors.grey.shade500,
-                              fontFamily: 'Sora',
-                              fontWeight: FontWeight.w500,
-                            ),
-                  
-                  
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: width * 0.03,   // 12 if width ≈ 400
-                              vertical: height * 0.0175,  // 14 if height ≈ 800
-                            ),
+
+
+                                    ],
+                                  ),
+
+
                           ),
-                          dialogColor: Color(0xFFF9F2ED), // Optional
                         ),
-                      ),
-                  
-                  
-                      SizedBox(height: height * 0.02),
-                      buildField(title: 'Postal Code',controller: cubit.profilepostcode, context: context,max: 10 ,texr: TextInputAction.done),
-                      SizedBox(height: height * 0.04),
-                      Center(
-                        child: buildFixedContainer(
-                          callback: () {
-                            cubit.updateEmployerProfile(int.tryParse(cubit.user ?? '0') ?? 0);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Company Profile updated successfully',
-                                  style: TextStyle(color: Colors.white), // 👈 text color
-                                ),
-                                backgroundColor: Colors.green, // 👈 background color
-                                duration: Duration(seconds: 2), // Optional: how long it shows
+
+
+                        SizedBox(height: height * 0.05),
+                        buildField(title: 'Company Name',controller: cubit.profilecompanyname, context: context,max: 40, texr: TextInputAction.done),
+                        buildField(title: 'Email',controller: cubit.profileemail, context: context,max: 40, texr: TextInputAction.done),
+                        buildField(title: 'Company Info',controller: cubit.profilecompanyinfo, context: context,line: 20,fix: height* 0.2 ,texr: TextInputAction.newline),
+                        buildField(title: 'Phone',controller: cubit.profilephone, context: context,max: 15, phonekeyboard: TextInputType.number, ),
+                        buildField(title: 'Street',controller: cubit.profilestreet, context: context,max: 60, texr: TextInputAction.done),
+                        SizedBox(height: height * 0.02),
+                        buildFieldTitle(title: 'Location', context: context),
+                        SizedBox(height: height * 0.01),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(height * 0.02),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
                               ),
-                            );
-                          },
-                          text: 'Save',
-                          color: const Color(0xff004673), context: context,
+                            ],
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.02,   // 8 is 2% of 400
+                            vertical: height * 0.005,   // 4 is 0.5% of 800
+                          ),                        child:
+                          CountryStateCityPicker(
+                            country: cubit.countryController,
+                            state: cubit.stateController,
+                            city: cubit.cityController,
+                            textFieldDecoration: InputDecoration(
+                              border: InputBorder.none, // 🔥 Remove underline
+                              enabledBorder: InputBorder.none, // 🔥 Remove underline when enabled
+                              focusedBorder: InputBorder.none, //
+
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintStyle: TextStyle(
+                                fontSize: width * 0.035, // 14 is 3.5% of 400
+                                color: Colors.grey.shade500,
+                                fontFamily: 'Sora',
+                                fontWeight: FontWeight.w500,
+                              ),
+
+
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: width * 0.03,   // 12 if width ≈ 400
+                                vertical: height * 0.0175,  // 14 if height ≈ 800
+                              ),
+                            ),
+                            dialogColor: Color(0xFFF9F2ED), // Optional
+                          ),
                         ),
-                      ),
-                      SizedBox(height: height * 0.02),
-                    ],
+
+
+                        SizedBox(height: height * 0.02),
+                        buildField(title: 'Postal Code',controller: cubit.profilepostcode, context: context,max: 10 ,texr: TextInputAction.done),
+                        SizedBox(height: height * 0.04),
+                        Center(
+                          child: buildFixedContainer(
+                            callback: () {
+                              cubit.updateEmployerProfile(int.tryParse(cubit.user ?? '0') ?? 0);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Company Profile updated successfully',
+                                    style: TextStyle(color: Colors.white), // 👈 text color
+                                  ),
+                                  backgroundColor: Colors.green, // 👈 background color
+                                  duration: Duration(seconds: 2), // Optional: how long it shows
+                                ),
+                              );
+                            },
+                            text: 'Save',
+                            color: const Color(0xff004673), context: context,
+                          ),
+                        ),
+                        SizedBox(height: height * 0.02),
+                      ],
+                    ),
                   ),
                 ),
               ),

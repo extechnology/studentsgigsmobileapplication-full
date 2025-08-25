@@ -63,7 +63,7 @@ class PostregisterCubit extends Cubit<PostregisterState> {
       // print("$e");
       _monitorConnection();
 
-      emit( isConnected ? Postregistererror('Exception: $e') :  Postregistererror('"Oops! We couldn’t load right now. \n Please check your network availability."'));
+      emit( isConnected ? Postregistererror('Exception: ') :  Postregistererror('"Oops! We couldn’t load right now. \n Please check your network availability."'));
     }
   }
 

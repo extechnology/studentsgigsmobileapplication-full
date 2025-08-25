@@ -27,7 +27,7 @@ class Postjobdetailpagedetail extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(
                   left: width * 0.03,
-                  bottom: height * 0.040,
+                  bottom: 108.0 + MediaQuery.of(context).padding.bottom,
                   top: height * 0.025),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
