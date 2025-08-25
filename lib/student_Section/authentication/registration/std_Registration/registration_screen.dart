@@ -30,6 +30,7 @@ class RegisterPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xffF9F2ED),
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: Padding(
           padding:
@@ -51,60 +52,66 @@ class RegisterPage extends StatelessWidget {
               fit: BoxFit.contain),
         ),
       ),
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => GoogleAuthBloc(GoogleAuthService()),
-          ),
-          BlocProvider(
-            create: (context) => RegisterBloc(RegisterRepository()),
-          ),
-          BlocProvider(
-            create: (context) => TermsBloc(),
-          ),
-        ],
-        child: MultiBlocListener(
-          listeners: [
-            BlocListener<GoogleAuthBloc, GoogleAuthState>(
-              listener: (context, state) {
-                if (state is GoogleAuthSuccess) {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    'StudentHomeScreens',
-                    arguments: {"userName": "Google User"},
-                  );
-                } else if (state is GoogleAuthFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.error)),
-                  );
-                }
-              },
+      body: SafeArea(
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => GoogleAuthBloc(GoogleAuthService()),
             ),
-            BlocListener<RegisterBloc, RegisterState>(
-              listener: (context, state) {
-                if (state is SendOTPSuccess) {
-                  _showOTPDialog(context, state);
-                } else if (state is SendOTPFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.error),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                } else if (state is RegisterFailure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.error),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              },
+            BlocProvider(
+              create: (context) => RegisterBloc(RegisterRepository()),
+            ),
+            BlocProvider(
+              create: (context) => TermsBloc(),
             ),
           ],
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: padding),
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<GoogleAuthBloc, GoogleAuthState>(
+                listener: (context, state) {
+                  if (state is GoogleAuthSuccess) {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      'StudentHomeScreens',
+                      arguments: {"userName": "Google User"},
+                    );
+                  } else if (state is GoogleAuthFailure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.error)),
+                    );
+                  }
+                },
+              ),
+              BlocListener<RegisterBloc, RegisterState>(
+                listener: (context, state) {
+                  if (state is SendOTPSuccess) {
+                    _showOTPDialog(context, state);
+                  } else if (state is SendOTPFailure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.error),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } else if (state is RegisterFailure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.error),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: padding,
+                right: padding,
+                bottom: MediaQuery.of(context).viewInsets.bottom +
+                    (size.height *
+                        0.02), // keeps content above keyboard/system nav
+              ),
               child: Column(
                 children: [
                   SizedBox(height: size.height * 0.04),
@@ -180,7 +187,7 @@ class RegisterPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: size.height * 0.06),
+                  //SizedBox(height: size.height * 0.06),
                 ],
               ),
             ),

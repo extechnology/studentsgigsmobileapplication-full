@@ -32,6 +32,7 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Color(0xffF9F2ED),
+      resizeToAvoidBottomInset: true,
       body: MultiBlocProvider(
         providers: [
           BlocProvider(
