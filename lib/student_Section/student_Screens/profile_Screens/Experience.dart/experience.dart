@@ -45,31 +45,31 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
     super.dispose();
   }
 
-  void _filterJobTitles(String query, List<Map<String, String>> allJobTitles) {
-    setState(() {
-      if (query.isEmpty) {
-        // Remove duplicates by converting to Set and back to List
-        final uniqueJobTitles = <String, Map<String, String>>{};
-        for (var job in allJobTitles) {
-          uniqueJobTitles[job['value']!] = job;
-        }
-        filteredJobTitles = uniqueJobTitles.values.toList();
-        isSearching = false;
-      } else {
-        final filtered = allJobTitles.where((job) {
-          return job['label']!.toLowerCase().contains(query.toLowerCase());
-        }).toList();
+  // void _filterJobTitles(String query, List<Map<String, String>> allJobTitles) {
+  //   setState(() {
+  //     if (query.isEmpty) {
+  //       // Remove duplicates by converting to Set and back to List
+  //       final uniqueJobTitles = <String, Map<String, String>>{};
+  //       for (var job in allJobTitles) {
+  //         uniqueJobTitles[job['value']!] = job;
+  //       }
+  //       filteredJobTitles = uniqueJobTitles.values.toList();
+  //       isSearching = false;
+  //     } else {
+  //       final filtered = allJobTitles.where((job) {
+  //         return job['label']!.toLowerCase().contains(query.toLowerCase());
+  //       }).toList();
 
-        // Remove duplicates from filtered results
-        final uniqueFiltered = <String, Map<String, String>>{};
-        for (var job in filtered) {
-          uniqueFiltered[job['value']!] = job;
-        }
-        filteredJobTitles = uniqueFiltered.values.toList();
-        isSearching = true;
-      }
-    });
-  }
+  //       // Remove duplicates from filtered results
+  //       final uniqueFiltered = <String, Map<String, String>>{};
+  //       for (var job in filtered) {
+  //         uniqueFiltered[job['value']!] = job;
+  //       }
+  //       filteredJobTitles = uniqueFiltered.values.toList();
+  //       isSearching = true;
+  //     }
+  //   });
+  // }
 
   void _handleCurrentlyWorking(bool? value) {
     if (value == null) return;
@@ -126,6 +126,7 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xffF9F2ED),
       appBar: AppBar(
         backgroundColor: const Color(0xffF9F2ED),
@@ -139,48 +140,55 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
           ),
         ),
       ),
-      body: BlocConsumer<ExperienceBloc, ExperienceState>(
-        listener: (context, state) {
-          if (state is ExperienceError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          } else if (state is ExperienceAdded) {
-            // Show success message
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Experience added successfully!'),
-                backgroundColor: Colors.green,
+      body: SafeArea(
+        child: BlocConsumer<ExperienceBloc, ExperienceState>(
+          listener: (context, state) {
+            if (state is ExperienceError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+            } else if (state is ExperienceAdded) {
+              // Show success message
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Experience added successfully!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              // Navigate back with success result
+              Navigator.pop(context, true);
+            }
+          },
+          builder: (context, state) {
+            final size = MediaQuery.of(context).size;
+            final padding = size.width * 0.05; // 5% horizontal padding
+            final spacing = size.height * 0.02; // 2% vertical spacing
+            if (state is ExperienceLoading && _formKey.currentState == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            List<Map<String, String>> jobTitles = [];
+            if (state is JobTitlesLoaded) {
+              // Remove duplicates from the original job titles
+              final uniqueJobTitles = <String, Map<String, String>>{};
+              for (var job in state.jobTitles) {
+                uniqueJobTitles[job['value']!] = job;
+              }
+              jobTitles = uniqueJobTitles.values.toList();
+
+              if (filteredJobTitles.isEmpty) {
+                filteredJobTitles = jobTitles;
+              }
+            }
+
+            return SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: padding,
+                right: padding,
+                bottom: MediaQuery.of(context).viewInsets.bottom + spacing,
               ),
-            );
-            // Navigate back with success result
-            Navigator.pop(context, true);
-          }
-        },
-        builder: (context, state) {
-          if (state is ExperienceLoading && _formKey.currentState == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          List<Map<String, String>> jobTitles = [];
-          if (state is JobTitlesLoaded) {
-            // Remove duplicates from the original job titles
-            final uniqueJobTitles = <String, Map<String, String>>{};
-            for (var job in state.jobTitles) {
-              uniqueJobTitles[job['value']!] = job;
-            }
-            jobTitles = uniqueJobTitles.values.toList();
-
-            if (filteredJobTitles.isEmpty) {
-              filteredJobTitles = jobTitles;
-            }
-          }
-
-          return SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -191,24 +199,12 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
                     CustomTextField(
                       controller: companyName,
                       hintText: "Enter your company name",
-                      // validator: (value) {
-                      //   if (value == null || value.isEmpty) {
-                      //     return 'Company name is required';
-                      //   }
-                      //   return null;
-                      // },
                     ),
                     _buildSectionLabel("Start Date"),
                     CalendarInputField(
                       controller: startDate,
                       hintText: 'Select start date',
                       onDateSelected: calculateExperience,
-                      // validator: (value) {
-                      //   if (value == null || value.isEmpty) {
-                      //     return 'Start date is required';
-                      //   }
-                      //   return null;
-                      // },
                     ),
                     _buildSectionLabel("End Date"),
                     AbsorbPointer(
@@ -372,9 +368,9 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
                   ],
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

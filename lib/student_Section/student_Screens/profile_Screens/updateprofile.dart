@@ -37,6 +37,7 @@ class ProfileEditScreen extends StatelessWidget {
         EmployeeServices(),
       )..add(LoadProfileData()),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: const Color(0xffF9F2ED),
         appBar: AppBar(
           title: const Text(
