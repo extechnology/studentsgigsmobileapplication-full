@@ -13,7 +13,7 @@ Future<void> logout(BuildContext context) async {
     await secureStorage.deleteAll();
 
     // Sign out from Google
-    await googleSignIn.signOut();
+    await googleSignIn.disconnect();
 
     // Check if the widget is still mounted before using context
     if (!context.mounted) return;
