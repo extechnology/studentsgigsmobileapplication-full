@@ -71,6 +71,7 @@ class StudentEmployee {
       'available_working_periods_end_date': availableWorkingPeriodsEndDate,
       'date_of_birth': dateOfBirth,
       'age': age,
+      'gender': gender
     };
   }
 }

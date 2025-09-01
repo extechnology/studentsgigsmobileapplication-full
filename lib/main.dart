@@ -96,7 +96,7 @@ class MyApp extends StatelessWidget {
         "SearchScreen1": (context) => const SearchScreen1(),
         "SearchScreen2": (context) => const SearchScreen2(),
         "GigsDetailScreen": (context) => const GigsDetailScreen(),
-        "ProfileEditScreen": (context) => const ProfileEditScreen(),
+        "ProfileEditScreen": (context) => ProfileEditScreen(),
         "WorkPreference": (context) => StudentWorkPreference(),
         "CategoryDropdownFormField": (context) => CategoryDropdownFormField(),
         "Technicalskill": (context) => const Technicalskill(),

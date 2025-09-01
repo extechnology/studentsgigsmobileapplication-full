@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:anjalim/intro_screens/optionscreen.dart';
 import 'package:anjalim/student_Section/services/apiconstant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -32,10 +33,10 @@ class GoogleAuthService {
           "Accept": "application/json",
         },
         body: jsonEncode({
-          "id_token": googleAuth.idToken,
+          //"id_token": googleAuth.idToken,
           "email": googleUser.email,
           "username": googleUser.displayName,
-          "access_token": googleAuth.accessToken,
+          //"access_token": googleAuth.accessToken,
         }),
       );
 
@@ -61,34 +62,28 @@ class GoogleAuthService {
     }
   }
 
-  // navigation based on user type
-  static void _navigateBasedOnUserType(
-      BuildContext context, String userType, Map<String, dynamic> userData) {
-    switch (userType.toLowerCase()) {
-      case 'student':
-        Navigator.of(context).pushReplacementNamed("StudentHomeScreens");
-        break;
-      case 'employer':
-        Navigator.of(context).pushReplacementNamed("EmployerDashboard");
-        break;
-      // case 'admin':
-      //   Navigator.of(context).pushReplacementNamed("AdminDashboard");
-      //   break;
-      default:
-        // Default navigation or onboarding
-        Navigator.of(context).pushReplacementNamed("OptionScreen");
-        break;
+  // Method to sign out
+  static Future<void> logOut(BuildContext context) async {
+    try {
+      const storage = FlutterSecureStorage();
+      await storage.deleteAll();
+      await _googleSignIn.disconnect();
+      //await Future.delayed(Duration(seconds: 2));
+
+      // Use Navigator with a fresh context to avoid any state issues
+      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => OptionScreen()),
+        (route) => false,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Logged out successfully')),
+      );
+    } catch (e) {
+      print('Error during logout: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error during logout: ${e.toString()}')),
+      );
     }
   }
-
-  // Method to sign out
-  // static Future<void> signOut() async {
-  //   try {
-  //     await _googleSignIn.signOut();
-  //     const storage = FlutterSecureStorage();
-  //     await storage.deleteAll();
-  //   } catch (e) {
-
-  //   }
-  // }
 }

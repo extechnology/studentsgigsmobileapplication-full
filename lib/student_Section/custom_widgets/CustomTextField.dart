@@ -13,6 +13,8 @@ class CustomTextField extends StatefulWidget {
   final int? maxLength;
   final int? maxLines;
   final ValueChanged<String>? onChanged;
+  final String? Function(String?)? validator; // Added validator parameter
+
   const CustomTextField({
     super.key,
     this.hintText,
@@ -26,6 +28,7 @@ class CustomTextField extends StatefulWidget {
     this.maxLength,
     this.maxLines = 1,
     this.onChanged,
+    this.validator, // Added to constructor
   });
 
   @override
@@ -48,7 +51,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
     bool isPasswordField =
         (widget.isObscured ?? false) && widget.iconTrailing == null;
 
-    return TextField(
+    return TextFormField(
+      // Changed from TextField to TextFormField
       keyboardType: widget.keyboardType,
       enabled: widget.enabled,
       controller: widget.controller,
@@ -59,6 +63,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       maxLength: widget.maxLength,
       maxLines: widget.maxLines,
       onChanged: widget.onChanged,
+      validator: widget.validator, // Added validator property
       decoration: InputDecoration(
         hintText: widget.hintText,
         hintStyle: const TextStyle(color: Colors.black26),
@@ -74,6 +79,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
             color: Colors.black26,
             width: 2,
           ),
+        ),
+        errorBorder: const OutlineInputBorder(
+          // Added error border styling
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(color: Colors.red, width: 1),
+        ),
+        focusedErrorBorder: const OutlineInputBorder(
+          // Added focused error border
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(color: Colors.red, width: 2),
         ),
         suffixIcon: isPasswordField
             ? IconButton(

@@ -1,0 +1,69 @@
+class Validators {
+  // Name validator
+  static String? validateName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter your name';
+    }
+    if (value.trim().length < 2) {
+      return 'Name must be at least 2 characters long';
+    }
+    return null;
+  }
+
+  // Email validator
+  static String? validateEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter your email';
+    }
+    
+    // Basic email regex pattern
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    
+    if (!emailRegex.hasMatch(value.trim())) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
+
+  // Portfolio/LinkedIn validator
+  static String? validatePortfolio(String? value) {
+  // If nothing is entered, it's fine (optional field)
+  if (value == null || value.trim().isEmpty) {
+    return null;
+  }
+
+  // If entered, must be a valid URL
+  final urlRegex = RegExp(r'^https?:\/\/');
+  if (!urlRegex.hasMatch(value.trim())) {
+    return 'Please enter a valid URL (starting with http:// or https://)';
+  }
+
+  return null;
+}
+
+
+  // Work hours validator
+  static String? validateWorkHours(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter work hours';
+    }
+    
+    final hours = int.tryParse(value.trim());
+    if (hours == null) {
+      return 'Please enter a valid number';
+    }
+    
+    if (hours < 1 || hours > 24) {
+      return 'Work hours must be between 1 and 24';
+    }
+    return null;
+  }
+
+  // About validator 
+  static String? validateAbout(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please tell us about yourself';
+    }
+    return null;
+  } 
+}
