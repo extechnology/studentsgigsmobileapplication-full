@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:anjalim/student_Section/custom_widgets/CustomTextField.dart';
 import 'package:anjalim/student_Section/custom_widgets/dropdownbutton.dart';
+import 'package:anjalim/student_Section/custom_widgets/profile_validators';
 import 'package:anjalim/student_Section/models_std/employee_Profile/employeeProfileImages.dart';
 import 'package:anjalim/student_Section/services/employee_detailsFeatching.dart';
 import 'package:anjalim/student_Section/student_blocs/profile_edit_std/profile_edit_bloc.dart'
@@ -28,7 +29,8 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ProfileEditScreen extends StatelessWidget {
-  const ProfileEditScreen({super.key});
+  ProfileEditScreen({super.key});
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +107,7 @@ class ProfileEditScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 18, right: 18),
                 child: Form(
-                  key: GlobalKey<FormState>(),
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -205,13 +207,15 @@ class ProfileEditScreen extends StatelessWidget {
                       CustomTextField(
                         controller: bloc.user_Name,
                         hintText: "Enter Name",
+                        validator: Validators.validateName,
                       ),
 
-                      // Email Field
+// Email Field
                       _buildSectionLabel("Contact Email"),
                       CustomTextField(
                         controller: bloc.email,
                         hintText: "Enter Email",
+                        validator: Validators.validateEmail,
                       ),
 
                       // Phone Field with Country Code Picker
@@ -292,13 +296,16 @@ class ProfileEditScreen extends StatelessWidget {
                       CustomTextField(
                         controller: bloc.work_Hours,
                         keyboardType: TextInputType.number,
+                        validator: Validators.validateWorkHours,
                       ),
 
-                      // Portfolio Field
-                      _buildSectionLabel("Portfolio/LinkedIn Profile"),
+// If you have a portfolio field, you can use:
+                      _buildSectionLabel("Portfolio/LinkedIn"),
                       CustomTextField(
-                        controller: bloc.portfolio,
-                        hintText: "Enter Portfolio/LinkedIn Profile",
+                        controller:
+                            bloc.portfolio, // assuming you have this controller
+                        hintText: "Enter portfolio or LinkedIn URL",
+                        validator: Validators.validatePortfolio,
                       ),
 
                       // Work Location Field
@@ -407,7 +414,12 @@ class ProfileEditScreen extends StatelessWidget {
                       CustomTextField(
                         maxLines: 4,
                         controller: bloc.about,
-                        hintText: "",
+                        hintText: "Describe yourself",
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please tell us about yourself';
+                          }
+                        },
                       ),
 
                       const SizedBox(height: 20),
@@ -421,8 +433,8 @@ class ProfileEditScreen extends StatelessWidget {
                             builder: (BuildContext context) {
                               return FloatingActionButton(
                                 onPressed: () {
-                                  final form = Form.of(context);
-                                  if (form?.validate() ?? false) {
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
                                     bloc.add(UpdateProfile(context: context));
                                   }
                                 },

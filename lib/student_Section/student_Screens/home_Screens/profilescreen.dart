@@ -1,5 +1,5 @@
+import 'package:anjalim/student_Section/authentication/google_Auth/googlesignup.dart';
 import 'package:anjalim/student_Section/authentication/other_functionalities/forgot_password.dart';
-import 'package:anjalim/student_Section/authentication/other_functionalities/logout_function.dart';
 import 'package:anjalim/student_Section/models_std/employee_Profile/employeeProfileImages.dart';
 import 'package:anjalim/student_Section/services/student_Imageupload.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
   late ScrollController _scrollController;
   bool _showProfilePicInAppBar = false;
+  bool isLoggingOut = false;
 
   @override
   void initState() {
@@ -403,10 +404,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                logout(context); // Perform logout
-              },
+              onPressed: isLoggingOut
+                  ? null
+                  : () async {
+                      try {
+                        await GoogleAuthService.logOut(context);
+                      } finally {
+                        if (mounted) setState(() => isLoggingOut = false);
+                      }
+                    },
               child: const Text(
                 "Log Out",
                 style: TextStyle(color: Color(0xff004673)),
