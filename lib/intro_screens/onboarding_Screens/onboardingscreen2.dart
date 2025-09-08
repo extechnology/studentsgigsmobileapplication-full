@@ -13,8 +13,7 @@ class OnboardingScreen2 extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF9F2ED),
       appBar: AppBar(
-        leading:
-        Container(
+        leading: Container(
           margin: EdgeInsets.only(
             left: screenWidth * 0.02,
             top: screenHeight * 0.008, // slightly reduced
@@ -135,7 +134,7 @@ class OnboardingScreen2 extends StatelessWidget {
                                 ),
                               ),
                               title:
-                              "Browse and apply for gigs that match your interests",
+                                  "Browse and apply for gigs that match your interests",
                               subtitle: "",
                             ),
                             SizedBox(height: screenHeight * 0.015),
@@ -153,7 +152,7 @@ class OnboardingScreen2 extends StatelessWidget {
                                 ),
                               ),
                               title:
-                              "Work on and complete gigs to earn money and build your portfolio",
+                                  "Work on and complete gigs to earn money and build your portfolio",
                               subtitle: "",
                             ),
                           ],
@@ -217,7 +216,7 @@ class OnboardingScreen2 extends StatelessWidget {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, "LoginPage");
+                                  Navigator.pushNamed(context, "OptionScreen");
                                 },
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.symmetric(
@@ -225,7 +224,7 @@ class OnboardingScreen2 extends StatelessWidget {
                                   ),
                                   minimumSize: Size.zero,
                                   tapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
                                   "Sign In",

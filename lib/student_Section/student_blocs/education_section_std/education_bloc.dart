@@ -16,6 +16,7 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     on<DeleteEducationDetail>(_onDeleteEducationDetail);
     on<LoadFieldsOfStudy>(_onLoadFieldsOfStudy);
     on<SearchUniversities>(_onSearchUniversities);
+    on<ClearUniversitySearch>(_onClearUniversitySearch);
   }
 
   Future<void> _onLoadEducationDetails(
@@ -144,6 +145,18 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
       }
     } catch (e) {
       emit(EducationError(e.toString()));
+    }
+  }
+
+  Future<void> _onClearUniversitySearch(
+    ClearUniversitySearch event,
+    Emitter<EducationState> emit,
+  ) async {
+    // Preserve the fields of study state if it exists
+    if (state is FieldsOfStudyLoaded) {
+      emit(FieldsOfStudyLoaded((state as FieldsOfStudyLoaded).fields));
+    } else {
+      emit(EducationInitial());
     }
   }
 }

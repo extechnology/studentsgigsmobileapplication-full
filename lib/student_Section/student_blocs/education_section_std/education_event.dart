@@ -54,3 +54,5 @@ class SearchUniversities extends EducationEvent {
   @override
   List<Object> get props => [query];
 }
+
+class ClearUniversitySearch extends EducationEvent {}
