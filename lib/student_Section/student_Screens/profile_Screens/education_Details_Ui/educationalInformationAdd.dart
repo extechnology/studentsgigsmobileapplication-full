@@ -359,6 +359,9 @@ class _EducationAddPageState extends State<EducationAddPage> {
                               selectedUniversity = state.universities[index];
                               _universityController.text = selectedUniversity!;
                             });
+                            context
+                                .read<EducationBloc>()
+                                .add(ClearUniversitySearch());
                           },
                         );
                       },
