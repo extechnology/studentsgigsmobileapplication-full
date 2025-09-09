@@ -66,24 +66,35 @@ class GoogleAuthService {
   static Future<void> logOut(BuildContext context) async {
     try {
       const storage = FlutterSecureStorage();
-      await storage.deleteAll();
-      await _googleSignIn.disconnect();
-      //await Future.delayed(Duration(seconds: 2));
 
-      // Use Navigator with a fresh context to avoid any state issues
+      // Clear all stored data first
+      await storage.deleteAll();
+
+      // Check if user is signed in to Google
+      bool isSignedIn = await _googleSignIn.isSignedIn();
+
+      if (isSignedIn) {
+        try {
+          await _googleSignIn.disconnect();
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error during logout: ${e.toString()}')),
+              );
+        }
+      }
+
+      // Navigate to option screen
       Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => OptionScreen()),
-        (route) => false,
+            (route) => false,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Logged out successfully')),
       );
     } catch (e) {
-      print('Error during logout: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error during logout: ${e.toString()}')),
-      );
+          SnackBar(content: Text('Error during logout: ${e.toString()}')),
+          );
     }
-  }
-}
+   }}
