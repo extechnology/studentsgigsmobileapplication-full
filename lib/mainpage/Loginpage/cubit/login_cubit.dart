@@ -25,7 +25,7 @@ class LoginCubit extends Cubit<LoginState> {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
     serverClientId:
-        '15124092057-q7saopofjt97svqnsd47t12n7ckn29qi.apps.googleusercontent.com',
+        '15124092057-m12t3dii9piu2tr9vvv1ba8h24pq5q3f.apps.googleusercontent.com',
   );
 
   // static const _storage = FlutterSecureStorage();
