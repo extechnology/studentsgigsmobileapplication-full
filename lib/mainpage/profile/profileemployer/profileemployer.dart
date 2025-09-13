@@ -39,28 +39,31 @@ class Profileemployer extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xffF9F2ED),
-         body: Padding(
-           padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
-           child: RefreshIndicator(
-             backgroundColor: Color(0xffFFFFFF),
-             color: Color(0xff000000),
-             onRefresh: () async {
-               await context.read<ProfileemployerCubit>()..getcompanyinfo();
-             },
-             child: SingleChildScrollView(
-               physics: AlwaysScrollableScrollPhysics(),
-               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                 children: [
-                   SizedBox(height: height * 0.02), // roughly 15px on a 750px screen
+         body: RefreshIndicator(
+           backgroundColor: Color(0xffFFFFFF),
+           color: Color(0xff000000),
+           onRefresh: () async {
+             await context.read<ProfileemployerCubit>()..getcompanyinfo();
+           },
+           child: SingleChildScrollView(
+             physics: AlwaysScrollableScrollPhysics(),
+             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 SizedBox(height: height * 0.02), // roughly 15px on a 750px screen
 
-                   Row(
+                 Padding(
+                   padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
+                   child: Row(
                      children: [
                        buildFieldTitle(title: "Profile",  context: context),
                      ],
                    ),
-                   SizedBox(height: height * 0.014), // ≈ 11px on an 800px screen
+                 ),
+                 SizedBox(height: height * 0.014), // ≈ 11px on an 800px screen
 
-                   Container(
+                 Padding(
+                   padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
+                   child: Container(
                      width: width * 0.33,
                      height: width * 0.33,
                      decoration: BoxDecoration(
@@ -80,31 +83,43 @@ class Profileemployer extends StatelessWidget {
                          color: Colors.grey, // optional color
                        )  ),
                    ),
-                   SizedBox(height: height * 0.01875), // 15 is ~1.875% of 800px height
+                 ),
+                 SizedBox(height: height * 0.01875), // 15 is ~1.875% of 800px height
 
-                   buildprofile(context: context, text: "Company Info", leadingIcon: Icons.work_outline,color: Color(0xff000000), callback: () {
+                 Padding(
+                   padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
+                   child: buildprofile(context: context, text: "Company Info", leadingIcon: Icons.work_outline,color: Color(0xff000000), callback: () {
                      Navigator.pushNamed(context, "Companyinfo");
                      // Navigator.push(context, MaterialPageRoute(builder: (context) => Companyinfo(),));
 
                    }, bottomRight: width * 0.042, bottomLeft: width * 0.042, topRight: width * 0.042, topLeft: width * 0.042),
-                   SizedBox(height: height * 0.03125), // 25 is ~3.125% of 800px
+                 ),
+                 SizedBox(height: height * 0.03125), // 25 is ~3.125% of 800px
 
 
 
-                   buildprofile(context: context, text: "Plan Usage", leadingIcon: Icons.speed,color: Color(0xffEB8125), callback: () {
+                 Padding(
+                   padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
+                   child: buildprofile(context: context, text: "Plan Usage", leadingIcon: Icons.speed,color: Color(0xffEB8125), callback: () {
                      Navigator.pushNamed(context,'Planusagenew' );
                      // Navigator.push(context, MaterialPageRoute(builder: (context) => Planusagenew(),));
 
                    },  topRight: width * 0.042, topLeft: width * 0.042),
-                   buildprofile(context: context, text: "Premium ", leadingIcon: Icons.emoji_events  ,color: Color(0xff004673), callback: () {
+                 ),
+                 Padding(
+                   padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
+                   child: buildprofile(context: context, text: "Premium ", leadingIcon: Icons.emoji_events  ,color: Color(0xff004673), callback: () {
                      Navigator.pushNamed(context,'Premiumemployerpage' );
                      // Navigator.push(context, MaterialPageRoute(builder: (context) => Premiumemployerpage(),));
 
                    }, bottomRight: width * 0.042, bottomLeft: width * 0.042),
+                 ),
 
-                   SizedBox(height: height * 0.03125), // 25 is ~3.125% of 800px
+                 SizedBox(height: height * 0.03125), // 25 is ~3.125% of 800px
 
-                   buildprofile(context: context, text: "Log out", leadingIcon: Icons.logout,color: Color(0xff000000),
+                 Padding(
+                   padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
+                   child: buildprofile(context: context, text: "Log out", leadingIcon: Icons.logout,color: Color(0xff000000),
                        callback: () async {
                          final shouldLogout = await showDialog<bool>(
                            context: context,
@@ -161,21 +176,24 @@ class Profileemployer extends StatelessWidget {
                        },
                        topRight: width * 0.042, topLeft: width * 0.042
                    ),
-                   BlocListener<ForgetCubit, ForgetState>(
-                     listener: (context, state) {
-                       if (state is ForgetIoaded) {
-                         ScaffoldMessenger.of(context).showSnackBar(
-                           SnackBar(
+                 ),
+                 BlocListener<ForgetCubit, ForgetState>(
+                   listener: (context, state) {
+                     if (state is ForgetIoaded) {
+                       ScaffoldMessenger.of(context).showSnackBar(
+                         SnackBar(
 
-                               content: Text(state.message),
-                               backgroundColor: Colors.green),
-                         );
-                       } else if (state is ForgetError) {
-                         ScaffoldMessenger.of(context).showSnackBar(
-                           SnackBar(content: Text(state.error), backgroundColor: Colors.red),
-                         );
-                       }
-                     },
+                             content: Text(state.message),
+                             backgroundColor: Colors.green),
+                       );
+                     } else if (state is ForgetError) {
+                       ScaffoldMessenger.of(context).showSnackBar(
+                         SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+                       );
+                     }
+                   },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
                   child: buildprofile(context: context, text: "Password ", leadingIcon: Icons.lock_reset,color: Color(0xffEB8125),
                     callback: () async {
                       const storage = FlutterSecureStorage();
@@ -266,66 +284,72 @@ class Profileemployer extends StatelessWidget {
                     },
                        bottomRight: width * 0.042, bottomLeft: width * 0.042,
                    ),
+                ),
 
-             ),
-                    SizedBox(height: height * 0.0975), // 30 is ~3.75% of 800px
-                   Center(
-                     child: GestureDetector(
-                       onTap: () => cubit.openUrl("https://studentsgigs.com/termscondition"),
-                       child: Text(
-                         "Terms & Conditions",
-                         style: TextStyle(
-                           fontFamily: 'Sen',
-                           letterSpacing: 0.7,
+           ),
+                 SizedBox(height: height * 0.14), // roughly 15px on a 750px screen
 
-                           fontWeight: FontWeight.w900,
-                           fontSize: width * 0.03,
-                           color: Color(0xffEB8125),
-                           // clickable look
-                         ),
-                       ),
+                 Container(
+                 width: double.infinity,
+                 color:  Color(0xFF0D1B2A), // dark background
+                 padding:  EdgeInsets.all(16),
+                 child: Column(
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                     Divider(
+                       color: Colors.grey.shade900,
+                       thickness: 0.1,
                      ),
-                   ),
-                    SizedBox(height: height * 0.006375), // roughly 6px on a 750px screen
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     children: [
-                       GestureDetector(
-                         onTap: () => cubit.openUrl("https://studentsgigs.com/privacypolicy"),
-                         child: Text(
-                           "Privacy Policy",
-                           style: TextStyle(
-                             fontFamily: 'Sen',
-                             fontSize: width * 0.03,
-
-                             letterSpacing: 0.7,
-                             fontWeight: FontWeight.w900,
-                             color: Color(0xffEB8125), // clickable look
-                           ),
-                         ),
+                      Text(
+                       "© 2025 Job Portal. All Rights Reserved.",
+                       style: TextStyle(
+                         color: Color(0xffFFFFFF),
+                         fontSize: 14,
                        ),
-                       SizedBox(width: width * 0.052), // spacing between texts
-                       GestureDetector(
-                         onTap: () => cubit.openUrl("https://studentsgigs.com/refundpolicy"),
-                         child: Text(
-                           "Refund Policy",
-                           style: TextStyle(
-                             fontFamily: 'Sen',
-                             letterSpacing: 0.7,
-
-                             fontWeight: FontWeight.w900,
-                             fontSize: width * 0.03,
-                             color: Color(0xffEB8125), // clickable look
-
-                           ),
+                       textAlign: TextAlign.center,
+                     ),
+                     const SizedBox(height: 8),
+                     Wrap(
+                       spacing: 16,
+                       alignment: WrapAlignment.center,
+                       children: [
+                         InkWell(
+                           onTap: () => cubit.openUrl("https://studentsgigs.com/privacypolicy"),
+                           child:  Text("Privacy Policy",
+                               style: TextStyle(
+                                   color: Color(0xffFFFFFF),
+                                   fontSize: 13)),
                          ),
+                         InkWell(
+                           onTap: () => cubit.openUrl("https://studentsgigs.com/termscondition"),
+
+                           child:  Text("Terms & Conditions",
+                               style: TextStyle(
+                                   color: Color(0xffFFFFFF),
+                                   fontSize: 13)),
+                         ),
+                         InkWell(
+                           onTap: () => cubit.openUrl("https://studentsgigs.com/refundpolicy"),
+                           child: const Text("Refund Policy",
+                               style: TextStyle(
+                                   color: Color(0xffFFFFFF),
+                                   fontSize: 13)),
+                         ),
+                       ],
+                     ),
+                     const SizedBox(height: 8),
+                     const Text(
+                       "Powered by exmedia",
+                       style: TextStyle(
+                         color: Color(0xffFFFFFF),
+                         fontSize: 12,
                        ),
-                     ],
-                   ),// roughly 15px on a 750px screen
-
-
-                 ],
+                       textAlign: TextAlign.center,
+                     ),
+                   ],
+                 ),
                ),
+               ],
              ),
            ),
          ),
