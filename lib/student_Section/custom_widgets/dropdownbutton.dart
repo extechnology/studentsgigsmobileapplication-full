@@ -35,9 +35,7 @@ DropdownButtonFormField<String> buildDropdownButtonFormField({
     isExpanded: true, // Prevents overflow for long text
     dropdownColor: Colors.white,
     style: const TextStyle(
-      color: Colors.black,
-      fontSize: 16,
-    ),
+        color: Colors.black, fontSize: 16, overflow: TextOverflow.ellipsis),
   );
 }
 

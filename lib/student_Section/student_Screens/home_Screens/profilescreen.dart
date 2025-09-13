@@ -4,6 +4,7 @@ import 'package:anjalim/student_Section/models_std/employee_Profile/employeeProf
 import 'package:anjalim/student_Section/services/student_Imageupload.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -55,6 +56,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  // Function to launch URLs
+  Future<void> _launchURL(String url) async {
+    try {
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  Icon(Icons.error_outline, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text(
+                    "Could not open the link",
+                    style: TextStyle(fontFamily: "Poppins"),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              margin: const EdgeInsets.all(16),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.white),
+                SizedBox(width: 8),
+                Text(
+                  "Error opening the link",
+                  style: TextStyle(fontFamily: "Poppins"),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(16),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -72,6 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: const Color(0xffF9F2ED),
       body: CustomScrollView(
         controller: _scrollController,
+        physics: const ClampingScrollPhysics(),
         slivers: [
           // Custom App Bar with Cover Photo
           SliverAppBar(
@@ -201,10 +262,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const SizedBox(height: 30),
 
-                  // Action Buttons
-                  _buildActionButtons(),
-
-                  const SizedBox(height: 30),
+                  // Privacy Policy Links Section
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: _buildPrivacyPolicySection()),
                 ],
               ),
             ),
@@ -296,6 +357,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: () => Navigator.pushNamed(context, "PlanUsagePage"),
           isLast: true,
         ),
+        _buildDivider(),
+        _buildMenuItem(
+          icon: Icons.lock_reset_outlined,
+          title: "Reset Password",
+          color: const Color(0xffEB8125),
+          onTap: () => _showForgotPasswordDialog(),
+          isLast: true,
+        ),
+        _buildDivider(),
+        _buildMenuItem(
+          icon: Icons.logout_outlined,
+          title: "Log Out",
+          color: const Color(0xff004673),
+          onTap: () => _showLogoutConfirmationDialog(),
+          isLast: true,
+        ),
       ],
     );
   }
@@ -359,30 +436,130 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildActionButtons() {
+  // Widget _buildActionButtons() {
+  //   return Container(
+  //     margin: const EdgeInsets.symmetric(horizontal: 20),
+  //     child: Row(
+  //       children: [
+  //         Expanded(
+  //           child: _buildActionButton(
+  //             icon: Icons.lock_reset_outlined,
+  //             title: "Reset Password",
+  //             color: const Color(0xffEB8125),
+  //             onTap: () => _showForgotPasswordDialog(),
+  //           ),
+  //         ),
+  //         const SizedBox(width: 15),
+  //         Expanded(
+  //           child: _buildActionButton(
+  //             icon: Icons.logout_outlined,
+  //             title: "Log Out",
+  //             color: const Color(0xff004673),
+  //             onTap: () => _showLogoutConfirmationDialog(),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // Footer Section with Privacy Policy Links
+  Widget _buildPrivacyPolicySection() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D1B2A).withOpacity(0.9),
+        // borderRadius: const BorderRadius.only(
+        //   topLeft: Radius.circular(12),
+        //   topRight: Radius.circular(12),
+        // ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: _buildActionButton(
-              icon: Icons.lock_reset_outlined,
-              title: "Reset Password",
-              color: const Color(0xffEB8125),
-              onTap: () => _showForgotPasswordDialog(),
-            ),
+          // Policy links - ultra compact
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 4,
+            runSpacing: 4,
+            children: [
+              _buildFooterLink(
+                text: "Privacy Policy",
+                url: "https://studentsgigs.com/privacypolicy",
+              ),
+              _buildFooterDivider(),
+              _buildFooterLink(
+                text: "Terms & Conditions",
+                url: "https://studentsgigs.com/termscondition",
+              ),
+              _buildFooterDivider(),
+              _buildFooterLink(
+                text: "Refund Policy",
+                url: "https://studentsgigs.com/refundpolicy",
+              ),
+            ],
           ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: _buildActionButton(
-              icon: Icons.logout_outlined,
-              title: "Log Out",
-              color: const Color(0xff004673),
-              onTap: () => _showLogoutConfirmationDialog(),
+
+          const SizedBox(height: 6),
+
+          // Copyright text - smaller
+          Text(
+            "© 2025 Job Portal. All Rights Reserved.",
+            style: TextStyle(
+              fontFamily: "Poppins",
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 10,
+              fontWeight: FontWeight.w300,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: 4),
+
+          // Powered by text - smallest
+          Text(
+            "Powered by exmedia",
+            style: TextStyle(
+              fontFamily: "Poppins",
+              color: Colors.white.withOpacity(0.5),
+              fontSize: 9,
+              fontWeight: FontWeight.w300,
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFooterLink({
+    required String text,
+    required String url,
+  }) {
+    return InkWell(
+      onTap: () => _launchURL(url),
+      borderRadius: BorderRadius.circular(4),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontFamily: "Poppins",
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 10,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFooterDivider() {
+    return Container(
+      width: 1,
+      height: 18,
+      margin: const EdgeInsets.symmetric(horizontal: 2),
+      color: Colors.white.withOpacity(0.4),
     );
   }
 
@@ -424,41 +601,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required String title,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildActionButton({
+  //   required IconData icon,
+  //   required String title,
+  //   required Color color,
+  //   required VoidCallback onTap,
+  // }) {
+  //   return ElevatedButton(
+  //     onPressed: onTap,
+  //     style: ElevatedButton.styleFrom(
+  //       backgroundColor: color,
+  //       foregroundColor: Colors.white,
+  //       elevation: 0,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(16),
+  //       ),
+  //       padding: const EdgeInsets.symmetric(vertical: 16),
+  //     ),
+  //     child: Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         Icon(icon, size: 24),
+  //         const SizedBox(height: 8),
+  //         Text(
+  //           title,
+  //           textAlign: TextAlign.center,
+  //           style: const TextStyle(
+  //             fontFamily: "Poppins",
+  //             fontWeight: FontWeight.w500,
+  //             fontSize: 14,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   void _showForgotPasswordDialog() {
     showDialog(
