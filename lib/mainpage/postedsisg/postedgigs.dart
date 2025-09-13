@@ -242,23 +242,19 @@ class Postedgigs extends StatelessWidget {
                                       SizedBox(width: width * 0.01,),
                                       Column(
                                         children: [
-                                          SizedBox(
-                                            width: 100,
-
-                                            child: Text(
-                                              job.company!.companyName ?? 'Unknown Company' ,
-                                              style: TextStyle(
-                                                fontFamily: 'Sora',
-                                                fontWeight: FontWeight.w700, // Bold
-                                                fontSize: width * 0.0275, // ≈ 11 when width is 400
-                                                height: 1.35,                // 135% line height
-                                                letterSpacing: 0.0,          // No extra spacing
-                                                color: Colors.black,
-                                                                      // Optional
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-
+                                          Text(
+                                            job.company!.companyName ?? 'Unknown Company' ,
+                                            style: TextStyle(
+                                              fontFamily: 'Sora',
+                                              fontWeight: FontWeight.w700, // Bold
+                                              fontSize: width * 0.0275, // ≈ 11 when width is 400
+                                              height: 1.35,                // 135% line height
+                                              letterSpacing: 0.0,          // No extra spacing
+                                              color: Colors.black,
+                          // Optional
                                             ),
+                                            overflow: TextOverflow.ellipsis,
+
                                           ),
                                         ],
                                       )
@@ -331,20 +327,17 @@ class Postedgigs extends StatelessWidget {
                                         ),
                                       ),
                                       SizedBox(width: width * 0.15,),
-                                      SizedBox(
-                                        width: 50,
-                                        child: Text(
-                                          '${job.postedDate!.difference(DateTime.now()).inDays.abs()} days ago',                                  style: TextStyle(
-                                            fontFamily: 'Sora',
-                                            fontWeight: FontWeight.w400, // Regular
-                                            fontSize: width * 0.020,                // 10px
-                                            height: 1.35,                // Line height = 135%
-                                            letterSpacing: 0.0,         // No extra spacing
-                                            color: Colors.black,        // Optional
-                                          ),
-                                          softWrap: true,
-                                          overflow: TextOverflow.ellipsis,
+                                      Text(
+                                        '${job.postedDate!.difference(DateTime.now()).inDays.abs()} days ago',                                  style: TextStyle(
+                                          fontFamily: 'Sora',
+                                          fontWeight: FontWeight.w400, // Regular
+                                          fontSize: width * 0.025,                // 10px
+                                          height: 1.35,                // Line height = 135%
+                                          letterSpacing: 0.0,         // No extra spacing
+                                          color: Colors.black,        // Optional
                                         ),
+                                        overflow: TextOverflow.ellipsis,
+
                                       ),
 
 

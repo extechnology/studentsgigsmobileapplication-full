@@ -193,15 +193,20 @@ class Planusagenew extends StatelessWidget {
                                           children: [
                                             Icon(Icons.access_time,color:Color(0xff479F51) ,),
                                             SizedBox(width: width * 0.01), // gap
-                                            Text(
-                                              "$remaining days remaining",
-                                              style: TextStyle(
-                                                fontFamily: 'Sora',
-                                                fontWeight: FontWeight.w400, // Regular
-                                                fontSize: 11,
-                                                height: 1.5, // 150% line-height
-                                                letterSpacing: 0, // 0% letter spacing
-                                                color: Color(0xFF0C792F), // border color: #0C792F
+                                            Container(
+                                              width: width * 0.24,
+                                              child: Text(
+                                                "$remaining days remaining",
+                                                style: TextStyle(
+                                                  fontFamily: 'Sora',
+                                                  fontWeight: FontWeight.w400, // Regular
+                                                  fontSize: 11,
+                                                  height: 1.5, // 150% line-height
+                                                  letterSpacing: 0, // 0% letter spacing
+                                                  color: Color(0xFF0C792F),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  // border color: #0C792F
+                                                ),
                                               ),
                                             ),
                                             SizedBox(width: 5), // gap
