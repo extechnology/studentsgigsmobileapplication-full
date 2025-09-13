@@ -296,10 +296,7 @@ class Profileemployer extends StatelessWidget {
                  child: Column(
                    mainAxisSize: MainAxisSize.min,
                    children: [
-                     Divider(
-                       color: Colors.grey.shade900,
-                       thickness: 0.1,
-                     ),
+
                       Text(
                        "© 2025 Job Portal. All Rights Reserved.",
                        style: TextStyle(
@@ -308,7 +305,7 @@ class Profileemployer extends StatelessWidget {
                        ),
                        textAlign: TextAlign.center,
                      ),
-                     const SizedBox(height: 8),
+                     SizedBox(height: height * 0.01),
                      Wrap(
                        spacing: 16,
                        alignment: WrapAlignment.center,
@@ -318,7 +315,9 @@ class Profileemployer extends StatelessWidget {
                            child:  Text("Privacy Policy",
                                style: TextStyle(
                                    color: Color(0xffFFFFFF),
-                                   fontSize: 13)),
+                                   fontSize: width * 0.031
+                               )
+                           ),
                          ),
                          InkWell(
                            onTap: () => cubit.openUrl("https://studentsgigs.com/termscondition"),
@@ -326,23 +325,25 @@ class Profileemployer extends StatelessWidget {
                            child:  Text("Terms & Conditions",
                                style: TextStyle(
                                    color: Color(0xffFFFFFF),
-                                   fontSize: 13)),
+                                   fontSize: width * 0.031
+                               )),
                          ),
                          InkWell(
                            onTap: () => cubit.openUrl("https://studentsgigs.com/refundpolicy"),
-                           child: const Text("Refund Policy",
+                           child:  Text("Refund Policy",
                                style: TextStyle(
                                    color: Color(0xffFFFFFF),
-                                   fontSize: 13)),
+                                   fontSize: width * 0.031
+                               )),
                          ),
                        ],
                      ),
-                     const SizedBox(height: 8),
-                     const Text(
+                      SizedBox(height: height * 0.01),
+                      Text(
                        "Powered by exmedia",
                        style: TextStyle(
                          color: Color(0xffFFFFFF),
-                         fontSize: 12,
+                           fontSize: width * 0.027,
                        ),
                        textAlign: TextAlign.center,
                      ),

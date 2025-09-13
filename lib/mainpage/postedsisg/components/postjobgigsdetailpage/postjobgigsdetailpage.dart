@@ -131,7 +131,17 @@ class Postjobgigsdetailpage extends StatelessWidget {
                     ),
                     ),
 
-                      child: CircleAvatar(backgroundImage: NetworkImage(app.employee.profile.profilePic ?? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKw7CSv4kiYTGhtTwYqc6mO9uHRB9cKndI2A&s"),radius: 30,)),
+                      child:
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: app.employee.profile.profilePic != null
+                            ? NetworkImage(app.employee.profile.profilePic!)
+                            : null,
+                        child: app.employee.profile.profilePic == null
+                            ? Icon(Icons.person, size: 30)
+                            : null,
+                      ),
+                  ),
                 ),
                 SizedBox(width:width * 0.05 ,),
 

@@ -8,8 +8,9 @@ import 'package:http/http.dart' as http;
 
 class GoogleAuthService {
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
-    serverClientId:
-        '15124092057-m12t3dii9piu2tr9vvv1ba8h24pq5q3f.apps.googleusercontent.com',
+
+    // clientId:
+    //     '15124092057-44a67cmrfqnppeq0autv5hr646pg663n.apps.googleusercontent.com',
     scopes: ['email', 'profile'],
   );
 
@@ -22,9 +23,9 @@ class GoogleAuthService {
 
       final googleAuth = await googleUser.authentication;
 
-      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
-        throw Exception("Google token missing");
-      }
+      // if (googleAuth.accessToken == null || googleAuth.idToken == null) {
+      //   throw Exception("Google token missing");
+      // }
 
       final response = await http.post(
         Uri.parse("${ApiConstants.baseUrl}api/employee/api/google-auth/"),

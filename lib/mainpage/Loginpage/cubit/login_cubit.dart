@@ -24,8 +24,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
-    serverClientId:
-        '15124092057-m12t3dii9piu2tr9vvv1ba8h24pq5q3f.apps.googleusercontent.com',
+
   );
 
   // static const _storage = FlutterSecureStorage();
@@ -45,9 +44,9 @@ class LoginCubit extends Cubit<LoginState> {
       // print("🚫2. Getting authentication");
       final googleAuth = await googleUser.authentication;
 
-      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
-        throw Exception("Google token missing");
-      }
+      // if (googleAuth.accessToken == null || googleAuth.idToken == null) {
+      //   throw Exception("Google token missing");
+      // }
 
       // print("🚫3. Calling backend API with userType: $userType");
       final response = await http.post(
