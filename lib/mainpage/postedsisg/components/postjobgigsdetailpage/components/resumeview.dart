@@ -49,52 +49,61 @@ class _ResumePdfViewerPageState extends State<ResumePdfViewerPage> {
     });
 
     try {
-      // Request permissions (based on Android version)
       if (Platform.isAndroid) {
         final androidInfo = await DeviceInfoPlugin().androidInfo;
         final sdkInt = androidInfo.version.sdkInt;
 
-        if (sdkInt >= 30) {
-          if (!await Permission.manageExternalStorage.request().isGranted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Storage permission denied')),
-            );
-            setState(() => isDownloading = false);
-            return;
-          }
+        bool granted = false;
+
+        if (sdkInt >= 33) {
+          // Android 13+ → Need media-specific permissions
+          var images = await Permission.photos.request();
+          var videos = await Permission.videos.request();
+          var audio = await Permission.audio.request();
+          granted = images.isGranted || videos.isGranted || audio.isGranted;
+        } else if (sdkInt >= 30) {
+          // Android 11 & 12
+          var status = await Permission.manageExternalStorage.request();
+          granted = status.isGranted;
         } else {
-          if (!await Permission.storage.request().isGranted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Storage permission denied')),
-            );
-            setState(() => isDownloading = false);
-            return;
-          }
+          // Android 10 and below
+          var status = await Permission.storage.request();
+          granted = status.isGranted;
+        }
+
+        if (!granted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Storage permission denied')),
+          );
+          setState(() => isDownloading = false);
+          return;
         }
       }
 
-      // Download PDF
+      // ✅ Download PDF
       final response = await http.get(Uri.parse(widget.pdfUrl));
       if (response.statusCode == 200) {
-        // Save to /storage/emulated/0/Download/
+        // Save to Downloads folder
         final downloadsDir = Directory('/storage/emulated/0/Download');
-        final filePath = '${downloadsDir.path}/resume_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        if (!downloadsDir.existsSync()) {
+          downloadsDir.createSync(recursive: true);
+        }
+
+        final filePath =
+            '${downloadsDir.path}/resume_${DateTime.now().millisecondsSinceEpoch}.pdf';
         final file = File(filePath);
         await file.writeAsBytes(response.bodyBytes);
 
-        // Notify success
+        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Downloaded to: $filePath')),
         );
 
-        // ✅ Auto open
+        // Open file
         await OpenFile.open(filePath);
-
-        // ✅ Optional: Share via Gmail, Drive, WhatsApp, etc.
-
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to download PDF.')),
+          const SnackBar(content: Text('Failed to download PDF.')),
         );
       }
     } catch (e) {

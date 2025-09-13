@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../dashborad/dashborad.dart';
 import '../../../datapage/datapage.dart';
@@ -85,6 +86,12 @@ class ProfileemployerCubit extends Cubit<ProfileemployerState> {
       // Navigator.of(context).pushReplacement(
       //   MaterialPageRoute(builder: (context) => Registerpage()),
       // );
+    }
+  }
+  Future<void> openUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
     }
   }
 

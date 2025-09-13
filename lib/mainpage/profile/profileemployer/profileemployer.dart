@@ -266,7 +266,62 @@ class Profileemployer extends StatelessWidget {
                     },
                        bottomRight: width * 0.042, bottomLeft: width * 0.042,
                    ),
-),
+
+             ),
+                    SizedBox(height: height * 0.0975), // 30 is ~3.75% of 800px
+                   Center(
+                     child: GestureDetector(
+                       onTap: () => cubit.openUrl("https://studentsgigs.com/termscondition"),
+                       child: Text(
+                         "Terms & Conditions",
+                         style: TextStyle(
+                           fontFamily: 'Sen',
+                           letterSpacing: 0.7,
+
+                           fontWeight: FontWeight.w900,
+                           fontSize: width * 0.03,
+                           color: Color(0xffEB8125),
+                           // clickable look
+                         ),
+                       ),
+                     ),
+                   ),
+                    SizedBox(height: height * 0.006375), // roughly 6px on a 750px screen
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       GestureDetector(
+                         onTap: () => cubit.openUrl("https://studentsgigs.com/privacypolicy"),
+                         child: Text(
+                           "Privacy Policy",
+                           style: TextStyle(
+                             fontFamily: 'Sen',
+                             fontSize: width * 0.03,
+
+                             letterSpacing: 0.7,
+                             fontWeight: FontWeight.w900,
+                             color: Color(0xffEB8125), // clickable look
+                           ),
+                         ),
+                       ),
+                       SizedBox(width: width * 0.052), // spacing between texts
+                       GestureDetector(
+                         onTap: () => cubit.openUrl("https://studentsgigs.com/refundpolicy"),
+                         child: Text(
+                           "Refund Policy",
+                           style: TextStyle(
+                             fontFamily: 'Sen',
+                             letterSpacing: 0.7,
+
+                             fontWeight: FontWeight.w900,
+                             fontSize: width * 0.03,
+                             color: Color(0xffEB8125), // clickable look
+
+                           ),
+                         ),
+                       ),
+                     ],
+                   ),// roughly 15px on a 750px screen
 
 
                  ],
