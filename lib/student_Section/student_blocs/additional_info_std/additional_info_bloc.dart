@@ -150,7 +150,7 @@ class AdditionalInfoBloc
       emit(state.copyWith(
         errorMessage: 'Failed to upload resume: ${e.toString()}',
       ));
-      debugPrint('Resume upload error: $e');
+      // debugPrint('Resume upload error: $e');
     }
   }
 
