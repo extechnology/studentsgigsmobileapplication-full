@@ -256,23 +256,12 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
   final secureStorage = FlutterSecureStorage();
 
   Future<void> pickImageFromGallery() async {
-    final status = await Permission.photos.request();
+    final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (status.isGranted) {
-      // Store permission granted
-      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'true');
-
-      final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (returned != null) {
-        selectedImage = File(returned.path);
-        emit(CompanyinfoInitial());
-      }
-    } else if (status.isPermanentlyDenied) {
-      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'false');
-      openAppSettings();
+    if (returned != null) {
+      selectedImage = File(returned.path);
       emit(CompanyinfoInitial());
     } else {
-      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'false');
       emit(CompanyinfoInitial());
     }
   }

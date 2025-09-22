@@ -32,7 +32,8 @@ class _DashboradState extends State<Dashborad> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return DefaultTabController(
+    return
+      DefaultTabController(
       length: 4,
       child: Scaffold(
         backgroundColor: Color(0xffF9F2ED),

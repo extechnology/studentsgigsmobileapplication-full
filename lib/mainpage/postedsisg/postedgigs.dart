@@ -327,17 +327,20 @@ class Postedgigs extends StatelessWidget {
                                         ),
                                       ),
                                       SizedBox(width: width * 0.15,),
-                                      Text(
-                                        '${job.postedDate!.difference(DateTime.now()).inDays.abs()} days ago',                                  style: TextStyle(
-                                          fontFamily: 'Sora',
-                                          fontWeight: FontWeight.w400, // Regular
-                                          fontSize: width * 0.025,                // 10px
-                                          height: 1.35,                // Line height = 135%
-                                          letterSpacing: 0.0,         // No extra spacing
-                                          color: Colors.black,        // Optional
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
+                                      Container(
+                                        width: width * 0.14,
+                                        child: Text(
+                                          '${job.postedDate!.difference(DateTime.now()).inDays.abs()} days ago',                                  style: TextStyle(
+                                            fontFamily: 'Sora',
+                                            fontWeight: FontWeight.w400, // Regular
+                                            fontSize: width * 0.025,                // 10px
+                                            height: 1.35,                // Line height = 135%
+                                            letterSpacing: 0.0,         // No extra spacing
+                                            color: Colors.black,        // Optional
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
 
+                                        ),
                                       ),
 
 

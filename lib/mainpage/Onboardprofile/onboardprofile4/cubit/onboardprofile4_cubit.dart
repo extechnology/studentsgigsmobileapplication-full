@@ -43,23 +43,15 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
   final secureStorage = FlutterSecureStorage();
 
   Future<void> pickImageFromGallery() async {
-    final status = await Permission.photos.request();
-
-    if (status.isGranted) {
-      // Store permission granted
-      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'true');
-
+    try {
       final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
+
       if (returned != null) {
         selectedImage = File(returned.path);
-        emit(Onboardprofile4Initial());
       }
-    } else if (status.isPermanentlyDenied) {
-      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'false');
-      openAppSettings();
+
       emit(Onboardprofile4Initial());
-    } else {
-      await secureStorage.write(key: 'isGalleryPermissionGranted', value: 'false');
+    } catch (e) {
       emit(Onboardprofile4Initial());
     }
   }
