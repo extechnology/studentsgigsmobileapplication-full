@@ -1,8 +1,6 @@
 import 'package:anjalim/student_Section/student_blocs/additional_info_std/additional_info_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class AdditionalInformationScreen extends StatelessWidget {
   const AdditionalInformationScreen({super.key});
@@ -67,14 +65,9 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
     return BlocConsumer<AdditionalInfoBloc, AdditionalInfoState>(
       listener: (context, state) {
         if (state.errorMessage != null) {
-          if (state.errorMessage ==
-              'Storage permission is permanently denied') {
-            _showPermissionDialog(context);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage!)),
-            );
-          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.errorMessage!)),
+          );
         }
       },
       builder: (context, state) {
@@ -167,26 +160,23 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
                   // Upload Resume Button
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        backgroundColor: Colors.white),
-                    onPressed: () {
-                      context.read<AdditionalInfoBloc>().add(
-                            UploadResume(null, context: context),
-                          );
-                    },
-                    icon: const Icon(
-                      Icons.upload_file,
-                      color: Color(0xff004673),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      backgroundColor: Colors.white,
                     ),
+                    onPressed: () {
+                      context
+                          .read<AdditionalInfoBloc>()
+                          .add(UploadResume(null, context: context));
+                    },
+                    icon:
+                        const Icon(Icons.upload_file, color: Color(0xff004673)),
                     label: const Text(
                       'Upload Resume (PDF)',
                       style: TextStyle(
                           fontFamily: "Poppins", color: Color(0xff004673)),
                     ),
                   ),
-
-                  // Show existing server resume
                   if (state.additionalInfo?.resume != null &&
                       state.additionalInfo!.resume!.isNotEmpty &&
                       !state.isResumeUploaded)
@@ -199,8 +189,6 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
                           .read<AdditionalInfoBloc>()
                           .add(const ViewResume(false)),
                     ),
-
-                  // Show selected new resume (local file)
                   if (state.resume != null && state.resume!.files.isNotEmpty)
                     _ResumeItem(
                       fileName: state.resume!.files.single.name,
@@ -211,52 +199,52 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
                           .read<AdditionalInfoBloc>()
                           .add(const ViewResume(true)),
                     ),
-                ],
-              ),
-              const SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
-              // Save / Cancel Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  OutlinedButton(
-                    style: const ButtonStyle(),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Cancel',
-                      style:
-                          TextStyle(fontFamily: "Poppins", color: Colors.black),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      backgroundColor: const Color(0xff004673),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                    ),
-                    onPressed: state.status == AdditionalInfoStatus.loading
-                        ? null
-                        : () => context
-                            .read<AdditionalInfoBloc>()
-                            .add(SaveAdditionalInfo()),
-                    child: state.status == AdditionalInfoStatus.loading
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : const Text(
-                            'Save Changes',
-                            style: TextStyle(
-                                fontFamily: "Poppins", color: Colors.white),
-                          ),
+                  // Save / Cancel Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      OutlinedButton(
+                        style: const ButtonStyle(),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                              fontFamily: "Poppins", color: Colors.black),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          backgroundColor: const Color(0xff004673),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                        ),
+                        onPressed: state.status == AdditionalInfoStatus.loading
+                            ? null
+                            : () => context
+                                .read<AdditionalInfoBloc>()
+                                .add(SaveAdditionalInfo()),
+                        child: state.status == AdditionalInfoStatus.loading
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(
+                                'Save Changes',
+                                style: TextStyle(
+                                    fontFamily: "Poppins", color: Colors.white),
+                              ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -280,30 +268,6 @@ class _AdditionalInformationViewState extends State<AdditionalInformationView> {
 
     // If not found, return null to show no selection
     return null;
-  }
-
-  Future<void> _showPermissionDialog(BuildContext context) async {
-    final shouldOpenSettings = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Permission Required'),
-        content: Text('Please enable storage permission in app settings'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text('Open Settings'),
-          ),
-        ],
-      ),
-    );
-
-    if (shouldOpenSettings == true) {
-      await openAppSettings();
-    }
   }
 
   String _getFileNameFromUrl(String url) {

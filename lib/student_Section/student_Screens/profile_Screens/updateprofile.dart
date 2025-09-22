@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:anjalim/student_Section/custom_widgets/CustomTextField.dart';
 import 'package:anjalim/student_Section/custom_widgets/dropdownbutton.dart';
 import 'package:anjalim/student_Section/custom_widgets/profile_validators';
@@ -26,7 +25,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ProfileEditScreen extends StatelessWidget {
   ProfileEditScreen({super.key});
@@ -67,11 +65,6 @@ class ProfileEditScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.successMessage!)),
               );
-            } else if (state is ProfileEditPermissionRequired) {
-              // Show permission dialog when permission is required
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                _showPermissionDialog(context, state);
-              });
             }
           },
           builder: (context, state) {
@@ -464,59 +457,59 @@ class ProfileEditScreen extends StatelessWidget {
   }
 
   /// Show permission explanation dialog and open app settings
-  Future<void> _showPermissionDialog(
-    BuildContext context,
-    ProfileEditPermissionRequired state,
-  ) async {
-    final bloc = context.read<ProfileEditBloc>();
+  // Future<void> _showPermissionDialog(
+  //   BuildContext context,
+  //   ProfileEditPermissionRequired state,
+  // ) async {
+  //   final bloc = context.read<ProfileEditBloc>();
 
-    final shouldOpenSettings = await showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext dialogContext) {
-            return AlertDialog(
-              title: const Text("Permission Required"),
-              content:
-                  const Text("We need access to your photos to upload images"),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext, false),
-                  child: const Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext, true),
-                  child: const Text("Open Settings"),
-                ),
-              ],
-            );
-          },
-        ) ??
-        false;
+  //   final shouldOpenSettings = await showDialog<bool>(
+  //         context: context,
+  //         barrierDismissible: false,
+  //         builder: (BuildContext dialogContext) {
+  //           return AlertDialog(
+  //             title: const Text("Permission Required"),
+  //             content:
+  //                 const Text("We need access to your photos to upload images"),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () => Navigator.pop(dialogContext, false),
+  //                 child: const Text("Cancel"),
+  //               ),
+  //               TextButton(
+  //                 onPressed: () => Navigator.pop(dialogContext, true),
+  //                 child: const Text("Open Settings"),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       ) ??
+  //       false;
 
-    if (shouldOpenSettings) {
-      await openAppSettings();
+  //   if (shouldOpenSettings) {
+  //     await openAppSettings();
 
-      // Wait a bit for user to return from settings
-      await Future.delayed(const Duration(milliseconds: 500));
+  //     // Wait a bit for user to return from settings
+  //     await Future.delayed(const Duration(milliseconds: 500));
 
-      // Check permission status again
-      final status = await Permission.photos.status;
+  //     // Check permission status again
+  //     final status = await Permission.photos.status;
 
-      if (status.isGranted) {
-        // Retry picking image with the original event
-        bloc.add(RetryImagePicking(
-          originalEvent: state.originalPickEvent,
-        ));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Permission still not granted'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    }
-  }
+  //     if (status.isGranted) {
+  //       // Retry picking image with the original event
+  //       bloc.add(RetryImagePicking(
+  //         originalEvent: state.originalPickEvent,
+  //       ));
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text('Permission still not granted'),
+  //           duration: Duration(seconds: 2),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
   Widget _buildSectionLabel(String text) {
     return Padding(

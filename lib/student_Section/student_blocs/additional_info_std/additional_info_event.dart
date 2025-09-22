@@ -74,12 +74,3 @@ class RequestResumePermission extends AdditionalInfoEvent {
   @override
   List<Object> get props => [context];
 }
-
-class ResumePermissionRequired extends AdditionalInfoEvent {
-  final BuildContext context;
-
-  const ResumePermissionRequired(this.context);
-
-  @override
-  List<Object> get props => [context];
-}

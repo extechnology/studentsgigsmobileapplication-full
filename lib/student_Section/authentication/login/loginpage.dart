@@ -1,8 +1,8 @@
-import 'package:anjalim/student_Section/authentication/other_functionalities/forgot_password.dart';
 import 'package:anjalim/student_Section/authentication/google_Auth/google_signup_bloc/blocevent.dart';
 import 'package:anjalim/student_Section/authentication/google_Auth/google_signup_bloc/bloclogic.dart';
 import 'package:anjalim/student_Section/authentication/google_Auth/google_signup_bloc/statebloc.dart';
 import 'package:anjalim/student_Section/authentication/google_Auth/googlesignup.dart';
+import 'package:anjalim/student_Section/authentication/other_functionalities/forgot_password.dart';
 import 'package:anjalim/student_Section/authentication/login/bloc_Login/std_login_bloc.dart';
 import 'package:anjalim/student_Section/authentication/login/bloc_Login/std_login_event.dart';
 import 'package:anjalim/student_Section/authentication/login/bloc_Login/std_login_state.dart';

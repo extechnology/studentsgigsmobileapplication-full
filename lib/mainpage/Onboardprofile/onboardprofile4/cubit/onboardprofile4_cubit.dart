@@ -11,13 +11,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:path/path.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../../dashborad/dashborad.dart';
 import '../../../datapage/datapage.dart';
-import '../../../postedsisg/model/model.dart' as onboard;
-import '../model/model.dart'as posted;
+import '../model/model.dart' as posted;
 
 part 'onboardprofile4_state.dart';
 
@@ -36,7 +33,7 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
   String? selectedCity;
   final String baseurl = ApiConstantsemployer.baseUrl;
 
-  String ? user;
+  String? user;
 
   File? selectedImage;
 
@@ -44,7 +41,8 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
 
   Future<void> pickImageFromGallery() async {
     try {
-      final returned = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final returned =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
 
       if (returned != null) {
         selectedImage = File(returned.path);
@@ -55,6 +53,7 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       emit(Onboardprofile4Initial());
     }
   }
+
   Map<String, String> countryNameToCode = {
     'Aruba': 'AW',
     'Afghanistan': 'AF',
@@ -268,14 +267,12 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
   TextEditingController profilestreet = TextEditingController();
   TextEditingController profilepostcode = TextEditingController();
 
-  Future<void> updateEmployerProfile( BuildContext context ,{
+  Future<void> updateEmployerProfile(
+    BuildContext context, {
     required GlobalKey email,
     required GlobalKey companyname,
     required GlobalKey location,
-
-
-  })
-  async {
+  }) async {
     isValid = true;
     GlobalKey? firstInvalidKey;
 
@@ -300,12 +297,12 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       return;
     }
 
-
     // print("Function is working");
     // print("Function is working $user");
 
     try {
-      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      final token =
+          await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
       // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       var uri = Uri.parse('$baseurl/api/employer/employer-info/?pk=$user');
@@ -314,7 +311,6 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       final countryName = countryController.text.trim();
       final alpha2Code = countryNameToCode[countryName] ?? "";
 
-
       // Pass your Bearer token here
       request.headers['Authorization'] = 'Bearer $token';
 
@@ -322,10 +318,11 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       request.fields['company_name'] = profilecompanyname.text.trim();
       request.fields['company_info'] = profilecompanyinfo.text.trim();
       request.fields['email'] = profileemail.text.trim();
-      request.fields['phone_number'] = '$selectedCountryCode${profilephone.text.trim()}';
+      request.fields['phone_number'] =
+          '$selectedCountryCode${profilephone.text.trim()}';
       request.fields['street_address'] = profilestreet.text.trim();
-      request.fields['state'] = stateController.text.trim();  // ✅ FIXED
-      request.fields['city'] = cityController.text.trim();    // ✅ FIXED
+      request.fields['state'] = stateController.text.trim(); // ✅ FIXED
+      request.fields['city'] = cityController.text.trim(); // ✅ FIXED
       request.fields['postal_code'] = profilepostcode.text.trim();
       request.fields['country'] = jsonEncode({
         "value": alpha2Code,
@@ -335,9 +332,10 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       // Handle optional image upload
       if (selectedImage != null) {
         final photoFile = await http.MultipartFile.fromPath(
-          'logo',  // <-- this must match your backend field name for image
+          'logo', // <-- this must match your backend field name for image
           selectedImage!.path,
-          contentType: MediaType('image', 'jpeg'), // or MediaType('image', 'png') based on your image type
+          contentType: MediaType('image',
+              'jpeg'), // or MediaType('image', 'png') based on your image type
         );
         request.files.add(photoFile);
       }
@@ -354,7 +352,7 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
         //
         // print("Profile Updated Successfully");
         // print('Response: $data');
-        Navigator.pushReplacementNamed(context,"Dashborad" );
+        Navigator.pushReplacementNamed(context, "Dashborad");
         // Navigator.push(context, MaterialPageRoute(builder: (context) => Dashborad(),));
       } else {
         // print('Failed: ${response.statusCode}');
@@ -364,6 +362,7 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       // print('Error: $e');
     }
   }
+
   void scrollToField(GlobalKey key) {
     final context = key.currentContext;
     if (context != null) {
@@ -374,11 +373,12 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       );
     }
   }
+
   void parsePhoneNumber(String fullPhoneNumber) {
     if (fullPhoneNumber.startsWith('+')) {
       // List of all country codes from the package
       final allCountryCodes =
-      codes.map((c) => CountryCode.fromJson(c)).toList();
+          codes.map((c) => CountryCode.fromJson(c)).toList();
 
       // Sort by length of dial code in descending order to match longest first
       allCountryCodes
@@ -396,16 +396,16 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
   }
 
   Future<void> getcompanyinfo(BuildContext context) async {
-    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+    final token =
+        await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
     // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
-    final response = await http.get(Uri.parse(url),headers: {
+    final response = await http.get(Uri.parse(url), headers: {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
-
     });
-    if(response.statusCode >= 200 && response.statusCode <= 299){
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
       final data = posted.compantonboardingFromJson(response.body);
       // print(data);
 
@@ -416,11 +416,8 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
           MaterialPageRoute(builder: (context) => Dashborad()),
         );
       } else {
-
         // print("object no va");
         // print("1${user}");
-
-
       }
       // profileemail.text = data.employer.email!;
       // profilecompanyinfo.text = data.employer.companyInfo!;
@@ -439,20 +436,13 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       // print(data.employer?.user?.email);
       // print("networkurl$networkImage");
 
-
       // emit(CompanyinfoInitial());
       // Future.delayed(Duration(milliseconds: 5000), () {
       //   // Trigger a fake user interaction
       //   emit(CompanyinfoInitial()); // Ensure rebuild (if needed)
       // });
-
-    }else {
+    } else {
       // print("Something Wrong");
     }
-
   }
-
-
-
-
 }

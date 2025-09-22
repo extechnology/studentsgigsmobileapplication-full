@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:csc_picker_plus/csc_picker_plus.dart'; // ✅ This exposes getAllCountriesData
+// ✅ This exposes getAllCountriesData
 
 import 'package:bloc/bloc.dart';
 import 'package:emoji_flag_converter/emoji_flag_converter.dart';
@@ -12,7 +12,6 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:http_parser/http_parser.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../../datapage/datapage.dart';
 import '../model/model.dart'; // <-- THIS IS THE IMPORTANT ONE
@@ -273,7 +272,8 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
 
   Future<void> updateEmployerProfile(int user) async {
     try {
-      final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+      final token =
+          await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
       // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
       var uri = Uri.parse('$baseurl/api/employer/employer-info/?pk=$user');
@@ -387,12 +387,12 @@ class CompanyinfoCubit extends Cubit<CompanyinfoState> {
   }
 
   Future<void> getcompanyinfo() async {
-    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+    final token =
+        await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
     // final token2 = await ApiConstants.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
     final response = await http.get(Uri.parse(url), headers: {
-
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
     });
