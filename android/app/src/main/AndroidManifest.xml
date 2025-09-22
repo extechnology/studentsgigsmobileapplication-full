@@ -1,23 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- For file picking -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
 
     <!-- For media files -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
 
     <!-- Camera Permission -->
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Network Permission -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <!-- Location permissions -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
 
     <application
         android:label="Students Gigs"
