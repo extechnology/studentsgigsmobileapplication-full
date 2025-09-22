@@ -72,8 +72,12 @@ class _DashboradState extends State<Dashborad> {
               searchText: searchText!.trim(),
             ),
             Postedgigs(),
-            Postyourjob(),
-            Profileemployer(),
+            Builder(
+              builder: (context) {
+                final tabController = DefaultTabController.of(context);
+                return Postyourjob(tabController: tabController); // pass controller
+              },
+            ),            Profileemployer(),
           ],
         ),
       ),

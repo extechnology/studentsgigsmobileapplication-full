@@ -13,7 +13,9 @@ import '../../widgets/typeforlocation.dart';
 import '../../widgets/typehyder.dart';
 
 class Postyourjob extends StatefulWidget {
-  const Postyourjob({super.key});
+  final TabController tabController;
+
+  const Postyourjob({super.key, required this.tabController});
 
   @override
   State<Postyourjob> createState() => _PostyourjobState();
@@ -53,7 +55,8 @@ class _PostyourjobState extends State<Postyourjob> {
           ),
         );
         // Optionally show a loading spinner
-      } else if (state is PostyourjobSuccess) {
+      }
+      else if (state is PostyourjobSuccess) {
         showDialog(
           context: context,
           builder: (context) {
@@ -82,7 +85,13 @@ class _PostyourjobState extends State<Postyourjob> {
               actionsAlignment: MainAxisAlignment.center,
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // close dialog
+                    FocusScope.of(context).unfocus(); // hide keyboard
+
+                    widget.tabController?.animateTo(1); // switch to "Posted" tab
+
+                  },
                   child: const Text("OK"),
                 ),
               ],
@@ -90,7 +99,8 @@ class _PostyourjobState extends State<Postyourjob> {
           },
         );
 
-      } else if (state is PostyourjobFailure) {
+      }
+      else if (state is PostyourjobFailure) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error: ${state.error}")),
         );
