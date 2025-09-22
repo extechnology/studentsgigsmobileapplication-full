@@ -8,12 +8,10 @@ import 'package:anjalim/student_Section/services/student_Imageupload.dart';
 import 'package:anjalim/student_Section/student_Screens/profile_Screens/updateprofile.dart';
 import 'package:bloc/bloc.dart';
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 part 'profile_edit_event.dart';
 part 'profile_edit_state.dart';
@@ -141,119 +139,51 @@ class ProfileEditBloc extends Bloc<ProfileEditEvent, ProfileEditState> {
     ageController.text = age.toString();
   }
 
-  Future<Permission> _getStoragePermission() async {
-    if (Platform.isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      if (androidInfo.version.sdkInt >= 33) {
-        return Permission.photos; // For Android 13+
-      } else {
-        return Permission.storage; // For Android 12 and below
-      }
-    } else {
-      return Permission.photos; // For iOS
-    }
-  }
-
   Future<void> _onPickImage(
     PickImage event,
     Emitter<ProfileEditState> emit,
   ) async {
     try {
-      // Get the appropriate permission
-      final permission = await _getStoragePermission();
+      emit(ProfileEditUploading(
+        profileData: _profileData,
+        jobTitles: jobTitles,
+      ));
 
-      // Check current permission status
-      var status = await permission.status;
+      final returnedImage = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
 
-      // debugPrint("Current permission status: $status");
+      if (returnedImage != null) {
+        final pickedImage = File(returnedImage.path);
 
-      if (status.isGranted) {
-        // Permission already granted, proceed with image picking
-        await _handleImageUpload(event, emit);
-        return;
-      }
-
-      if (status.isDenied) {
-        // Request permission
-        // debugPrint("Requesting permission...");
-        status = await permission.request();
-        // debugPrint("Permission request result: $status");
-
-        if (status.isGranted) {
-          await _handleImageUpload(event, emit);
-        } else if (status.isPermanentlyDenied) {
-          // Show dialog to go to settings
-          emit(ProfileEditPermissionRequired(
-            profileData: _profileData,
-            jobTitles: jobTitles,
-            isProfileImage: event.isProfileImage,
-            context: event.context,
-            originalPickEvent: event,
-          ));
+        if (event.isProfileImage) {
+          _selectedProfileImage = pickedImage;
+          await ImageUploadFunction(_selectedProfileImage!, event.context);
         } else {
-          // Permission denied but not permanently
-          emit(ProfileEditLoaded(
-            profileData: _profileData,
-            jobTitles: jobTitles,
-          ));
-
-          ScaffoldMessenger.of(event.context).showSnackBar(
-            const SnackBar(
-              content: Text('Permission denied. Cannot access gallery.'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          _selectedCoverImage = pickedImage;
+          await CoverPicUploadFunction(_selectedCoverImage!);
         }
-      } else if (status.isPermanentlyDenied) {
-        // Already permanently denied, show settings dialog
-        emit(ProfileEditPermissionRequired(
+
+        _profileData = await fetchEmployeeProfile();
+        emit(ProfileEditLoaded(
           profileData: _profileData,
           jobTitles: jobTitles,
-          isProfileImage: event.isProfileImage,
-          context: event.context,
-          originalPickEvent: event,
+          showSuccess: true,
+          successMessage: 'Image uploaded successfully!',
         ));
-      } else if (status.isRestricted) {
-        // Handle restricted case (iOS)
+      } else {
         emit(ProfileEditLoaded(
           profileData: _profileData,
           jobTitles: jobTitles,
         ));
-        ScaffoldMessenger.of(event.context).showSnackBar(
-          const SnackBar(
-            content: Text('Access to gallery is restricted on this device.'),
-            backgroundColor: Colors.red,
-          ),
-        );
       }
-    } catch (e, stackTrace) {
-      // debugPrint("Error in _onPickImage: $e");
-      // debugPrint("Stack trace: $stackTrace");
-      emit(ProfileEditError(
-        error: 'Failed to handle image picking: ${e.toString()}',
-      ));
+    } catch (e) {
+      emit(ProfileEditError(error: 'Failed to upload image: $e'));
     }
   }
 
-// Future<Permission> _getStoragePermission() async {
-//   try {
-//     if (Platform.isAndroid) {
-//       final androidInfo = await DeviceInfoPlugin().androidInfo;
-//       final sdkInt = androidInfo.version.sdkInt ?? 0; // Handle null case
-//       if (sdkInt >= 33) {
-//         return Permission.photos; // For Android 13+
-//       } else {
-//         return Permission.storage; // For Android 12 and below
-//       }
-//     } else {
-//       return Permission.photos; // For iOS
-//     }
-//   } catch (e) {
-//     debugPrint("Error getting storage permission: $e");
-//     // Fallback to storage permission if device info fails
-//     return Platform.isAndroid ? Permission.storage : Permission.photos;
-//   }
-// }
+//
 
   /// Handle the actual image upload after permission is granted
   Future<void> _handleImageUpload(
@@ -308,37 +238,7 @@ class ProfileEditBloc extends Bloc<ProfileEditEvent, ProfileEditState> {
     RetryImagePicking event,
     Emitter<ProfileEditState> emit,
   ) async {
-    emit(ProfileEditLoading());
-
-    try {
-      // Get the appropriate permission
-      final permission = await _getStoragePermission();
-      final status = await permission.status;
-
-      if (status.isGranted) {
-        await secureStorage.write(
-            key: 'isGalleryPermissionGranted', value: 'true');
-
-        // Directly handle image upload since permission is granted
-        await _handleImageUpload(event.originalEvent, emit);
-      } else {
-        emit(ProfileEditLoaded(
-          profileData: _profileData,
-          jobTitles: jobTitles,
-        ));
-
-        ScaffoldMessenger.of(event.originalEvent.context).showSnackBar(
-          const SnackBar(
-            content:
-                Text('Gallery permission is still required to upload images.'),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 4),
-          ),
-        );
-      }
-    } catch (e) {
-      emit(ProfileEditError(error: 'Failed to pick image: ${e.toString()}'));
-    }
+    await _onPickImage(event.originalEvent, emit);
   }
 
   Future<void> _onUpdateProfile(
