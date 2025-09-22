@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiConstantsemployer{
+
   static String baseUrl = 'https://server.studentsgigs.com';
 
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
@@ -26,4 +27,5 @@ class ApiConstantsemployer{
       'Authorization': 'Bearer ${token ?? ""}', // fallback empty if null
     };
   }
+
 }
