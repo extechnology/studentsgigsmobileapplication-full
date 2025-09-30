@@ -196,91 +196,92 @@ class Profileemployer extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
                   child: buildprofile(context: context, text: "Password ", leadingIcon: Icons.lock_reset,color: Color(0xffEB8125),
                     callback: () async {
-                      const storage = FlutterSecureStorage();
-                      final email = await storage.read(key: 'user_email');
-
-                      if (email != null && email.isNotEmpty) {
-                        // Ask for confirmation first
-                        final shouldSend = await showDialog<bool>(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            backgroundColor: Color(0xffFFFFFF),
-
-                            title: const Text("Confirm"),
-                            content: Text("Do you want to send a password reset link to:\n\n$email ?"),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(false),
-                                child: const Text("Cancel"),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(true),
-                                child: const Text("Send"),
-                              ),
-                            ],
-                          ),
-                        );
-
-                        // If user confirmed
-                        if (shouldSend == true) {
-                          // Show loading dialog
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) => const AlertDialog(
-                              backgroundColor: Color(0xffFFFFFF),
-
-                              content: Row(
-                                children: [
-                                  CircularProgressIndicator(),
-                                  SizedBox(width: 16),
-                                  Text("Sending reset link..."),
-                                ],
-                              ),
-                            ),
-                          );
-
-                          // Trigger password reset
-                          await context.read<ForgetCubit>().resetPassword(email: email);
-
-                          // Close loading
-                          Navigator.of(context).pop();
-
-                          // Show success message
-                          // showDialog(
-                          //   context: context,
-                          //   builder: (_) => AlertDialog(
-                          //     backgroundColor: Color(0xffFFFFFF),
-                          //     title: const Text("📩 Email Sent"),
-                          //     content: Text("A reset link was sent to:\n\n$email"),
-                          //     actions: [
-                          //       TextButton(
-                          //         onPressed: () => Navigator.of(context).pop(),
-                          //         child: const Text("OK"),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // );
-                        }
-
-                      } else {
-                        // Email not found
-                        showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            backgroundColor: Color(0xffFFFFFF),
-
-                            title: const Text("❌ Error"),
-                            content: const Text("Email not found in secure storage."),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text("Close"),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
+                      showResetPasswordDialog(context);
+                      // const storage = FlutterSecureStorage();
+                      // final email = await storage.read(key: 'user_email');
+                      //
+                      // if (email != null && email.isNotEmpty) {
+                      //   // Ask for confirmation first
+                      //   final shouldSend = await showDialog<bool>(
+                      //     context: context,
+                      //     builder: (_) => AlertDialog(
+                      //       backgroundColor: Color(0xffFFFFFF),
+                      //
+                      //       title: const Text("Confirm"),
+                      //       content: Text("Do you want to send a password reset link to:\n\n$email ?"),
+                      //       actions: [
+                      //         TextButton(
+                      //           onPressed: () => Navigator.of(context).pop(false),
+                      //           child: const Text("Cancel"),
+                      //         ),
+                      //         TextButton(
+                      //           onPressed: () => Navigator.of(context).pop(true),
+                      //           child: const Text("Send"),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   );
+                      //
+                      //   // If user confirmed
+                      //   if (shouldSend == true) {
+                      //     // Show loading dialog
+                      //     showDialog(
+                      //       context: context,
+                      //       barrierDismissible: false,
+                      //       builder: (_) => const AlertDialog(
+                      //         backgroundColor: Color(0xffFFFFFF),
+                      //
+                      //         content: Row(
+                      //           children: [
+                      //             CircularProgressIndicator(),
+                      //             SizedBox(width: 16),
+                      //             Text("Sending reset link..."),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     );
+                      //
+                      //     // Trigger password reset
+                      //     await context.read<ForgetCubit>().resetPassword(,email: email);
+                      //
+                      //     // Close loading
+                      //     Navigator.of(context).pop();
+                      //
+                      //     // Show success message
+                      //     // showDialog(
+                      //     //   context: context,
+                      //     //   builder: (_) => AlertDialog(
+                      //     //     backgroundColor: Color(0xffFFFFFF),
+                      //     //     title: const Text("📩 Email Sent"),
+                      //     //     content: Text("A reset link was sent to:\n\n$email"),
+                      //     //     actions: [
+                      //     //       TextButton(
+                      //     //         onPressed: () => Navigator.of(context).pop(),
+                      //     //         child: const Text("OK"),
+                      //     //       ),
+                      //     //     ],
+                      //     //   ),
+                      //     // );
+                      //   }
+                      //
+                      // } else {
+                      //   // Email not found
+                      //   showDialog(
+                      //     context: context,
+                      //     builder: (_) => AlertDialog(
+                      //       backgroundColor: Color(0xffFFFFFF),
+                      //
+                      //       title: const Text("❌ Error"),
+                      //       content: const Text("Email not found in secure storage."),
+                      //       actions: [
+                      //         TextButton(
+                      //           onPressed: () => Navigator.of(context).pop(),
+                      //           child: const Text("Close"),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   );
+                      // }
                     },
                        bottomRight: width * 0.042, bottomLeft: width * 0.042,
                    ),
@@ -459,3 +460,100 @@ Widget buildprofile({
 }
 
 
+Future<void> showResetPasswordDialog(BuildContext context) async {
+  final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
+  const storage = FlutterSecureStorage();
+  final email = await storage.read(key: 'user_email');
+
+  if (email == null || email.isEmpty) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("❌ Error"),
+        content: const Text("Email not found in secure storage."),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Close"))],
+      ),
+    );
+    return;
+  }
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => AlertDialog(
+      title: const Text("Reset Password"),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: "New Password"),
+              validator: (v) => (v == null || v.isEmpty) ? "Enter password" : null,
+            ),
+            TextFormField(
+              controller: _confirmController,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: "Confirm Password"),
+              validator: (v) => v != _passwordController.text ? "Passwords do not match" : null,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+        TextButton(
+          onPressed: () async {
+            if (_formKey.currentState!.validate()) {
+              // Show loading
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Center(child: CircularProgressIndicator()),
+              );
+
+              try {
+                // Call Cubit
+                await context.read<ForgetCubit>().resetPassword(
+                  password: _passwordController.text,
+                  confirm_password: _confirmController.text,
+                );
+
+                // Close loader
+                Navigator.pop(context);
+
+                // ✅ Show success SnackBar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Password has been reset successfully ✅"),
+                    backgroundColor: Colors.green,
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+
+                Navigator.pop(context); // close reset password dialog
+              } catch (e) {
+                // Close loader
+                Navigator.pop(context);
+
+                // ❌ Show error SnackBar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Failed to reset password: $e"),
+                    backgroundColor: Colors.red,
+                    duration: const Duration(seconds: 3),
+                  ),
+                );
+              }
+            }
+          },
+          child: const Text("Send"),
+        ),
+      ],
+    ),
+  );
+}
