@@ -14,7 +14,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController forgotPassword = TextEditingController();
+  final TextEditingController password = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
   EmployeeProfile? _profileData;
   bool _isLoading = true;
   late ScrollController _scrollController;
@@ -638,197 +639,193 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // }
 
   void _showForgotPasswordDialog() {
+    bool obscureNewPassword = true;
+    bool obscureConfirmPassword = true;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Text(
-            "Reset Password",
-            style: TextStyle(
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Enter your email address to receive password reset link.",
-                style: TextStyle(
-                  fontFamily: "Poppins",
-                  color: Colors.grey.shade600,
-                  fontSize: 14,
-                ),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: forgotPassword,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: "Email Address",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xffEB8125)),
-                  ),
-                  prefixIcon: const Icon(Icons.email_outlined),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.9,
+                  maxHeight: MediaQuery.of(context).size.height * 0.7,
                 ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                "Cancel",
-                style: TextStyle(
-                  fontFamily: "Poppins",
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                String email = forgotPassword.text.trim();
-                if (email.isNotEmpty) {
-                  // Validate email format
-                  if (_isValidEmail(email)) {
-                    // Close dialog first
-                    Navigator.of(context).pop();
-
-                    // Show success message immediately
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Row(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          "Reset Password",
+                          style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        Text(
+                          "Enter your new password.",
+                          style: TextStyle(
+                            fontFamily: "Poppins",
+                            color: Colors.grey.shade600,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: password,
+                          obscureText: obscureNewPassword,
+                          decoration: InputDecoration(
+                            labelText: "New password",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  const BorderSide(color: Color(0xffEB8125)),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                obscureNewPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey.shade600,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  obscureNewPassword = !obscureNewPassword;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        TextFormField(
+                          controller: confirmPassword,
+                          obscureText: obscureConfirmPassword,
+                          decoration: InputDecoration(
+                            labelText: "Confirm password",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  const BorderSide(color: Color(0xffEB8125)),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                obscureConfirmPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey.shade600,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  obscureConfirmPassword =
+                                      !obscureConfirmPassword;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 25),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Icon(Icons.check_circle_outline,
-                                color: Colors.white),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Text(
-                                    "Reset link sent successfully!",
-                                    style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            ElevatedButton(
+                              onPressed: () async {
+                                String newPassword = password.text.trim();
+                                String confirmPwd = confirmPassword.text.trim();
+
+                                if (newPassword.isEmpty || confirmPwd.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text("Please fill in all fields."),
+                                      backgroundColor: Colors.red,
                                     ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    "Check your email: $email",
-                                    style: const TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: 12,
-                                      color: Colors.white70,
+                                  );
+                                  return;
+                                }
+
+                                if (newPassword != confirmPwd) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Passwords do not match."),
+                                      backgroundColor: Colors.red,
                                     ),
-                                  ),
-                                ],
+                                  );
+                                  return;
+                                }
+
+                                // Call password reset first
+                                await passwordResetWithLogin(
+                                    newPassword, confirmPwd, context);
+
+                                // Close dialog after API call completes
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+
+                                // Clear the text fields
+                                password.clear();
+                                confirmPassword.clear();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xffEB8125),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text(
+                                "Reset",
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        backgroundColor: Colors.green,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        duration: const Duration(seconds: 5),
-                        margin: const EdgeInsets.all(16),
-                      ),
-                    );
-
-                    // Call the actual reset password function in background
-                    resetPassword(email, context);
-
-                    // Clear the text field
-                    forgotPassword.clear();
-                  } else {
-                    // Show error for invalid email
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Row(
-                          children: [
-                            Icon(Icons.error_outline, color: Colors.white),
-                            SizedBox(width: 8),
-                            Text(
-                              "Please enter a valid email address",
-                              style: TextStyle(fontFamily: "Poppins"),
-                            ),
-                          ],
-                        ),
-                        backgroundColor: Colors.red,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        margin: const EdgeInsets.all(16),
-                      ),
-                    );
-                  }
-                } else {
-                  // Show error for empty email
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Row(
-                        children: [
-                          Icon(Icons.warning_outlined, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text(
-                            "Please enter your email address",
-                            style: TextStyle(fontFamily: "Poppins"),
-                          ),
-                        ],
-                      ),
-                      backgroundColor: Colors.orange,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      margin: const EdgeInsets.all(16),
+                      ],
                     ),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xffEB8125),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
-              child: const Text(
-                "Send",
-                style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         );
       },
     );
-  }
-
-// Keep this email validation helper method
-  bool _isValidEmail(String email) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
-    forgotPassword.dispose();
     super.dispose();
   }
 }
