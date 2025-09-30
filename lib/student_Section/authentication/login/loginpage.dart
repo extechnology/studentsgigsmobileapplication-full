@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:anjalim/student_Section/authentication/Phone_Number_authentication/phone_auth_blocc/phone_auth_bloc.dart';
 import 'package:anjalim/student_Section/authentication/Phone_Number_authentication/phone_auth_blocc/phone_auth_event.dart';
 import 'package:anjalim/student_Section/authentication/Phone_Number_authentication/phone_auth_blocc/phone_auth_state.dart';
@@ -18,6 +20,7 @@ import 'package:anjalim/student_Section/authentication/terms_Conditions/terms_an
 import 'package:anjalim/student_Section/authentication/terms_Conditions/terms_bloc.dart';
 import 'package:anjalim/student_Section/authentication/terms_Conditions/terms_state.dart';
 import 'package:anjalim/student_Section/custom_widgets/CustomTextField.dart';
+import 'package:anjalim/student_Section/custom_widgets/count_down.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -174,40 +177,40 @@ class LoginPage extends StatelessWidget {
                               // Phone Login Button
                               SizedBox(
                                 height: buttonHeight,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    showPhoneNumberDialog(
-                                        context, screenWidth, screenHeight);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xff004673),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                screenHeight * 0.02))),
+                                width: screenWidth * 0.9, // optional width
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color(0xff004673), // button color
+                                    borderRadius: BorderRadius.circular(
+                                        screenHeight * 0.02),
                                   ),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.call,
-                                        color: Colors.white,
-                                        size: iconSize,
-                                      ),
-                                      SizedBox(
-                                        width: screenWidth * 0.05,
-                                      ),
-                                      Text(
-                                        "Log in with Phone",
-                                        style: TextStyle(
+                                  child: IconButton(
+                                    onPressed: () {
+                                      showPhoneNumberDialog(
+                                          context, screenWidth, screenHeight);
+                                    },
+                                    icon: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.call,
+                                          color: Colors.white,
+                                          size: iconSize,
+                                        ),
+                                        SizedBox(width: screenWidth * 0.05),
+                                        Text(
+                                          "Log in with Phone",
+                                          style: TextStyle(
                                             fontFamily: "Poppins",
                                             color: Colors.white,
                                             fontSize: bodyFontSize,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ],
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -261,15 +264,6 @@ class LoginPage extends StatelessWidget {
                                 isObscured: true,
                               ),
 
-                              SizedBox(height: size.height * 0.02),
-
-                              // Terms and Conditions with BLoC
-                              _buildTermsAndConditions(context, size),
-
-                              // Login Button with BLoC
-                              SizedBox(height: size.height * 0.03),
-                              _buildLoginButton(context),
-
                               // Forgot Password
                               Align(
                                 alignment: Alignment.bottomRight,
@@ -281,11 +275,20 @@ class LoginPage extends StatelessWidget {
                                     style: TextStyle(
                                         fontFamily: "Poppins",
                                         color: Color(0xff3F414E),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w300),
+                                        fontSize: size.width * 0.04,
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ),
                               ),
+
+                              SizedBox(height: size.height * 0.02),
+
+                              // Terms and Conditions with BLoC
+                              _buildTermsAndConditions(context, size),
+
+                              // Login Button with BLoC
+                              SizedBox(height: size.height * 0.04),
+                              _buildLoginButton(context),
 
                               // Sign Up Section
                               Padding(
@@ -393,7 +396,6 @@ class LoginPage extends StatelessWidget {
             listener: (context, state) {
               if (state is OtpSentSuccess) {
                 Navigator.of(dialogContext).pop();
-                // Show OTP verification dialog
                 _showPhoneAuthDialog(
                   context,
                   phoneNumber.text,
@@ -412,6 +414,7 @@ class LoginPage extends StatelessWidget {
             },
             builder: (context, state) {
               return Dialog(
+                backgroundColor: Colors.white, // ✅ White background
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -429,19 +432,23 @@ class LoginPage extends StatelessWidget {
                           color: Colors.black87,
                         ),
                       ),
+                      SizedBox(height: screenHeight * 0.01),
                       Text(
-                        "We'll send a OTP to your Mobile Number",
+                        "We'll send an OTP to your mobile number",
                         style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: screenHeight * 0.015,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black54,
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
+
+                      /// Country Code + Phone Number
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color:
+                              Colors.grey.shade100, // ✅ Light input background
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: Colors.grey.shade300),
                         ),
@@ -470,13 +477,12 @@ class LoginPage extends StatelessWidget {
                                 fontFamily: "Poppins",
                                 fontSize: screenHeight * 0.018,
                                 fontWeight: FontWeight.w500,
+                                color: Colors.black87,
                               ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: screenWidth * 0.02),
-                            ),
-                            VerticalDivider(
-                              color: Colors.grey[300],
-                              thickness: 1,
+                              // padding: EdgeInsets.symmetric(
+                              //   horizontal:
+                              //       screenWidth * 0.01, // ✅ Reduced padding
+                              // ),
                             ),
                             Expanded(
                               child: TextFormField(
@@ -486,27 +492,30 @@ class LoginPage extends StatelessWidget {
                                   hintText: "Phone Number",
                                   border: InputBorder.none,
                                   contentPadding: EdgeInsets.symmetric(
-                                    horizontal: screenWidth * 0.04,
-                                    vertical: screenHeight * 0.02,
+                                    // horizontal: screenWidth * 0.02, // ✅ Reduced
+                                    vertical: screenHeight * 0.018,
                                   ),
                                   hintStyle: TextStyle(
                                     fontFamily: "Poppins",
                                     fontSize: screenHeight * 0.018,
                                     fontWeight: FontWeight.w400,
-                                    color: const Color(0xffA1A4B2),
+                                    color: Colors.grey,
                                   ),
                                 ),
                                 style: TextStyle(
                                   fontFamily: "Poppins",
                                   fontSize: screenHeight * 0.018,
                                   fontWeight: FontWeight.w400,
+                                  color: Colors.black87,
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: screenHeight * 0.03),
+                      SizedBox(height: screenHeight * 0.025),
+
+                      /// Buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -550,7 +559,8 @@ class LoginPage extends StatelessWidget {
                                     }
                                   },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff004673),
+                              backgroundColor:
+                                  const Color(0xff004673), // ✅ Primary button
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -567,7 +577,7 @@ class LoginPage extends StatelessWidget {
                                 : Row(
                                     children: [
                                       Text(
-                                        "send OTP",
+                                        "Send OTP",
                                         style: TextStyle(
                                           fontFamily: "Poppins",
                                           fontSize: screenHeight * 0.018,
@@ -575,6 +585,7 @@ class LoginPage extends StatelessWidget {
                                           color: Colors.white,
                                         ),
                                       ),
+                                      const SizedBox(width: 4),
                                       const Icon(
                                         Icons.verified_outlined,
                                         color: Colors.green,
@@ -613,175 +624,194 @@ class LoginPage extends StatelessWidget {
       builder: (dialogContext) {
         return BlocProvider.value(
           value: context.read<OtpAuthBloc>(),
-          child: BlocConsumer<OtpAuthBloc, OtpAuthState>(
-            listener: (context, state) {
-              if (state is OtpVerifiedSuccess) {
-                Navigator.of(dialogContext).pop();
-                Navigator.pushReplacementNamed(context, 'StudentHomeScreens');
-              } else if (state is OtpAuthError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.error),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              int remainingSeconds = 600; // 10 minutes = 600 seconds
+              Timer? countdownTimer;
+
+              void startTimer() {
+                countdownTimer?.cancel();
+                countdownTimer =
+                    Timer.periodic(const Duration(seconds: 1), (timer) {
+                  if (remainingSeconds > 0) {
+                    setState(() => remainingSeconds--);
+                  } else {
+                    timer.cancel();
+                  }
+                });
               }
-            },
-            builder: (context, state) {
-              return Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(screenWidth * 0.05),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Enter OTP",
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: screenHeight * 0.025,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
+
+              // Start the timer when dialog first opens
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (countdownTimer == null) startTimer();
+              });
+
+              return BlocConsumer<OtpAuthBloc, OtpAuthState>(
+                listener: (context, state) {
+                  if (state is OtpVerifiedSuccess) {
+                    countdownTimer?.cancel();
+                    Navigator.of(dialogContext).pop();
+                    Navigator.pushReplacementNamed(
+                        context, 'StudentHomeScreens');
+                  } else if (state is OtpAuthError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.error),
+                        backgroundColor: Colors.red,
                       ),
-                      SizedBox(height: screenHeight * 0.01),
-                      Text(
-                        "Enter the 6-digit code sent to",
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: screenHeight * 0.015,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black54,
-                        ),
-                      ),
-                      Text(
-                        fullMobileNumber,
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: screenHeight * 0.015,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.03),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(6, (index) {
-                          return SizedBox(
-                            width: screenWidth * 0.10,
-                            child: TextField(
-                              controller: otpControllers[index],
-                              focusNode: focusNodes[index],
-                              textAlign: TextAlign.center,
-                              keyboardType: TextInputType.number,
-                              maxLength: 1,
-                              style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: screenHeight * 0.025,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              decoration: InputDecoration(
-                                counterText: "",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey.shade300),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                      color: Color(0xff004673), width: 2),
-                                ),
-                              ),
-                              onChanged: (value) {
-                                if (value.isNotEmpty && index < 5) {
-                                  focusNodes[index + 1].requestFocus();
-                                } else if (value.isEmpty && index > 0) {
-                                  focusNodes[index - 1].requestFocus();
-                                }
-                              },
-                            ),
-                          );
-                        }),
-                      ),
-                      SizedBox(height: screenHeight * 0.03),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(screenWidth * 0.05),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(dialogContext).pop();
-                              for (var controller in otpControllers) {
-                                controller.clear();
-                              }
-                            },
-                            child: Text(
-                              "Cancel",
-                              style: TextStyle(
-                                fontFamily: "Poppins",
-                                color: Colors.grey.shade600,
-                                fontSize: screenHeight * 0.018,
-                              ),
+                          Text(
+                            "Enter OTP",
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: screenHeight * 0.025,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
                             ),
                           ),
-                          SizedBox(width: screenWidth * 0.03),
-                          ElevatedButton(
-                            onPressed: state is OtpAuthLoading
-                                ? null
-                                : () {
-                                    String otp = otpControllers
-                                        .map((c) => c.text)
-                                        .join();
-                                    if (otp.length == 6) {
-                                      context.read<OtpAuthBloc>().add(
-                                            VerifyOtpEvent(
-                                              mobileNumber: fullMobileNumber,
-                                              otp: otp,
-                                            ),
-                                          );
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content:
-                                              Text("Please enter complete OTP"),
-                                          backgroundColor: Colors.red,
-                                        ),
-                                      );
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff004673),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                          SizedBox(height: screenHeight * 0.01),
+                          Text(
+                            "Code sent to $fullMobileNumber",
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: screenHeight * 0.015,
+                              color: Colors.black54,
                             ),
-                            child: state is OtpAuthLoading
-                                ? SizedBox(
-                                    height: screenHeight * 0.02,
-                                    width: screenHeight * 0.02,
-                                    child: const CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Text(
-                                    "Verify",
-                                    style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      fontSize: screenHeight * 0.018,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white,
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+
+                          ///  Countdown Timer
+                          const OtpCountdownText(startSeconds: 600),
+                          SizedBox(height: screenHeight * 0.03),
+
+                          /// OTP Input Fields
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: List.generate(6, (index) {
+                              return SizedBox(
+                                width: screenWidth * 0.10,
+                                child: TextField(
+                                  controller: otpControllers[index],
+                                  focusNode: focusNodes[index],
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 1,
+                                  decoration: InputDecoration(
+                                    counterText: "",
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: screenHeight * 0.015),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
+                                  onChanged: (value) {
+                                    if (value.isNotEmpty && index < 5) {
+                                      focusNodes[index + 1].requestFocus();
+                                    } else if (value.isEmpty && index > 0) {
+                                      focusNodes[index - 1].requestFocus();
+                                    }
+                                  },
+                                ),
+                              );
+                            }),
+                          ),
+                          SizedBox(height: screenHeight * 0.03),
+                          // Resend Button
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: remainingSeconds == 0
+                                    ? () {
+                                        context.read<OtpAuthBloc>().add(
+                                              SendOtpEvent(
+                                                mobileNumber: phoneNumber,
+                                                countryCode: countryCode,
+                                              ),
+                                            );
+                                        setState(() => remainingSeconds = 600);
+                                        startTimer();
+                                      }
+                                    : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: remainingSeconds == 0
+                                      ? const Color(0xff004673)
+                                      : Colors.grey,
+                                ),
+                                child: Text(
+                                  "Resend OTP",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenHeight * 0.018,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: screenWidth * 0.03),
+
+                              /// Verify Button
+                              ElevatedButton(
+                                onPressed: state is OtpAuthLoading ||
+                                        remainingSeconds == 0
+                                    ? null
+                                    : () {
+                                        String otp = otpControllers
+                                            .map((c) => c.text)
+                                            .join();
+                                        if (otp.length == 6) {
+                                          context.read<OtpAuthBloc>().add(
+                                                VerifyOtpEvent(
+                                                  mobileNumber:
+                                                      fullMobileNumber,
+                                                  otp: otp,
+                                                ),
+                                              );
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  "Please enter complete OTP"),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff004673),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: state is OtpAuthLoading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : const Text("Verify",
+                                        style: TextStyle(color: Colors.white)),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
           ),
@@ -945,7 +975,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: screenHeight * 0.015),
                       Text(
-                        "Enter your email to receive OTP",
+                        "Enter your email address linked to your account",
                         style: TextStyle(
                           fontFamily: "Poppins",
                           fontSize: screenHeight * 0.015,
@@ -1046,8 +1076,12 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  void showOtpVerificationDialog(BuildContext context, String email,
-      double screenWidth, double screenHeight) {
+  void showOtpVerificationDialog(
+    BuildContext context,
+    String email,
+    double screenWidth,
+    double screenHeight,
+  ) {
     final List<TextEditingController> otpControllers =
         List.generate(6, (_) => TextEditingController());
     final List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
@@ -1058,187 +1092,244 @@ class LoginPage extends StatelessWidget {
       builder: (dialogContext) {
         return BlocProvider.value(
           value: context.read<ForgotPasswordBloc>(),
-          child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
-            listener: (context, state) {
-              if (state is PasswordResetOtpVerified) {
-                Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-                showNewPasswordDialog(
-                    context, email, screenWidth, screenHeight);
-              } else if (state is ForgotPasswordError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.error),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              int remainingSeconds = 600; // 10 min countdown
+              Timer? countdownTimer;
+
+              // Start or restart the timer
+              void startTimer() {
+                countdownTimer?.cancel();
+                countdownTimer =
+                    Timer.periodic(const Duration(seconds: 1), (timer) {
+                  if (remainingSeconds > 0) {
+                    setState(() => remainingSeconds--);
+                  } else {
+                    timer.cancel();
+                  }
+                });
               }
-            },
-            builder: (context, state) {
-              return Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(screenWidth * 0.05),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Enter OTP",
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: screenHeight * 0.025,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
+
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (countdownTimer == null) startTimer();
+              });
+
+              return BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
+                listener: (context, state) {
+                  if (state is PasswordResetOtpVerified) {
+                    countdownTimer?.cancel();
+                    Navigator.of(dialogContext).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.green,
                       ),
-                      SizedBox(height: screenHeight * 0.01),
-                      Text(
-                        "Enter the 6-digit code sent to",
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: screenHeight * 0.015,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black54,
-                        ),
+                    );
+                    showNewPasswordDialog(
+                        context, email, screenWidth, screenHeight);
+                  } else if (state is ForgotPasswordError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.error),
+                        backgroundColor: Colors.red,
                       ),
-                      Text(
-                        email,
-                        style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontSize: screenHeight * 0.015,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
+                    );
+                  } else if (state is PasswordResetOtpSent) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.green,
                       ),
-                      SizedBox(height: screenHeight * 0.03),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: screenWidth * 0.02),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(6, (index) {
-                            return SizedBox(
-                              width: screenWidth * 0.10,
-                              child: TextField(
-                                controller: otpControllers[index],
-                                focusNode: focusNodes[index],
-                                textAlign: TextAlign.center,
-                                keyboardType: TextInputType.number,
-                                maxLength: 1,
-                                style: TextStyle(
-                                  fontFamily: "Poppins",
-                                  fontSize: screenHeight * 0.025,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                decoration: InputDecoration(
-                                  counterText: "",
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: screenHeight * 0.015),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide:
-                                        BorderSide(color: Colors.grey.shade300),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                        color: Color(0xffEB8125), width: 2),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  if (value.isNotEmpty && index < 5) {
-                                    focusNodes[index + 1].requestFocus();
-                                  } else if (value.isEmpty && index > 0) {
-                                    focusNodes[index - 1].requestFocus();
-                                  }
-                                },
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.03),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                    );
+                    // Restart countdown when OTP resent
+                    setState(() => remainingSeconds = 600);
+                    startTimer();
+                  }
+                },
+                builder: (context, state) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(screenWidth * 0.05),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(dialogContext).pop();
-                              for (var controller in otpControllers) {
-                                controller.clear();
-                              }
-                            },
-                            child: Text(
-                              "Cancel",
-                              style: TextStyle(
-                                fontFamily: "Poppins",
-                                color: Colors.grey.shade600,
-                                fontSize: screenHeight * 0.018,
-                              ),
+                          Text(
+                            "Enter OTP",
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: screenHeight * 0.025,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
                             ),
                           ),
-                          SizedBox(width: screenWidth * 0.03),
-                          ElevatedButton(
-                            onPressed: state is ForgotPasswordLoading
-                                ? null
-                                : () {
-                                    String otp = otpControllers
-                                        .map((c) => c.text)
-                                        .join();
-                                    if (otp.length == 6) {
-                                      context.read<ForgotPasswordBloc>().add(
-                                            VerifyPasswordResetOtpEvent(
-                                              identifier: email,
-                                              otp: otp,
-                                            ),
-                                          );
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content:
-                                              Text("Please enter complete OTP"),
-                                          backgroundColor: Colors.red,
-                                        ),
-                                      );
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xffEB8125),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                          SizedBox(height: screenHeight * 0.01),
+                          Text(
+                            "Enter the 6-digit code sent to",
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: screenHeight * 0.015,
+                              color: Colors.black54,
                             ),
-                            child: state is ForgotPasswordLoading
-                                ? SizedBox(
-                                    height: screenHeight * 0.02,
-                                    width: screenHeight * 0.02,
-                                    child: const CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Text(
-                                    "Verify",
+                          ),
+                          Text(
+                            email,
+                            style: TextStyle(
+                              fontFamily: "Poppins",
+                              fontSize: screenHeight * 0.015,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+
+                          //  Countdown text
+                          const OtpCountdownText(startSeconds: 600),
+                          SizedBox(height: screenHeight * 0.02),
+
+                          // OTP Fields
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: screenWidth * 0.02),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: List.generate(6, (index) {
+                                return SizedBox(
+                                  width: screenWidth * 0.10,
+                                  child: TextField(
+                                    controller: otpControllers[index],
+                                    focusNode: focusNodes[index],
+                                    textAlign: TextAlign.center,
+                                    keyboardType: TextInputType.number,
+                                    maxLength: 1,
                                     style: TextStyle(
                                       fontFamily: "Poppins",
-                                      fontSize: screenHeight * 0.018,
-                                      color: Colors.white,
+                                      fontSize: screenHeight * 0.025,
+                                      fontWeight: FontWeight.w600,
                                     ),
+                                    decoration: InputDecoration(
+                                      counterText: "",
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: screenHeight * 0.015),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                            color: Colors.grey.shade300),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: const BorderSide(
+                                            color: Color(0xffEB8125), width: 2),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      if (value.isNotEmpty && index < 5) {
+                                        focusNodes[index + 1].requestFocus();
+                                      } else if (value.isEmpty && index > 0) {
+                                        focusNodes[index - 1].requestFocus();
+                                      }
+                                    },
                                   ),
+                                );
+                              }),
+                            ),
+                          ),
+                          // SizedBox(height: screenHeight * 0.03),
+
+                          SizedBox(height: screenHeight * 0.02),
+
+                          // Action Row
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              //  Resend OTP Button (enabled after expiry)
+                              ElevatedButton(
+                                onPressed: remainingSeconds == 0
+                                    ? () {
+                                        context.read<ForgotPasswordBloc>().add(
+                                              SendPasswordResetOtpEvent(
+                                                  identifier: email),
+                                            );
+                                      }
+                                    : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: remainingSeconds == 0
+                                      ? const Color(0xff004673)
+                                      : Colors.grey,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Resend OTP",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenHeight * 0.018,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: screenWidth * 0.03),
+
+                              // Verify Button
+                              ElevatedButton(
+                                onPressed: state is ForgotPasswordLoading ||
+                                        remainingSeconds == 0
+                                    ? null
+                                    : () {
+                                        final otp = otpControllers
+                                            .map((c) => c.text)
+                                            .join();
+                                        if (otp.length == 6) {
+                                          context
+                                              .read<ForgotPasswordBloc>()
+                                              .add(VerifyPasswordResetOtpEvent(
+                                                identifier: email,
+                                                otp: otp,
+                                              ));
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  "Please enter complete OTP"),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xffEB8125),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: state is ForgotPasswordLoading
+                                    ? SizedBox(
+                                        height: screenHeight * 0.02,
+                                        width: screenHeight * 0.02,
+                                        child: const CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : Text(
+                                        "Verify",
+                                        style: TextStyle(
+                                          fontFamily: "Poppins",
+                                          fontSize: screenHeight * 0.018,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
           ),
