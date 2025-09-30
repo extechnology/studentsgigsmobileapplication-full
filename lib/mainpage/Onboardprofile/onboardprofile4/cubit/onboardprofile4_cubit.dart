@@ -431,8 +431,11 @@ class Onboardprofile4Cubit extends Cubit<Onboardprofile4State> {
       // cityController.text = cleanValue(data.employer.city);
       // print("hey moji");
       user = data.employer!.id.toString();
+
       // print(" 2${  user}");
       profileemail.text = data.employer?.user?.email ?? "";
+
+
       // print(data.employer?.user?.email);
       // print("networkurl$networkImage");
 

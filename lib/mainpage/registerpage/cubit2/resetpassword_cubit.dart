@@ -32,9 +32,9 @@ class ResetpasswordCubit extends Cubit<ResetpasswordState> {
     emit(ResetpasswordIoading());
 
     try {
-      final uri = Uri.parse('https://server.studentsgigs.com/api/employer/reset-password/');
+      final uri = Uri.parse('https://server.studentsgigs.com/api/employer/password-reset-otp/');
       var request = http.MultipartRequest('POST', uri)
-        ..fields['email'] = email;
+        ..fields['identifier'] = email;
 
       request.headers['Accept'] = 'application/json';
 
@@ -59,4 +59,109 @@ class ResetpasswordCubit extends Cubit<ResetpasswordState> {
       emit(Resetpassworderror("Server issue"));
     }
   }
+  Future<bool> verifyOtp({
+    required BuildContext context,
+    required String email,
+    required String otp,
+  }) async {
+    emit(ResetpasswordIoading());
+
+    try {
+      final uri = Uri.parse(
+          'https://server.studentsgigs.com/api/employer/verify-password-reset-otp/');
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['identifier'] = email
+        ..fields['otp'] = otp;
+
+      request.headers['Accept'] = 'application/json';
+
+      final response = await request.send();
+      final responseBody = await http.Response.fromStream(response);
+
+      if (response.statusCode == 200) {
+
+        // emit(ResetpasswordIoaded("OTP is valid ✅"));
+
+
+        return true;
+
+      } else {
+        emit(Resetpassworderror("Failed: ${responseBody.body}"));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Invalid OTP ❌: ${responseBody.body}"),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+        return false;
+
+      }
+    } catch (e) {
+      _monitorConnection();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: isConnected
+              ? Text("Something went wrong: $e")
+              : const Text("No Internet. Please check your connection."),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      emit(Resetpassworderror("Server issue"));
+      return false; // ✅ ensure a bool is always returned
+
+    }
+  }
+  Future<void> confirmPasswordChange({
+    required BuildContext context,
+    required String email,
+    required String password,
+    required String confirmPassword,
+  }) async {
+    emit(ResetpasswordIoading());
+
+    try {
+      final uri = Uri.parse(
+          'https://server.studentsgigs.com/api/employer/password-change-otp/');
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['identifier'] = email
+        ..fields['password'] = password
+        ..fields['confirm_password'] = confirmPassword;
+
+      request.headers['Accept'] = 'application/json';
+
+      final response = await request.send();
+      final responseBody = await http.Response.fromStream(response);
+
+      if (response.statusCode == 200) {
+        emit(ResetpasswordIoaded("Password reset successful "));
+
+
+      } else {
+        emit(Resetpassworderror("Failed: ${responseBody.body}"));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Password reset failed : ${responseBody.body}"),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      _monitorConnection();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: isConnected
+              ? Text("Something went wrong: $e")
+              : const Text("No Internet. Please check your connection."),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      emit(Resetpassworderror("Server issue"));
+    }
+  }
+
+
 }

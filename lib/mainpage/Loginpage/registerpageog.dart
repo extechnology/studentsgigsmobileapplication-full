@@ -1167,73 +1167,60 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: height * 0.04,),
+                        SizedBox(height: height * 0.08,),
 
-                        Center(
-                          child: Container(
-                            width: width * 0.35,
-                            child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    if(isChecked){
-                                      context.read<LoginCubit>().signIn(context); // or "employer", "admin"
-
-                                    }else{
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text("Please accept the Privacy Policy to continue."),
-                                          backgroundColor: Colors.redAccent,
-                                          behavior: SnackBarBehavior.floating,
-                                          duration: Duration(seconds: 2),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                        ),
-                                      );
-
-                                    }
-
-                                  },
-                                  child: Container(
-
-                                    width: circleSize,
-                                    height: circleSize,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Color(0xffE3E3E3),
-                                      ),
-                                      borderRadius: BorderRadius.circular(circleSize / 2), // perfectly circular
-                                    ),
-                                    child: Center(
-                                      child: Image.asset("assets/images/logos/google.png")
-
-                                    ),
-                                  ),
-                                ),
-
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: height * 0.04,),
-
-                        Center(
-                          child: Text(
-                            "OR LOG IN WITH EMAIL",
-                            style: TextStyle(
-                              color: Color(0xffA1A4B2),
-                              fontFamily: 'Sora',
-                              fontWeight: FontWeight.w400, // Regular
-                              fontSize: width * 0.035,
-                              height: 1.43, // Approx. "Title Medium" line-height: ~20px / 14px = 1.43
-                              letterSpacing: 14 * 0.05, // 5% of font size = 0.7
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: height * 0.04,),
+                        // Center(
+                        //   child: Container(
+                        //     width: width * 0.35,
+                        //     child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                        //       children: [
+                        //         InkWell(
+                        //           onTap: () {
+                        //             if(isChecked){
+                        //               context.read<LoginCubit>().signIn(context); // or "employer", "admin"
+                        //
+                        //             }else{
+                        //               ScaffoldMessenger.of(context).showSnackBar(
+                        //                 SnackBar(
+                        //                   content: Text("Please accept the Privacy Policy to continue."),
+                        //                   backgroundColor: Colors.redAccent,
+                        //                   behavior: SnackBarBehavior.floating,
+                        //                   duration: Duration(seconds: 2),
+                        //                   shape: RoundedRectangleBorder(
+                        //                     borderRadius: BorderRadius.circular(8),
+                        //                   ),
+                        //                 ),
+                        //               );
+                        //
+                        //             }
+                        //
+                        //           },
+                        //           child: Container(
+                        //
+                        //             width: circleSize,
+                        //             height: circleSize,
+                        //             decoration: BoxDecoration(
+                        //               color: Colors.transparent,
+                        //               border: Border.all(
+                        //                 width: 1,
+                        //                 color: Color(0xffE3E3E3),
+                        //               ),
+                        //               borderRadius: BorderRadius.circular(circleSize / 2), // perfectly circular
+                        //             ),
+                        //             child: Center(
+                        //               child: Image.asset("assets/images/logos/google.png")
+                        //
+                        //             ),
+                        //           ),
+                        //         ),
+                        //
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
+                        // SizedBox(height: height * 0.01,),
+                        //
+                        // SizedBox(height: height * 0.04,),
 
 
                         Center(child: textform(hint: "Name",
@@ -1337,10 +1324,12 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                   text: TextSpan(
                                     style: TextStyle(color: Colors.black, fontFamily: 'Sora',fontSize: width * 0.038),
                                     children: [
-                                      TextSpan(text: 'I have read the '),
+                                      TextSpan(text: 'By registering, you agree to our',style: TextStyle(fontSize: width * 0.03)),
                                       TextSpan(
-                                        text: 'Privacy Policy',
+                                        text: 'Terms and Conditions.',
                                         style: TextStyle(
+                                          fontSize: width * 0.03,
+
                                           color: Colors.blue,
                                           decoration: TextDecoration.underline,
                                         ),
@@ -1352,28 +1341,28 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                   ),
                                 ),
                                 // SizedBox(width: width * 0.22,),
-                                StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return Checkbox(
-
-                                      value: isChecked,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          isChecked = value ?? false;
-                                        });
-                                      },
-                                      activeColor: Color(0xffEB8125), // Fill color when checked
-                                      checkColor: Colors.white, // Tick color
-                                      side: BorderSide(color: Color(0xffEB8125), ), // Border color when unchecked
-                                    );
-                                  },
-                                ),
+                                // StatefulBuilder(
+                                //   builder: (context, setState) {
+                                //     return Checkbox(
+                                //
+                                //       value: isChecked,
+                                //       onChanged: (value) {
+                                //         setState(() {
+                                //           isChecked = value ?? false;
+                                //         });
+                                //       },
+                                //       activeColor: Color(0xffEB8125), // Fill color when checked
+                                //       checkColor: Colors.white, // Tick color
+                                //       side: BorderSide(color: Color(0xffEB8125), ), // Border color when unchecked
+                                //     );
+                                //   },
+                                // ),
 
                               ],
                             ),
                           ),
                         ),
-                        SizedBox(height: height * 0.03,),
+                        SizedBox(height: height * 0.08,),
 
                         Center(
                           child: Material(
@@ -1383,24 +1372,9 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                             child: InkWell(
 
                               onTap: () {
-                                if(isChecked){
                                   context.read<PostregisterCubit>().registerUser(conformpassword:confirmPasswordController.text.trim(),email: emailController.text.trim(),password: passwordController.text.trim(),username: usernameController.text.trim() );
-                                }
-                                else {
-                                  // Show alert if not checked
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text("Please accept the Privacy Policy to continue."),
-                                      backgroundColor: Colors.redAccent,
-                                      behavior: SnackBarBehavior.floating,
-                                      duration: Duration(seconds: 2),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                  );
 
-                                }
+
                               },
                               child: Container(
                                 width: width * 0.85,
