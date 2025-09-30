@@ -332,7 +332,7 @@ class _RegisterpageState extends State<Registerpage> {
                             color: Colors.grey.shade400,
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:  EdgeInsets.symmetric(horizontal:width * 0.02 ),
                             child: Text(
                               "OR",
                               style: TextStyle(
@@ -419,12 +419,12 @@ class _RegisterpageState extends State<Registerpage> {
                                       fontFamily: 'Sora',
                                       fontSize: width * 0.038),
                                   children: [
-                                    TextSpan(text: 'By logging in, you agree to our',style: TextStyle(fontSize: width * 0.03)),
+                                    TextSpan(text: 'By logging in, you agree to our ',style: TextStyle(fontSize: width * 0.03)),
                                     TextSpan(
                                       text: 'Terms and Conditions',
                                       style: TextStyle(
                                         fontSize: width * 0.03,
-                                        color: Colors.blue,
+                                        color: Colors.black,
                                         decoration: TextDecoration.underline,
                                       ),
                                       recognizer: TapGestureRecognizer()
@@ -517,11 +517,13 @@ class _RegisterpageState extends State<Registerpage> {
                                 return StatefulBuilder(
                                     builder: (dialogContext,setState) {
                                       return Dialog(
+                                        backgroundColor: Colors.white,
+
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(
                                                 16)),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(20),
+                                          padding:  EdgeInsets.all(width * 0.05),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
@@ -532,21 +534,22 @@ class _RegisterpageState extends State<Registerpage> {
                                                   Text(
                                                     "Reset Password",
                                                     style: TextStyle(
-                                                      fontSize: 20,
+                                                      fontSize: width * 0.05,
                                                       fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
-                                                  Icon(Icons.vpn_key, size: 22),
+                                                  Icon(Icons.vpn_key, size: width * 0.06),
                                                 ],
                                               ),
-                                              const SizedBox(height: 12),
+                                              SizedBox(height: height * 0.02),
                                               Text(
                                                 "Enter your email address linked to your account",
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(fontSize: 14,
+                                                style: TextStyle(
+                                                    fontSize: width * 0.035,
                                                     color: Colors.grey[700]),
                                               ),
-                                              const SizedBox(height: 20),
+                                              SizedBox(height: height * 0.02),
                                               TextField(
                                                 controller: emailController,
                                                 decoration: InputDecoration(
@@ -555,29 +558,33 @@ class _RegisterpageState extends State<Registerpage> {
                                                     borderRadius: BorderRadius
                                                         .circular(12),
                                                   ),
-                                                  contentPadding: const EdgeInsets
+                                                  contentPadding:  EdgeInsets
                                                       .symmetric(
-                                                      horizontal: 12, vertical: 10),
+                                                    horizontal: width * 0.03,
+                                                    vertical: height * 0.015,
+                                                  ),
                                                 ),
                                                 keyboardType: TextInputType.text,
                                               ),
-                                              SizedBox(height: 20),
+                                              SizedBox(height: height * 0.02),
                                               if (errorText != null) ...[
-                                                const SizedBox(height: 6),
+                                                SizedBox(height: height * 0.02),
                                                 Text(
                                                   errorText!,
                                                   style:
-                                                  const TextStyle(color: Colors.red, fontSize: 12),
+                                                  TextStyle(color: Colors.red,
+                                                      fontSize: width * 0.035),
                                                 ),
                                               ],
                                               // Info Text
                                               Text(
                                                 "A link will be sent to your email for resetting your password & username",
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(fontSize: 12,
+                                                style: TextStyle(
+                                                    fontSize: width * 0.03,
                                                     color: Colors.grey[600]),
                                               ),
-                                              const SizedBox(height: 20),
+                                              SizedBox(height: height * 0.02),
 
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment
@@ -621,10 +628,25 @@ class _RegisterpageState extends State<Registerpage> {
                                                         context: parentContext,
                                                         barrierDismissible: false,
                                                         builder: (_) {
+                                                          String formatTime(int seconds) {
+                                                            final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+                                                            final secs = (seconds % 60).toString().padLeft(2, '0');
+                                                            return "$minutes:$secs";
+                                                          }
+                                                          int secondsRemaining = 600; // ⏱ initial countdown
+                                                          Timer? timer;
                                                           return StatefulBuilder(
                                                             builder: (context,
                                                                 setState) {
+                                                              timer ??= Timer.periodic(const Duration(seconds: 1), (t) {
+                                                                if (secondsRemaining > 0) {
+                                                                  setState(() => secondsRemaining--);
+                                                                } else {
+                                                                  t.cancel();
+                                                                }
+                                                              });
                                                               return Dialog(
+                                                                backgroundColor: Colors.white,
                                                                 shape: RoundedRectangleBorder(
                                                                     borderRadius: BorderRadius
                                                                         .circular(
@@ -636,24 +658,25 @@ class _RegisterpageState extends State<Registerpage> {
                                                                     mainAxisSize: MainAxisSize
                                                                         .min,
                                                                     children: [
-                                                                      const Text(
+                                                                      Text(
                                                                         'Enter OTP',
                                                                         style: TextStyle(
-                                                                            fontSize: 20,
+                                                                            fontSize: width * 0.05,
                                                                             fontWeight: FontWeight
                                                                                 .bold),
                                                                       ),
-                                                                      const SizedBox(
-                                                                          height: 8),
-                                                                      const Text(
+                                                                      SizedBox(height: height * 0.02),
+
+                                                                      Text(
                                                                         'A verification code has been sent to your email.',
                                                                         style: TextStyle(
                                                                             color: Colors
                                                                                 .grey,
-                                                                            fontSize: 14),
+                                                                            fontSize: width * 0.035
+                                                                        ),
                                                                       ),
-                                                                      const SizedBox(
-                                                                          height: 12),
+                                                                      SizedBox(
+                                                                          height: height * 0.02),
 
                                                                       // ✅ Pinput OTP (6 digits)
                                                                       Pinput(
@@ -662,8 +685,8 @@ class _RegisterpageState extends State<Registerpage> {
                                                                         defaultPinTheme: PinTheme(
                                                                           width: 50,
                                                                           height: 50,
-                                                                          textStyle: const TextStyle(
-                                                                              fontSize: 20,
+                                                                          textStyle:  TextStyle(
+                                                                              fontSize: width * 0.05,
                                                                               color: Colors
                                                                                   .black),
                                                                           decoration: BoxDecoration(
@@ -679,8 +702,8 @@ class _RegisterpageState extends State<Registerpage> {
                                                                         focusedPinTheme: PinTheme(
                                                                           width: 50,
                                                                           height: 50,
-                                                                          textStyle: const TextStyle(
-                                                                              fontSize: 20,
+                                                                          textStyle:  TextStyle(
+                                                                              fontSize: width * 0.05,
                                                                               color: Colors
                                                                                   .black),
                                                                           decoration: BoxDecoration(
@@ -705,6 +728,7 @@ class _RegisterpageState extends State<Registerpage> {
                                                                         },
                                                                       ),
 
+
                                                                       if (otpError !=
                                                                           null)
                                                                         Padding(
@@ -713,15 +737,40 @@ class _RegisterpageState extends State<Registerpage> {
                                                                               top: 8),
                                                                           child: Text(
                                                                             otpError!,
-                                                                            style: const TextStyle(
+                                                                            style:  TextStyle(
                                                                                 color: Colors
                                                                                     .red,
-                                                                                fontSize: 12),
+                                                                                fontSize:width * 0.035 ),
                                                                           ),
                                                                         ),
+                                                                      TextButton(
+                                                                        onPressed: secondsRemaining == 0
+                                                                            ? () async {
+                                                                          // Call resend OTP API
+                                                                          await parentContext
+                                                                              .read<ResetpasswordCubit>()
+                                                                              .resetPassword(
+                                                                            email: email,
+                                                                            context: parentContext,
+                                                                          );
 
-                                                                      const SizedBox(
-                                                                          height: 20),
+                                                                          setState(() {
+                                                                            secondsRemaining = 600; // restart 10 min countdown
+                                                                            timer?.cancel();
+                                                                            timer = null;
+                                                                          });
+                                                                        }
+                                                                            : null,
+                                                                        child: Text(
+                                                                          secondsRemaining > 0
+                                                                              ? "Resend in ${formatTime(secondsRemaining)}"
+                                                                              : "Resend OTP",
+                                                                          style: TextStyle(
+                                                                            color: secondsRemaining == 0 ? Colors.blue : Colors.grey,
+                                                                          ),
+                                                                        ),
+                                                                      ),                                                                   SizedBox(
+                                                                          height: height * 0.03),
                                                                       Row(
                                                                         mainAxisAlignment: MainAxisAlignment
                                                                             .center,
@@ -756,6 +805,8 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                   builder: (
                                                                                       _) {
                                                                                     return Dialog(
+                                                                                      backgroundColor: Colors.white,
+
                                                                                       shape: RoundedRectangleBorder(
                                                                                           borderRadius: BorderRadius
                                                                                               .circular(
@@ -768,15 +819,15 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                           mainAxisSize: MainAxisSize
                                                                                               .min,
                                                                                           children: [
-                                                                                            const Text(
+                                                                                            Text(
                                                                                               'Set New Password',
                                                                                               style: TextStyle(
-                                                                                                  fontSize: 20,
+                                                                                                  fontSize: width *0.05 ,
                                                                                                   fontWeight: FontWeight
                                                                                                       .bold),
                                                                                             ),
-                                                                                            const SizedBox(
-                                                                                                height: 12),
+                                                                                            SizedBox(
+                                                                                                height: height * 0.02),
                                                                                             TextField(
                                                                                               controller: passController,
                                                                                               obscureText: true,
@@ -786,14 +837,14 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                                     borderRadius: BorderRadius
                                                                                                         .circular(
                                                                                                         12)),
-                                                                                                contentPadding: const EdgeInsets
+                                                                                                contentPadding:  EdgeInsets
                                                                                                     .symmetric(
-                                                                                                    horizontal: 12,
-                                                                                                    vertical: 10),
+                                                                                                    horizontal:width * 0.03 ,
+                                                                                                    vertical: height * 0.015),
                                                                                               ),
                                                                                             ),
-                                                                                            const SizedBox(
-                                                                                                height: 12),
+                                                                                            SizedBox(
+                                                                                                height: height * 0.02),
                                                                                             TextField(
                                                                                               controller: confirmPassController,
                                                                                               obscureText: true,
@@ -803,14 +854,14 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                                     borderRadius: BorderRadius
                                                                                                         .circular(
                                                                                                         12)),
-                                                                                                contentPadding: const EdgeInsets
+                                                                                                contentPadding:  EdgeInsets
                                                                                                     .symmetric(
-                                                                                                    horizontal: 12,
-                                                                                                    vertical: 10),
+                                                                                                    horizontal: width * 0.03,
+                                                                                                    vertical: height * 0.015),
                                                                                               ),
                                                                                             ),
-                                                                                            const SizedBox(
-                                                                                                height: 20),
+                                                                                            SizedBox(
+                                                                                                height: height *0.03),
                                                                                             Row(
                                                                                               mainAxisAlignment: MainAxisAlignment
                                                                                                   .center,
@@ -842,7 +893,7 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                                         0.054,
                                                                                                     padding: EdgeInsets
                                                                                                         .symmetric(
-                                                                                                        horizontal: 20,
+                                                                                                        horizontal: width * 0.056,
                                                                                                         vertical: 12),
                                                                                                     decoration: BoxDecoration(
                                                                                                       color: Colors
@@ -881,10 +932,10 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                   0.7,
                                                                               height: height *
                                                                                   0.054,
-                                                                              padding: const EdgeInsets
+                                                                              padding:  EdgeInsets
                                                                                   .symmetric(
-                                                                                  horizontal: 20,
-                                                                                  vertical: 12),
+                                                                                  horizontal: width * 0.056 ,
+                                                                                  vertical: height * 0.015),
                                                                               decoration: BoxDecoration(
                                                                                 color: Colors
                                                                                     .black,
@@ -946,13 +997,13 @@ class _RegisterpageState extends State<Registerpage> {
                               },
                             );
                           },
-                          child: const Text(
+                          child:  Text(
                             'Forgot Password?',
                             style: TextStyle(
                               fontFamily: 'Sora',
                               fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: Colors.blue,
+                              fontSize: width * 0.04,
+                              color: Colors.black,
                               decoration: TextDecoration.underline,
                             ),
                           ),
@@ -1235,7 +1286,7 @@ class _RegisterpageState extends State<Registerpage> {
                             color: Colors.grey.shade400,
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:  EdgeInsets.symmetric(horizontal:width * 0.02 ),
                             child: Text(
                               "OR",
                               style: TextStyle(
@@ -1322,12 +1373,12 @@ class _RegisterpageState extends State<Registerpage> {
                                       fontFamily: 'Sora',
                                       fontSize: width * 0.038),
                                   children: [
-                                    TextSpan(text: 'By logging in, you agree to our',style: TextStyle(fontSize: width * 0.03)),
+                                    TextSpan(text: 'By logging in, you agree to our ',style: TextStyle(fontSize: width * 0.03)),
                                     TextSpan(
                                       text: 'Terms and Conditions',
                                       style: TextStyle(
                                         fontSize: width * 0.03,
-                                        color: Colors.blue,
+                                        color: Colors.black,
                                         decoration: TextDecoration.underline,
                                       ),
                                       recognizer: TapGestureRecognizer()
@@ -1420,11 +1471,13 @@ class _RegisterpageState extends State<Registerpage> {
                                 return StatefulBuilder(
                                     builder: (dialogContext,setState) {
                                       return Dialog(
+                                        backgroundColor: Colors.white,
+
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(
                                                 16)),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(20),
+                                          padding:  EdgeInsets.all(width * 0.05),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
@@ -1435,21 +1488,22 @@ class _RegisterpageState extends State<Registerpage> {
                                                   Text(
                                                     "Reset Password",
                                                     style: TextStyle(
-                                                      fontSize: 20,
+                                                      fontSize: width * 0.05,
                                                       fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
-                                                  Icon(Icons.vpn_key, size: 22),
+                                                  Icon(Icons.vpn_key, size: width * 0.06),
                                                 ],
                                               ),
-                                              const SizedBox(height: 12),
+                                              SizedBox(height: height * 0.02),
                                               Text(
                                                 "Enter your email address linked to your account",
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(fontSize: 14,
+                                                style: TextStyle(
+                                                    fontSize: width * 0.035,
                                                     color: Colors.grey[700]),
                                               ),
-                                              const SizedBox(height: 20),
+                                              SizedBox(height: height * 0.02),
                                               TextField(
                                                 controller: emailController,
                                                 decoration: InputDecoration(
@@ -1458,29 +1512,33 @@ class _RegisterpageState extends State<Registerpage> {
                                                     borderRadius: BorderRadius
                                                         .circular(12),
                                                   ),
-                                                  contentPadding: const EdgeInsets
+                                                  contentPadding:  EdgeInsets
                                                       .symmetric(
-                                                      horizontal: 12, vertical: 10),
+                                                    horizontal: width * 0.03,
+                                                    vertical: height * 0.015,
+                                                  ),
                                                 ),
                                                 keyboardType: TextInputType.text,
                                               ),
-                                              SizedBox(height: 20),
+                                              SizedBox(height: height * 0.02),
                                               if (errorText != null) ...[
-                                                const SizedBox(height: 6),
+                                                SizedBox(height: height * 0.02),
                                                 Text(
                                                   errorText!,
                                                   style:
-                                                  const TextStyle(color: Colors.red, fontSize: 12),
+                                                  TextStyle(color: Colors.red,
+                                                      fontSize: width * 0.035),
                                                 ),
                                               ],
                                               // Info Text
                                               Text(
                                                 "A link will be sent to your email for resetting your password & username",
                                                 textAlign: TextAlign.center,
-                                                style: TextStyle(fontSize: 12,
+                                                style: TextStyle(
+                                                    fontSize: width * 0.03,
                                                     color: Colors.grey[600]),
                                               ),
-                                              const SizedBox(height: 20),
+                                              SizedBox(height: height * 0.02),
 
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment
@@ -1524,10 +1582,25 @@ class _RegisterpageState extends State<Registerpage> {
                                                         context: parentContext,
                                                         barrierDismissible: false,
                                                         builder: (_) {
+                                                          String formatTime(int seconds) {
+                                                            final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+                                                            final secs = (seconds % 60).toString().padLeft(2, '0');
+                                                            return "$minutes:$secs";
+                                                          }
+                                                          int secondsRemaining = 600; // ⏱ initial countdown
+                                                          Timer? timer;
                                                           return StatefulBuilder(
                                                             builder: (context,
                                                                 setState) {
+                                                              timer ??= Timer.periodic(const Duration(seconds: 1), (t) {
+                                                                if (secondsRemaining > 0) {
+                                                                  setState(() => secondsRemaining--);
+                                                                } else {
+                                                                  t.cancel();
+                                                                }
+                                                              });
                                                               return Dialog(
+                                                                backgroundColor: Colors.white,
                                                                 shape: RoundedRectangleBorder(
                                                                     borderRadius: BorderRadius
                                                                         .circular(
@@ -1539,24 +1612,25 @@ class _RegisterpageState extends State<Registerpage> {
                                                                     mainAxisSize: MainAxisSize
                                                                         .min,
                                                                     children: [
-                                                                      const Text(
+                                                                      Text(
                                                                         'Enter OTP',
                                                                         style: TextStyle(
-                                                                            fontSize: 20,
+                                                                            fontSize: width * 0.05,
                                                                             fontWeight: FontWeight
                                                                                 .bold),
                                                                       ),
-                                                                      const SizedBox(
-                                                                          height: 8),
-                                                                      const Text(
+                                                                      SizedBox(height: height * 0.02),
+
+                                                                      Text(
                                                                         'A verification code has been sent to your email.',
                                                                         style: TextStyle(
                                                                             color: Colors
                                                                                 .grey,
-                                                                            fontSize: 14),
+                                                                            fontSize: width * 0.035
+                                                                        ),
                                                                       ),
-                                                                      const SizedBox(
-                                                                          height: 12),
+                                                                      SizedBox(
+                                                                          height: height * 0.02),
 
                                                                       // ✅ Pinput OTP (6 digits)
                                                                       Pinput(
@@ -1565,8 +1639,8 @@ class _RegisterpageState extends State<Registerpage> {
                                                                         defaultPinTheme: PinTheme(
                                                                           width: 50,
                                                                           height: 50,
-                                                                          textStyle: const TextStyle(
-                                                                              fontSize: 20,
+                                                                          textStyle:  TextStyle(
+                                                                              fontSize: width * 0.05,
                                                                               color: Colors
                                                                                   .black),
                                                                           decoration: BoxDecoration(
@@ -1582,8 +1656,8 @@ class _RegisterpageState extends State<Registerpage> {
                                                                         focusedPinTheme: PinTheme(
                                                                           width: 50,
                                                                           height: 50,
-                                                                          textStyle: const TextStyle(
-                                                                              fontSize: 20,
+                                                                          textStyle:  TextStyle(
+                                                                              fontSize: width * 0.05,
                                                                               color: Colors
                                                                                   .black),
                                                                           decoration: BoxDecoration(
@@ -1608,6 +1682,7 @@ class _RegisterpageState extends State<Registerpage> {
                                                                         },
                                                                       ),
 
+
                                                                       if (otpError !=
                                                                           null)
                                                                         Padding(
@@ -1616,15 +1691,40 @@ class _RegisterpageState extends State<Registerpage> {
                                                                               top: 8),
                                                                           child: Text(
                                                                             otpError!,
-                                                                            style: const TextStyle(
+                                                                            style:  TextStyle(
                                                                                 color: Colors
                                                                                     .red,
-                                                                                fontSize: 12),
+                                                                                fontSize:width * 0.035 ),
                                                                           ),
                                                                         ),
+                                                                      TextButton(
+                                                                        onPressed: secondsRemaining == 0
+                                                                            ? () async {
+                                                                          // Call resend OTP API
+                                                                          await parentContext
+                                                                              .read<ResetpasswordCubit>()
+                                                                              .resetPassword(
+                                                                            email: email,
+                                                                            context: parentContext,
+                                                                          );
 
-                                                                      const SizedBox(
-                                                                          height: 20),
+                                                                          setState(() {
+                                                                            secondsRemaining = 600; // restart 10 min countdown
+                                                                            timer?.cancel();
+                                                                            timer = null;
+                                                                          });
+                                                                        }
+                                                                            : null,
+                                                                        child: Text(
+                                                                          secondsRemaining > 0
+                                                                              ? "Resend in ${formatTime(secondsRemaining)}"
+                                                                              : "Resend OTP",
+                                                                          style: TextStyle(
+                                                                            color: secondsRemaining == 0 ? Colors.blue : Colors.grey,
+                                                                          ),
+                                                                        ),
+                                                                      ),                                                                   SizedBox(
+                                                                          height: height * 0.03),
                                                                       Row(
                                                                         mainAxisAlignment: MainAxisAlignment
                                                                             .center,
@@ -1659,6 +1759,8 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                   builder: (
                                                                                       _) {
                                                                                     return Dialog(
+                                                                                      backgroundColor: Colors.white,
+
                                                                                       shape: RoundedRectangleBorder(
                                                                                           borderRadius: BorderRadius
                                                                                               .circular(
@@ -1671,15 +1773,15 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                           mainAxisSize: MainAxisSize
                                                                                               .min,
                                                                                           children: [
-                                                                                            const Text(
+                                                                                            Text(
                                                                                               'Set New Password',
                                                                                               style: TextStyle(
-                                                                                                  fontSize: 20,
+                                                                                                  fontSize: width *0.05 ,
                                                                                                   fontWeight: FontWeight
                                                                                                       .bold),
                                                                                             ),
-                                                                                            const SizedBox(
-                                                                                                height: 12),
+                                                                                            SizedBox(
+                                                                                                height: height * 0.02),
                                                                                             TextField(
                                                                                               controller: passController,
                                                                                               obscureText: true,
@@ -1689,14 +1791,14 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                                     borderRadius: BorderRadius
                                                                                                         .circular(
                                                                                                         12)),
-                                                                                                contentPadding: const EdgeInsets
+                                                                                                contentPadding:  EdgeInsets
                                                                                                     .symmetric(
-                                                                                                    horizontal: 12,
-                                                                                                    vertical: 10),
+                                                                                                    horizontal:width * 0.03 ,
+                                                                                                    vertical: height * 0.015),
                                                                                               ),
                                                                                             ),
-                                                                                            const SizedBox(
-                                                                                                height: 12),
+                                                                                            SizedBox(
+                                                                                                height: height * 0.02),
                                                                                             TextField(
                                                                                               controller: confirmPassController,
                                                                                               obscureText: true,
@@ -1706,14 +1808,14 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                                     borderRadius: BorderRadius
                                                                                                         .circular(
                                                                                                         12)),
-                                                                                                contentPadding: const EdgeInsets
+                                                                                                contentPadding:  EdgeInsets
                                                                                                     .symmetric(
-                                                                                                    horizontal: 12,
-                                                                                                    vertical: 10),
+                                                                                                    horizontal: width * 0.03,
+                                                                                                    vertical: height * 0.015),
                                                                                               ),
                                                                                             ),
-                                                                                            const SizedBox(
-                                                                                                height: 20),
+                                                                                            SizedBox(
+                                                                                                height: height *0.03),
                                                                                             Row(
                                                                                               mainAxisAlignment: MainAxisAlignment
                                                                                                   .center,
@@ -1745,7 +1847,7 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                                         0.054,
                                                                                                     padding: EdgeInsets
                                                                                                         .symmetric(
-                                                                                                        horizontal: 20,
+                                                                                                        horizontal: width * 0.056,
                                                                                                         vertical: 12),
                                                                                                     decoration: BoxDecoration(
                                                                                                       color: Colors
@@ -1784,10 +1886,10 @@ class _RegisterpageState extends State<Registerpage> {
                                                                                   0.7,
                                                                               height: height *
                                                                                   0.054,
-                                                                              padding: const EdgeInsets
+                                                                              padding:  EdgeInsets
                                                                                   .symmetric(
-                                                                                  horizontal: 20,
-                                                                                  vertical: 12),
+                                                                                  horizontal: width * 0.056 ,
+                                                                                  vertical: height * 0.015),
                                                                               decoration: BoxDecoration(
                                                                                 color: Colors
                                                                                     .black,
@@ -1849,13 +1951,13 @@ class _RegisterpageState extends State<Registerpage> {
                               },
                             );
                           },
-                          child: const Text(
+                          child:  Text(
                             'Forgot Password?',
                             style: TextStyle(
                               fontFamily: 'Sora',
                               fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                              color: Colors.blue,
+                              fontSize: width * 0.04,
+                              color: Colors.black,
                               decoration: TextDecoration.underline,
                             ),
                           ),
@@ -2224,12 +2326,12 @@ class _RegisterpageState extends State<Registerpage> {
                                     fontFamily: 'Sora',
                                     fontSize: width * 0.038),
                                 children: [
-                                  TextSpan(text: 'By logging in, you agree to our',style: TextStyle(fontSize: width * 0.03)),
+                                  TextSpan(text: 'By logging in, you agree to our ',style: TextStyle(fontSize: width * 0.03)),
                                   TextSpan(
                                     text: 'Terms and Conditions',
                                     style: TextStyle(
                                       fontSize: width * 0.03,
-                                      color: Colors.blue,
+                                      color: Colors.black,
                                       decoration: TextDecoration.underline,
                                     ),
                                     recognizer: TapGestureRecognizer()
@@ -2808,7 +2910,7 @@ class _RegisterpageState extends State<Registerpage> {
                             fontFamily: 'Sora',
                             fontWeight: FontWeight.w400,
                             fontSize: width * 0.04,
-                            color: Colors.blue,
+                            color: Colors.black,
                             decoration: TextDecoration.underline,
                           ),
                         ),

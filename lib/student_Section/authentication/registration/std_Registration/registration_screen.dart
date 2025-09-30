@@ -137,7 +137,7 @@ class RegisterPage extends StatelessWidget {
                         "Already have an account? ",
                         style: TextStyle(
                           fontFamily: "Poppins",
-                          fontSize: size.width * 0.045,
+                          fontSize: size.width * 0.040,
                         ),
                       ),
                       TextButton(
@@ -166,13 +166,14 @@ class RegisterPage extends StatelessWidget {
   Widget _buildTermsAndConditions(BuildContext context, Size size) {
     return BlocBuilder<TermsBloc, TermsState>(
       builder: (context, state) {
-        return RichText(
+        return
+          RichText(
           text: TextSpan(
             style:
                 TextStyle(fontSize: size.width * 0.03, color: Colors.black38),
             children: [
               TextSpan(
-                text: "By logging in, you agree to our  ",
+                text: "By registering in, you agree to our ",
                 style: TextStyle(
                     fontFamily: "Poppins", fontWeight: FontWeight.w300),
               ),
@@ -182,7 +183,7 @@ class RegisterPage extends StatelessWidget {
                   child: Text(
                     "Terms & Conditions",
                     style: TextStyle(
-                      fontSize: size.width * 0.035,
+                      fontSize: size.width * 0.026,
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.w500,
                       color: Colors.black,

@@ -1324,13 +1324,13 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                   text: TextSpan(
                                     style: TextStyle(color: Colors.black, fontFamily: 'Sora',fontSize: width * 0.038),
                                     children: [
-                                      TextSpan(text: 'By registering, you agree to our',style: TextStyle(fontSize: width * 0.03)),
+                                      TextSpan(text: 'By registering, you agree to our ',style: TextStyle(fontSize: width * 0.03)),
                                       TextSpan(
                                         text: 'Terms and Conditions.',
                                         style: TextStyle(
                                           fontSize: width * 0.03,
 
-                                          color: Colors.blue,
+                                          color: Colors.black,
                                           decoration: TextDecoration.underline,
                                         ),
                                         recognizer: TapGestureRecognizer()
