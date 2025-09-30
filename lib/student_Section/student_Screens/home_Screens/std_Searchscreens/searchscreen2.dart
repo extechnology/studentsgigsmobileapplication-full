@@ -41,7 +41,7 @@ class _SearchScreen2State extends State<SearchScreen2>
     _setupScrollListener();
 
     // Initialize BLoC
-    context.read<SearchBloc>().add(FetchJobTitlesEvent());
+    // context.read<SearchBloc>().add(FetchJobTitlesEvent());
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final args =
@@ -130,6 +130,10 @@ class _SearchScreen2State extends State<SearchScreen2>
     List<String> jobTitles = [];
     if (state is JobTitlesLoaded) {
       jobTitles = state.jobTitles;
+    } else if (state is SearchSuccessWithJobTitles) {
+      jobTitles = state.jobTitles;
+    } else if (state is SearchSuccess) {
+      jobTitles = []; // Fallback
     }
 
     final isLoading = state is SearchLoading;
@@ -514,28 +518,6 @@ class _SearchScreen2State extends State<SearchScreen2>
     );
   }
 
-  // // Add a method to reset the screen when navigating back
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-
-  //   // Clear search results and reset fields when coming back to this screen
-  //   final args =
-  //       ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-  //   if (args == null || args['selectJobTitle'] == null) {
-  //     // If no arguments, this means we're coming back from another screen
-  //     // Reset the search state
-  //     setState(() {
-  //       selectJobTitle = null;
-  //       selectedLocation = null;
-  //       selectedSalaryType = null;
-  //       location.clear();
-  //     });
-  //     // Clear the search results in the bloc
-  //     context.read<SearchBloc>().add(ClearFiltersEvent());
-  //   }
-  // }
-
   InputDecoration _getInputDecoration(String hintText, IconData icon) {
     return InputDecoration(
       hintText: hintText,
@@ -777,12 +759,6 @@ class _SearchScreen2State extends State<SearchScreen2>
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    if (args != null && args["selectJobTitle"] != null) {
-      selectJobTitle = args["selectJobTitle"];
-    }
-
     return Scaffold(
       backgroundColor: const Color(0xffF9F2ED),
       body: SafeArea(
@@ -790,7 +766,7 @@ class _SearchScreen2State extends State<SearchScreen2>
           opacity: _fadeAnimation,
           child: Column(
             children: [
-              // Header
+              // Header (keep as is)
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -832,6 +808,15 @@ class _SearchScreen2State extends State<SearchScreen2>
                     }
                   },
                   builder: (context, state) {
+                    // Check if we have results
+                    final hasResults = state is SearchSuccess &&
+                        state.searchResults.isNotEmpty;
+                    final isEmpty = state is SearchSuccess &&
+                        state.searchResults.isEmpty &&
+                        selectJobTitle != null &&
+                        selectJobTitle!.isNotEmpty;
+                    final isInitialLoading = state is SearchLoading;
+
                     return SingleChildScrollView(
                       controller: _scrollController,
                       padding: const EdgeInsets.all(16),
@@ -840,20 +825,13 @@ class _SearchScreen2State extends State<SearchScreen2>
                           // Filter Section
                           _buildFilterSection(state),
 
-                          // Results Section
-                          if (state is SearchLoading &&
-                              (state is! SearchSuccess ||
-                                  (state as SearchSuccess?)
-                                          ?.searchResults
-                                          .isEmpty ==
-                                      true))
+                          // Results Section - FIXED
+                          if (isInitialLoading && !hasResults)
                             _buildLoadingState()
-                          else if (state is SearchSuccess &&
-                              state.searchResults.isEmpty &&
-                              selectJobTitle != null)
+                          else if (isEmpty)
                             _buildEmptyState()
-                          else if (state is SearchSuccess)
-                            _buildResultsSection(state),
+                          else if (hasResults)
+                            _buildResultsSection(state as SearchSuccess),
                         ],
                       ),
                     );
