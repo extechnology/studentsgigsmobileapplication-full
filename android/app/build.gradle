@@ -62,3 +62,7 @@ android {
 flutter {
     source = "../.."
 }
+dependencies {
+    // ✅ Add this line for SmartAuth missing classes
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+}
