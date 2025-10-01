@@ -471,6 +471,7 @@ Future<void> showResetPasswordDialog(BuildContext context) async {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        backgroundColor: Colors.white,
         title: const Text("❌ Error"),
         content: const Text("Email not found in secure storage."),
         actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Close"))],
@@ -483,6 +484,8 @@ Future<void> showResetPasswordDialog(BuildContext context) async {
     context: context,
     barrierDismissible: false,
     builder: (_) => AlertDialog(
+      backgroundColor: Colors.white,
+
       title: const Text("Reset Password"),
       content: Form(
         key: _formKey,
