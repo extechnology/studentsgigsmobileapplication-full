@@ -125,251 +125,255 @@ class _ExperinceScreenState extends State<ExperinceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: const Color(0xffF9F2ED),
-      appBar: AppBar(
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: const Color(0xffF9F2ED),
-        title: const Text(
-          "Add Your Experience",
-          style: TextStyle(
-            fontFamily: "Poppin",
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Color(0xff3F414E),
+        appBar: AppBar(
+          backgroundColor: const Color(0xffF9F2ED),
+          title: const Text(
+            "Add Your Experience",
+            style: TextStyle(
+              fontFamily: "Poppin",
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Color(0xff3F414E),
+            ),
           ),
         ),
-      ),
-      body: SafeArea(
-        child: BlocConsumer<ExperienceBloc, ExperienceState>(
-          listener: (context, state) {
-            if (state is ExperienceError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-            } else if (state is ExperienceAdded) {
-              // Show success message
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Experience added successfully!'),
-                  backgroundColor: Colors.green,
+        body: SafeArea(
+          child: BlocConsumer<ExperienceBloc, ExperienceState>(
+            listener: (context, state) {
+              if (state is ExperienceError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+              } else if (state is ExperienceAdded) {
+                // Show success message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Experience added successfully!'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                // Navigate back with success result
+                Navigator.pop(context, true);
+              }
+            },
+            builder: (context, state) {
+              final size = MediaQuery.of(context).size;
+              final padding = size.width * 0.05; // 5% horizontal padding
+              final spacing = size.height * 0.02; // 2% vertical spacing
+              if (state is ExperienceLoading && _formKey.currentState == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              List<Map<String, String>> jobTitles = [];
+              if (state is JobTitlesLoaded) {
+                // Remove duplicates from the original job titles
+                final uniqueJobTitles = <String, Map<String, String>>{};
+                for (var job in state.jobTitles) {
+                  uniqueJobTitles[job['value']!] = job;
+                }
+                jobTitles = uniqueJobTitles.values.toList();
+
+                if (filteredJobTitles.isEmpty) {
+                  filteredJobTitles = jobTitles;
+                }
+              }
+
+              return SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  left: padding,
+                  right: padding,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + spacing,
                 ),
-              );
-              // Navigate back with success result
-              Navigator.pop(context, true);
-            }
-          },
-          builder: (context, state) {
-            final size = MediaQuery.of(context).size;
-            final padding = size.width * 0.05; // 5% horizontal padding
-            final spacing = size.height * 0.02; // 2% vertical spacing
-            if (state is ExperienceLoading && _formKey.currentState == null) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            List<Map<String, String>> jobTitles = [];
-            if (state is JobTitlesLoaded) {
-              // Remove duplicates from the original job titles
-              final uniqueJobTitles = <String, Map<String, String>>{};
-              for (var job in state.jobTitles) {
-                uniqueJobTitles[job['value']!] = job;
-              }
-              jobTitles = uniqueJobTitles.values.toList();
-
-              if (filteredJobTitles.isEmpty) {
-                filteredJobTitles = jobTitles;
-              }
-            }
-
-            return SingleChildScrollView(
-              padding: EdgeInsets.only(
-                left: padding,
-                right: padding,
-                bottom: MediaQuery.of(context).viewInsets.bottom + spacing,
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSectionLabel("Job Title"),
-                    _buildSearchableDropdown(jobTitles, state),
-                    const SizedBox(height: 15),
-                    _buildSectionLabel("Select / Enter your company name"),
-                    CustomTextField(
-                      controller: companyName,
-                      hintText: "Enter your company name",
-                    ),
-                    _buildSectionLabel("Start Date"),
-                    CalendarInputField(
-                      controller: startDate,
-                      hintText: 'Select start date',
-                      onDateSelected: calculateExperience,
-                    ),
-                    _buildSectionLabel("End Date"),
-                    AbsorbPointer(
-                      absorbing: isWorking,
-                      child: CalendarInputField(
-                        controller: endtDate,
-                        hintText: 'Select end date',
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionLabel("Job Title"),
+                      _buildSearchableDropdown(jobTitles, state),
+                      const SizedBox(height: 15),
+                      _buildSectionLabel("Select / Enter your company name"),
+                      CustomTextField(
+                        controller: companyName,
+                        hintText: "Enter your company name",
+                      ),
+                      _buildSectionLabel("Start Date"),
+                      CalendarInputField(
+                        controller: startDate,
+                        hintText: 'Select start date',
                         onDateSelected: calculateExperience,
-                        enabled: !isWorking,
-                        // validator: (value) {
-                        //   if (!isWorking && (value == null || value.isEmpty)) {
-                        //     return 'End date is required';
-                        //   }
-                        //   return null;
-                        // },
                       ),
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const Text("I currently work here"),
-                        const SizedBox(width: 8),
-                        Checkbox(
-                          onChanged: _handleCurrentlyWorking,
-                          value: isWorking,
-                          activeColor: Colors.green,
-                          checkColor: Colors.white,
+                      _buildSectionLabel("End Date"),
+                      AbsorbPointer(
+                        absorbing: isWorking,
+                        child: CalendarInputField(
+                          controller: endtDate,
+                          hintText: 'Select end date',
+                          onDateSelected: calculateExperience,
+                          enabled: !isWorking,
+                          // validator: (value) {
+                          //   if (!isWorking && (value == null || value.isEmpty)) {
+                          //     return 'End date is required';
+                          //   }
+                          //   return null;
+                          // },
                         ),
-                      ],
-                    ),
-                    if (experienceDuration.isNotEmpty) ...[
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade50,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.blue.shade200),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.timer, color: Colors.blue.shade600),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Duration: $experienceDuration',
-                              style: TextStyle(
-                                color: Colors.blue.shade700,
-                                fontWeight: FontWeight.w500,
+                      ),
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Text("I currently work here"),
+                          const SizedBox(width: 8),
+                          Checkbox(
+                            onChanged: _handleCurrentlyWorking,
+                            value: isWorking,
+                            activeColor: Colors.green,
+                            checkColor: Colors.white,
+                          ),
+                        ],
+                      ),
+                      if (experienceDuration.isNotEmpty) ...[
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.blue.shade200),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.timer, color: Colors.blue.shade600),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Duration: $experienceDuration',
+                                style: TextStyle(
+                                  color: Colors.blue.shade700,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            backgroundColor: const Color(0xffFF9500),
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            ],
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            "Cancel",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        // Update the Save button onPressed in your ExperinceScreen:
-
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff004673)),
-                          onPressed: state is ExperienceLoading
-                              ? null
-                              : () {
-                                  // Debug: Print all form data before validation
-
-                                  if (_formKey.currentState!.validate()) {
-                                    if (selectedJobTitle == null ||
-                                        selectedJobTitle!.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Please select a job title')),
-                                      );
-                                      return;
-                                    }
-
-                                    if (companyName.text.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Please enter company name')),
-                                      );
-                                      return;
-                                    }
-
-                                    if (startDate.text.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Please select start date')),
-                                      );
-                                      return;
-                                    }
-
-                                    if (!isWorking && endtDate.text.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Please select end date or mark as currently working')),
-                                      );
-                                      return;
-                                    }
-
-                                    // All validations passed, proceed with adding experience
-
-                                    context.read<ExperienceBloc>().add(
-                                          AddExperience(
-                                            companyName:
-                                                companyName.text.trim(),
-                                            jobTitle: selectedJobTitle!,
-                                            startDate: startDate.text.trim(),
-                                            endDate: isWorking
-                                                ? ''
-                                                : endtDate.text.trim(),
-                                            isWorking: isWorking,
-                                          ),
-                                        );
-                                  } else {}
-                                },
-                          child: state is ExperienceLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                  ),
-                                )
-                              : const Text("Save",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  )),
                         ),
                       ],
-                    )
-                  ],
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              backgroundColor: const Color(0xffFF9500),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              "Cancel",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          // Update the Save button onPressed in your ExperinceScreen:
+
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff004673)),
+                            onPressed: state is ExperienceLoading
+                                ? null
+                                : () {
+                                    // Debug: Print all form data before validation
+
+                                    if (_formKey.currentState!.validate()) {
+                                      if (selectedJobTitle == null ||
+                                          selectedJobTitle!.isEmpty) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Please select a job title')),
+                                        );
+                                        return;
+                                      }
+
+                                      if (companyName.text.isEmpty) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Please enter company name')),
+                                        );
+                                        return;
+                                      }
+
+                                      if (startDate.text.isEmpty) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Please select start date')),
+                                        );
+                                        return;
+                                      }
+
+                                      if (!isWorking && endtDate.text.isEmpty) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Please select end date or mark as currently working')),
+                                        );
+                                        return;
+                                      }
+
+                                      // All validations passed, proceed with adding experience
+
+                                      context.read<ExperienceBloc>().add(
+                                            AddExperience(
+                                              companyName:
+                                                  companyName.text.trim(),
+                                              jobTitle: selectedJobTitle!,
+                                              startDate: startDate.text.trim(),
+                                              endDate: isWorking
+                                                  ? ''
+                                                  : endtDate.text.trim(),
+                                              isWorking: isWorking,
+                                            ),
+                                          );
+                                    } else {}
+                                  },
+                            child: state is ExperienceLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  )
+                                : const Text("Save",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    )),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

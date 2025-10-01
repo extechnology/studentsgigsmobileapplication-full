@@ -27,136 +27,141 @@ class _PlanUsageView extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     final isSmallScreen = screenWidth < 600;
 
-    return Scaffold(
-      backgroundColor: const Color(0xffF9F2ED),
-      appBar: AppBar(
-        title: const Text(
-          "Plan Usage",
-          style: TextStyle(
-            fontFamily: "Poppins",
-            color: Color(0xff2D3748),
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: const Color(0xffF9F2ED),
+        appBar: AppBar(
+          title: const Text(
+            "Plan Usage",
+            style: TextStyle(
+              fontFamily: "Poppins",
+              color: Color(0xff2D3748),
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          backgroundColor: const Color(0xffF9F2ED),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Color(0xff2D3748)),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        backgroundColor: const Color(0xffF9F2ED),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Color(0xff2D3748)),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: BlocBuilder<PlanUsageBloc, PlanUsageState>(
-        builder: (context, state) {
-          if (state is PlanUsageInitial || state is PlanUsageLoading) {
-            return const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xff6C5CE7)),
-              ),
-            );
-          }
+        body: BlocBuilder<PlanUsageBloc, PlanUsageState>(
+          builder: (context, state) {
+            if (state is PlanUsageInitial || state is PlanUsageLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xff6C5CE7)),
+                ),
+              );
+            }
 
-          if (state is PlanUsageError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
-                  const SizedBox(height: 16),
-                  Text(
-                    "Something went wrong",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    state.message,
-                    style: TextStyle(color: Colors.grey[500]),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () =>
-                        context.read<PlanUsageBloc>().add(LoadPlanUsage()),
-                    child: const Text("Retry"),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (state is PlanUsageLoaded) {
-            return SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(isSmallScreen ? 16.0 : 24.0),
+            if (state is PlanUsageError) {
+              return Center(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Plan Header Card
-                    _buildPlanHeaderCard(
-                        context, state.planData, isSmallScreen),
-
-                    SizedBox(height: isSmallScreen ? 24 : 32),
-
-                    // Usage Statistics
-                    const Text(
-                      "Usage Statistics",
+                    Icon(Icons.error_outline,
+                        size: 64, color: Colors.grey[400]),
+                    const SizedBox(height: 16),
+                    Text(
+                      "Something went wrong",
                       style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xff2D3748),
-                        fontFamily: "Poppins",
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[600],
                       ),
                     ),
-                    SizedBox(height: isSmallScreen ? 12 : 16),
-                    JobUsageCards(
-                      used: state.usageData['jobs_applied']?.toString() ?? '0',
-                      total:
-                          state.planData['job_applications']?.toString() ?? '0',
-                      isSmallScreen: isSmallScreen,
+                    const SizedBox(height: 8),
+                    Text(
+                      state.message,
+                      style: TextStyle(color: Colors.grey[500]),
+                      textAlign: TextAlign.center,
                     ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () =>
+                          context.read<PlanUsageBloc>().add(LoadPlanUsage()),
+                      child: const Text("Retry"),
+                    ),
+                  ],
+                ),
+              );
+            }
 
-                    SizedBox(height: isSmallScreen ? 24 : 32),
+            if (state is PlanUsageLoaded) {
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(isSmallScreen ? 16.0 : 24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Plan Header Card
+                      _buildPlanHeaderCard(
+                          context, state.planData, isSmallScreen),
 
-                    // Plan Duration
-                    const Text(
-                      "Plan Duration",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xff2D3748),
-                        fontFamily: "Poppins",
+                      SizedBox(height: isSmallScreen ? 24 : 32),
+
+                      // Usage Statistics
+                      const Text(
+                        "Usage Statistics",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff2D3748),
+                          fontFamily: "Poppins",
+                        ),
                       ),
-                    ),
-                    SizedBox(height: isSmallScreen ? 12 : 16),
-                    PlanDuration(
-                      startDate: state.usageData['created_date'] ?? '',
-                      endDate: state.usageData['expire_date'] ?? '',
-                      isSmallScreen: isSmallScreen,
-                    ),
+                      SizedBox(height: isSmallScreen ? 12 : 16),
+                      JobUsageCards(
+                        used:
+                            state.usageData['jobs_applied']?.toString() ?? '0',
+                        total: state.planData['job_applications']?.toString() ??
+                            '0',
+                        isSmallScreen: isSmallScreen,
+                      ),
 
-                    SizedBox(height: isSmallScreen ? 24 : 32),
+                      SizedBox(height: isSmallScreen ? 24 : 32),
 
-                    // Remaining Days
-                    Center(
-                      child: RemainingDaysBadge(
+                      // Plan Duration
+                      const Text(
+                        "Plan Duration",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff2D3748),
+                          fontFamily: "Poppins",
+                        ),
+                      ),
+                      SizedBox(height: isSmallScreen ? 12 : 16),
+                      PlanDuration(
+                        startDate: state.usageData['created_date'] ?? '',
                         endDate: state.usageData['expire_date'] ?? '',
                         isSmallScreen: isSmallScreen,
                       ),
-                    ),
 
-                    SizedBox(height: isSmallScreen ? 16 : 20),
-                  ],
+                      SizedBox(height: isSmallScreen ? 24 : 32),
+
+                      // Remaining Days
+                      Center(
+                        child: RemainingDaysBadge(
+                          endDate: state.usageData['expire_date'] ?? '',
+                          isSmallScreen: isSmallScreen,
+                        ),
+                      ),
+
+                      SizedBox(height: isSmallScreen ? 16 : 20),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
+              );
+            }
 
-          return const SizedBox.shrink();
-        },
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

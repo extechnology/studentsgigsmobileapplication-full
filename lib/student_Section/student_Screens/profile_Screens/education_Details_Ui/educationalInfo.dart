@@ -21,26 +21,29 @@ class EducationPageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<EducationBloc, EducationState>(
-        builder: (context, state) {
-          if (state is EducationLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is EducationError) {
-            return Center(child: Text(state.message));
-          } else if (state is EducationLoaded) {
-            if (state.educations.isEmpty) {
-              return _buildEmptyState(context);
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body: BlocBuilder<EducationBloc, EducationState>(
+          builder: (context, state) {
+            if (state is EducationLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is EducationError) {
+              return Center(child: Text(state.message));
+            } else if (state is EducationLoaded) {
+              if (state.educations.isEmpty) {
+                return _buildEmptyState(context);
+              }
+              return EducationListScreen(educations: state.educations);
+            } else if (state is EducationOperationSuccess) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<EducationBloc>().add(LoadEducationDetails());
+              });
+              return const Center(child: CircularProgressIndicator());
             }
-            return EducationListScreen(educations: state.educations);
-          } else if (state is EducationOperationSuccess) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.read<EducationBloc>().add(LoadEducationDetails());
-            });
-            return const Center(child: CircularProgressIndicator());
-          }
-          return const Center(child: Text('Unknown state'));
-        },
+            return const Center(child: Text('Unknown state'));
+          },
+        ),
       ),
     );
   }
@@ -105,7 +108,8 @@ class EducationListScreen extends StatelessWidget {
         backgroundColor: const Color(0xffF9F2ED),
         title: const Text(
           'Education Details',
-          style: TextStyle(fontFamily: "Poppins", fontSize: 20),
+          style: TextStyle(
+              fontFamily: "Poppins", fontSize: 20, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -174,9 +178,9 @@ class EducationCard extends StatelessWidget {
                   child: Text(
                     education.institution,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontFamily: "Poppins",
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),

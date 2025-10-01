@@ -9,16 +9,19 @@ class AdditionalInformationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AdditionalInfoBloc()..add(LoadAdditionalInfo()),
-      child: Scaffold(
-        backgroundColor: const Color(0xffF9F2ED),
-        appBar: AppBar(
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
           backgroundColor: const Color(0xffF9F2ED),
-          title: const Text(
-            'Additional Information',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          appBar: AppBar(
+            backgroundColor: const Color(0xffF9F2ED),
+            title: const Text(
+              'Additional Information',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
+          body: const AdditionalInformationView(),
         ),
-        body: const AdditionalInformationView(),
       ),
     );
   }

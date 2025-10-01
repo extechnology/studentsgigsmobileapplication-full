@@ -36,421 +36,430 @@ class ProfileEditScreen extends StatelessWidget {
       create: (context) => ProfileEditBloc(
         EmployeeServices(),
       )..add(LoadProfileData()),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: const Color(0xffF9F2ED),
-        appBar: AppBar(
-          title: const Text(
-            "Update Profile",
-            style: TextStyle(
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Color(0xff3F414E),
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: const Color(0xffF9F2ED),
+          appBar: AppBar(
+            title: const Text(
+              "Update Profile",
+              style: TextStyle(
+                fontFamily: "Poppins",
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Color(0xff3F414E),
+              ),
+            ),
+            backgroundColor: const Color(0xffF9F2ED),
+            leading: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back_ios),
             ),
           ),
-          backgroundColor: const Color(0xffF9F2ED),
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios),
-          ),
-        ),
-        body: BlocConsumer<ProfileEditBloc, ProfileEditState>(
-          listener: (context, state) {
-            if (state is ProfileEditError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error)),
-              );
-            } else if (state is ProfileEditLoaded && state.showSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.successMessage!)),
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is ProfileEditInitial || state is ProfileEditLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+          body: BlocConsumer<ProfileEditBloc, ProfileEditState>(
+            listener: (context, state) {
+              if (state is ProfileEditError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.error)),
+                );
+              } else if (state is ProfileEditLoaded && state.showSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.successMessage!)),
+                );
+              }
+            },
+            builder: (context, state) {
+              if (state is ProfileEditInitial || state is ProfileEditLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            if (state is ProfileEditError) {
-              return Center(child: Text(state.error));
-            }
+              if (state is ProfileEditError) {
+                return Center(child: Text(state.error));
+              }
 
-            final bloc = context.read<ProfileEditBloc>();
+              final bloc = context.read<ProfileEditBloc>();
 
-            // Now all states have profileData and jobTitles
-            EmployeeProfile? profileData;
-            List<dynamic> jobTitles = [];
+              // Now all states have profileData and jobTitles
+              EmployeeProfile? profileData;
+              List<dynamic> jobTitles = [];
 
-            if (state is ProfileEditLoaded) {
-              profileData = state.profileData;
-              jobTitles = state.jobTitles;
-            } else if (state is ProfileEditUploading) {
-              profileData = state.profileData;
-              jobTitles = state.jobTitles;
-            } else if (state is ProfileEditLocationSuggestions) {
-              profileData = state.profileData;
-              jobTitles = state.jobTitles;
-            } else if (state is ProfileEditPermissionRequired) {
-              profileData = state.profileData;
-              jobTitles = state.jobTitles;
-            }
+              if (state is ProfileEditLoaded) {
+                profileData = state.profileData;
+                jobTitles = state.jobTitles;
+              } else if (state is ProfileEditUploading) {
+                profileData = state.profileData;
+                jobTitles = state.jobTitles;
+              } else if (state is ProfileEditLocationSuggestions) {
+                profileData = state.profileData;
+                jobTitles = state.jobTitles;
+              } else if (state is ProfileEditPermissionRequired) {
+                profileData = state.profileData;
+                jobTitles = state.jobTitles;
+              }
 
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 18, right: 18),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Profile picture section
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height / 3.3,
-                        width: double.infinity,
-                        child: Stack(
-                          children: [
-                            // Cover Photo Section
-                            state is ProfileEditUploading
-                                ? const Center(
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Color(0xff004673),
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    height: MediaQuery.of(context).size.height /
-                                        3.8,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      image: DecorationImage(
-                                        image:
-                                            _getCoverPhotoProvider(profileData),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: Container(
-                                          height: 38,
-                                          width: 38,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Color(0xff004673),
-                                          ),
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            onPressed: () => bloc.add(PickImage(
-                                              isProfileImage: false,
-                                              context: context,
-                                            )),
-                                            icon: const Icon(Icons.edit,
-                                                color: Colors.white, size: 20),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
-                            // Profile Picture Section
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: CircleAvatar(
-                                radius: 55,
-                                backgroundColor: Colors.grey.shade300,
-                                backgroundImage:
-                                    _getProfilePicProvider(profileData),
-                                child: state is ProfileEditUploading
-                                    ? const CircularProgressIndicator(
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 18, right: 18),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Profile picture section
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 3.3,
+                          width: double.infinity,
+                          child: Stack(
+                            children: [
+                              // Cover Photo Section
+                              state is ProfileEditUploading
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
-                                      )
-                                    : Align(
-                                        alignment: Alignment.bottomRight,
-                                        child: Container(
-                                          height: 38,
-                                          width: 38,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Color(0xff004673),
-                                          ),
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            onPressed: () => bloc.add(PickImage(
-                                              isProfileImage: true,
-                                              context: context,
-                                            )),
-                                            icon: const Icon(Icons.edit,
-                                                color: Colors.white, size: 20),
+                                          Color(0xff004673),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              3.8,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          image: _getCoverPhotoProvider(
+                                              profileData),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Container(
+                                            height: 38,
+                                            width: 38,
+                                            decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Color(0xff004673),
+                                            ),
+                                            child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              onPressed: () =>
+                                                  bloc.add(PickImage(
+                                                isProfileImage: false,
+                                                context: context,
+                                              )),
+                                              icon: const Icon(Icons.edit,
+                                                  color: Colors.white,
+                                                  size: 20),
+                                            ),
                                           ),
                                         ),
                                       ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Name Field
-                      _buildSectionLabel("Name"),
-                      CustomTextField(
-                        controller: bloc.user_Name,
-                        hintText: "Enter Name",
-                        validator: Validators.validateName,
-                      ),
+                                    ),
 
-// Email Field
-                      _buildSectionLabel("Contact Email"),
-                      CustomTextField(
-                        controller: bloc.email,
-                        hintText: "Enter Email",
-                        validator: Validators.validateEmail,
-                      ),
-
-                      // Phone Field with Country Code Picker
-                      _buildSectionLabel("Phone Number"),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Row(
-                          children: [
-                            // Country Code Picker
-                            CountryCodePicker(
-                              onChanged: (CountryCode countryCode) {
-                                bloc.selectedCountryCode = countryCode;
-                              },
-                              initialSelection: bloc.selectedCountryCode.code,
-                              favorite: const ['+91', '+1', '+44'],
-                              showCountryOnly: false,
-                              showOnlyCountryWhenClosed: false,
-                              alignLeft: false,
-                              textStyle: const TextStyle(
-                                fontFamily: "Poppins",
-                                fontWeight: FontWeight.w500,
-                              ),
-                              dialogTextStyle: const TextStyle(
-                                fontFamily: "Poppins",
-                              ),
-                              searchStyle: const TextStyle(
-                                fontFamily: "Poppins",
-                              ),
-                              searchDecoration: const InputDecoration(
-                                hintText: 'Search country...',
-                                hintStyle: TextStyle(fontFamily: "Poppins"),
-                              ),
-                              flagWidth: 25,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2),
-                            ),
-                            Container(
-                              width: 1,
-                              height: 40,
-                              color: Colors.grey.shade300,
-                            ),
-                            // Phone Number Input
-                            Expanded(
-                              child: TextFormField(
-                                controller: bloc.phone_Number,
-                                keyboardType: TextInputType.phone,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(10),
-                                ],
-                                decoration: const InputDecoration(
-                                  hintText: "Enter Phone Number",
-                                  hintStyle: TextStyle(fontFamily: "Poppins"),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 16),
+                              // Profile Picture Section
+                              Align(
+                                alignment: Alignment.bottomLeft,
+                                child: CircleAvatar(
+                                  radius: 55,
+                                  backgroundColor: Colors.grey.shade300,
+                                  backgroundImage:
+                                      _getProfilePicProvider(profileData),
+                                  child: state is ProfileEditUploading
+                                      ? const CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.white),
+                                        )
+                                      : Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Container(
+                                            height: 38,
+                                            width: 38,
+                                            decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Color(0xff004673),
+                                            ),
+                                            child: IconButton(
+                                              padding: EdgeInsets.zero,
+                                              onPressed: () =>
+                                                  bloc.add(PickImage(
+                                                isProfileImage: true,
+                                                context: context,
+                                              )),
+                                              icon: const Icon(Icons.edit,
+                                                  color: Colors.white,
+                                                  size: 20),
+                                            ),
+                                          ),
+                                        ),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter phone number';
-                                  }
-                                  if (value.length < 7) {
-                                    return 'Please enter a valid phone number';
-                                  }
-                                  return null;
-                                },
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
+                        // Name Field
+                        _buildSectionLabel("Name"),
+                        CustomTextField(
+                          controller: bloc.user_Name,
+                          hintText: "Enter Name",
+                          validator: Validators.validateName,
+                        ),
 
-                      // Work Hours Field
-                      _buildSectionLabel("Available Working Hours"),
-                      CustomTextField(
-                        controller: bloc.work_Hours,
-                        keyboardType: TextInputType.number,
-                        validator: Validators.validateWorkHours,
-                      ),
+                        // Email Field
+                        _buildSectionLabel("Contact Email"),
+                        CustomTextField(
+                          controller: bloc.email,
+                          hintText: "Enter Email",
+                          validator: Validators.validateEmail,
+                        ),
 
-// If you have a portfolio field, you can use:
-                      _buildSectionLabel("Portfolio/LinkedIn"),
-                      CustomTextField(
-                        controller:
-                            bloc.portfolio, // assuming you have this controller
-                        hintText: "Enter portfolio or LinkedIn URL",
-                        validator: Validators.validatePortfolio,
-                      ),
+                        // Phone Field with Country Code Picker
+                        _buildSectionLabel("Phone Number"),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Row(
+                            children: [
+                              // Country Code Picker
+                              CountryCodePicker(
+                                onChanged: (CountryCode countryCode) {
+                                  bloc.selectedCountryCode = countryCode;
+                                },
+                                initialSelection: bloc.selectedCountryCode.code,
+                                favorite: const ['+91', '+1', '+44'],
+                                showCountryOnly: false,
+                                showOnlyCountryWhenClosed: false,
+                                alignLeft: false,
+                                textStyle: const TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                dialogTextStyle: const TextStyle(
+                                  fontFamily: "Poppins",
+                                ),
+                                searchStyle: const TextStyle(
+                                  fontFamily: "Poppins",
+                                ),
+                                searchDecoration: const InputDecoration(
+                                  hintText: 'Search country...',
+                                  hintStyle: TextStyle(fontFamily: "Poppins"),
+                                ),
+                                flagWidth: 25,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 2),
+                              ),
+                              Container(
+                                width: 1,
+                                height: 40,
+                                color: Colors.grey.shade300,
+                              ),
+                              // Phone Number Input
+                              Expanded(
+                                child: TextFormField(
+                                  controller: bloc.phone_Number,
+                                  keyboardType: TextInputType.phone,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
+                                  decoration: const InputDecoration(
+                                    hintText: "Enter Phone Number",
+                                    hintStyle: TextStyle(fontFamily: "Poppins"),
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 16),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter phone number';
+                                    }
+                                    if (value.length < 7) {
+                                      return 'Please enter a valid phone number';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
 
-                      // Work Location Field
-                      _buildSectionLabel("Preferred Work Location"),
-                      if (state is ProfileEditLocationSuggestions)
-                        ..._buildLocationSuggestions(
-                            state as ProfileEditLocationSuggestions, bloc),
-                      if (state is! ProfileEditLocationSuggestions)
-                        TextField(
-                          controller: bloc.loacation,
+                        // Work Hours Field
+                        _buildSectionLabel("Available Working Hours"),
+                        CustomTextField(
+                          controller: bloc.work_Hours,
+                          keyboardType: TextInputType.number,
+                          validator: Validators.validateWorkHours,
+                        ),
+
+                        // If you have a portfolio field, you can use:
+                        _buildSectionLabel("Portfolio/LinkedIn"),
+                        CustomTextField(
+                          controller: bloc
+                              .portfolio, // assuming you have this controller
+                          hintText: "Enter portfolio or LinkedIn URL",
+                          validator: Validators.validatePortfolio,
+                        ),
+
+                        // Work Location Field
+                        _buildSectionLabel("Preferred Work Location"),
+                        if (state is ProfileEditLocationSuggestions)
+                          ..._buildLocationSuggestions(
+                              state as ProfileEditLocationSuggestions, bloc),
+                        if (state is! ProfileEditLocationSuggestions)
+                          TextField(
+                            controller: bloc.loacation,
+                            onChanged: (value) {
+                              if (value.length >= 2) {
+                                bloc.add(SearchLocation(query: value));
+                              }
+                            },
+                            decoration: InputDecoration(
+                              labelText: "Search Your Location",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              hintText: "Enter your preferred work location",
+                            ),
+                          ),
+
+                        // Date of Birth Field
+                        _buildSectionLabel("Date of Birth"),
+                        GestureDetector(
+                          onTap: () => bloc.add(SelectDate(context: context)),
+                          child: AbsorbPointer(
+                            child: CustomTextField(
+                              hintText: "DD-MM-YYYY",
+                              controller: bloc.dateOfbirth,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[\d-]')),
+                                LengthLimitingTextInputFormatter(10),
+                                _DateInputFormatter(),
+                              ],
+                              iconTrailing: Icons.calendar_month_outlined,
+                            ),
+                          ),
+                        ),
+
+                        // Gender Field
+                        _buildSectionLabel("Gender"),
+                        DropdownButtonFormField<String>(
+                          value: bloc.selectedGender,
+                          hint: Text(
+                            "Select your gender",
+                            style: TextStyle(
+                                fontFamily: "Poppins", color: Colors.grey[600]),
+                          ),
+                          items: ["Male", "Female"].map((gender) {
+                            return DropdownMenuItem<String>(
+                              value: gender,
+                              child: Text(gender),
+                            );
+                          }).toList(),
                           onChanged: (value) {
-                            if (value.length >= 2) {
-                              bloc.add(SearchLocation(query: value));
-                            }
+                            bloc.selectedGender = value;
+                          },
+                          validator: (value) {
+                            if (value == null) return 'Please select gender';
+                            return null;
                           },
                           decoration: InputDecoration(
-                            labelText: "Search Your Location",
+                            labelText: "Select your gender",
+                            labelStyle: const TextStyle(fontFamily: "Poppins"),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(15)),
+                          ),
+                        ),
+
+                        // Age Field
+                        _buildSectionLabel("Age"),
+                        CustomTextField(
+                          controller: bloc.ageController,
+                          hintText: "0",
+                          keyboardType: TextInputType.number,
+                        ),
+
+                        // Job Title Field
+                        _buildSectionLabel("Job Title"),
+                        buildDropdownButtonFormField(
+                          value: bloc.selectedJobTitle,
+                          items: jobTitles.map((job) {
+                            return DropdownMenuItem(
+                              value: job['job_title'].toString(),
+                              child: Text(job['job_title'] ?? 'No Title'),
+                            );
+                          }).toList(),
+                          labelText: "Select Job Title",
+                          onChanged: (value) {
+                            bloc.selectedJobTitle = value;
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select a job title';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        // About You Field
+                        _buildSectionLabel("About You"),
+                        CustomTextField(
+                          maxLines: 4,
+                          controller: bloc.about,
+                          hintText: "Describe yourself",
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Please tell us about yourself';
+                            }
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Save Button
+                        Center(
+                          child: SizedBox(
+                            width: 107,
+                            height: 56,
+                            child: Builder(
+                              builder: (BuildContext context) {
+                                return FloatingActionButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState?.validate() ??
+                                        false) {
+                                      bloc.add(UpdateProfile(context: context));
+                                    }
+                                  },
+                                  backgroundColor: const Color(0xff004673),
+                                  child: const Text(
+                                    "Save",
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        color: Colors.white,
+                                        fontSize: 16),
+                                  ),
+                                );
+                              },
                             ),
-                            hintText: "Enter your preferred work location",
                           ),
                         ),
-
-                      // Date of Birth Field
-                      _buildSectionLabel("Date of Birth"),
-                      GestureDetector(
-                        onTap: () => bloc.add(SelectDate(context: context)),
-                        child: AbsorbPointer(
-                          child: CustomTextField(
-                            hintText: "DD-MM-YYYY",
-                            controller: bloc.dateOfbirth,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[\d-]')),
-                              LengthLimitingTextInputFormatter(10),
-                              _DateInputFormatter(),
-                            ],
-                            iconTrailing: Icons.calendar_month_outlined,
-                          ),
-                        ),
-                      ),
-
-                      // Gender Field
-                      _buildSectionLabel("Gender"),
-                      DropdownButtonFormField<String>(
-                        value: bloc.selectedGender,
-                        hint: Text(
-                          "Select your gender",
-                          style: TextStyle(
-                              fontFamily: "Poppins", color: Colors.grey[600]),
-                        ),
-                        items: ["Male", "Female"].map((gender) {
-                          return DropdownMenuItem<String>(
-                            value: gender,
-                            child: Text(gender),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          bloc.selectedGender = value;
-                        },
-                        validator: (value) {
-                          if (value == null) return 'Please select gender';
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          labelText: "Select your gender",
-                          labelStyle: const TextStyle(fontFamily: "Poppins"),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                        ),
-                      ),
-
-                      // Age Field
-                      _buildSectionLabel("Age"),
-                      CustomTextField(
-                        controller: bloc.ageController,
-                        hintText: "0",
-                        keyboardType: TextInputType.number,
-                      ),
-
-                      // Job Title Field
-                      _buildSectionLabel("Job Title"),
-                      buildDropdownButtonFormField(
-                        value: bloc.selectedJobTitle,
-                        items: jobTitles.map((job) {
-                          return DropdownMenuItem(
-                            value: job['job_title'].toString(),
-                            child: Text(job['job_title'] ?? 'No Title'),
-                          );
-                        }).toList(),
-                        labelText: "Select Job Title",
-                        onChanged: (value) {
-                          bloc.selectedJobTitle = value;
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Please select a job title';
-                          }
-                          return null;
-                        },
-                      ),
-
-                      // About You Field
-                      _buildSectionLabel("About You"),
-                      CustomTextField(
-                        maxLines: 4,
-                        controller: bloc.about,
-                        hintText: "Describe yourself",
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please tell us about yourself';
-                          }
-                        },
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // Save Button
-                      Center(
-                        child: SizedBox(
-                          width: 107,
-                          height: 56,
-                          child: Builder(
-                            builder: (BuildContext context) {
-                              return FloatingActionButton(
-                                onPressed: () {
-                                  if (_formKey.currentState?.validate() ??
-                                      false) {
-                                    bloc.add(UpdateProfile(context: context));
-                                  }
-                                },
-                                backgroundColor: const Color(0xff004673),
-                                child: const Text(
-                                  "Save",
-                                  style: TextStyle(
-                                      fontFamily: "Poppins",
-                                      color: Colors.white,
-                                      fontSize: 16),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                    ],
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
