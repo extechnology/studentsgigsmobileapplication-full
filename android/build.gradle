@@ -6,19 +6,22 @@ allprojects {
 }
 
 buildscript {
-    ext.kotlin_version = '2.1.0' // ✅ Define Kotlin version here
+    ext {
+        kotlin_version = '2.1.0'              // ✅ Kotlin version
+        ndkVersion = "26.1.10909125"         // ✅ Pin NDK globally
+    }
 
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.6.0' // latest AGP
+        classpath 'com.android.tools.build:gradle:8.6.0' // ✅ latest AGP
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.4.3'
-
     }
 }
+
 
 rootProject.buildDir = "../build"
 

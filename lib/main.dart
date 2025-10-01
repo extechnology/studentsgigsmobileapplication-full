@@ -46,6 +46,14 @@ import 'mainpage/spashscreen/spashscreen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setApplicationSwitcherDescription(
+    const ApplicationSwitcherDescription(
+      label: 'Students Gigs',
+      primaryColor: 0xFF004673, // your app's theme color
+    ),
+  );
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Allow only portrait mode
   ]).then((_) {
