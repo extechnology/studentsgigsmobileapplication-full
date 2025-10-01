@@ -8,9 +8,9 @@ import '../postyourjob/postyourjob/postyourjob.dart';
 import '../profile/profileemployer/profileemployer.dart';
 
 class Dashborad extends StatefulWidget {
-  final String ? initialSearchText;
+  final String? initialSearchText;
 
-  const Dashborad({super.key,  this.initialSearchText });
+  const Dashborad({super.key, this.initialSearchText});
 
   @override
   State<Dashborad> createState() => _DashboradState();
@@ -29,22 +29,19 @@ class _DashboradState extends State<Dashborad> {
       searchText = null;
     });
   }
+
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return
-      DefaultTabController(
+    return DefaultTabController(
       length: 4,
       child: Scaffold(
         backgroundColor: Color(0xffF9F2ED),
         bottomNavigationBar: SafeArea(
           child: Container(
-          
-          
             color: Color(0xffF9F2ED),
-            height: kBottomNavigationBarHeight + screenHeight * 0.025  ,
-          
-            child:  TabBar(
+            height: kBottomNavigationBarHeight + screenHeight * 0.025,
+            child: TabBar(
               onTap: (index) {
                 if (index == 0) {
                   // Home tab clicked, reset the search and show default homepage
@@ -53,10 +50,9 @@ class _DashboradState extends State<Dashborad> {
               },
               tabs: [
                 Tab(icon: Icon(Icons.home), text: "Home"),
-                Tab(icon: Icon(Icons.work_outline ), text: "Posted"),
+                Tab(icon: Icon(Icons.work_outline), text: "Posted"),
                 Tab(icon: Icon(Icons.add), text: "Post Job"),
                 Tab(icon: Icon(Icons.person), text: "Profile"),
-          
               ],
               unselectedLabelColor: Colors.black,
               labelColor: Color(0xffEB8125),
@@ -69,19 +65,20 @@ class _DashboradState extends State<Dashborad> {
             (searchText == null || searchText!.trim().isEmpty)
                 ? const Homepageifdatalocation()
                 : Homepagetextformdatahave(
-              searchText: searchText!.trim(),
-            ),
+                    searchText: searchText!.trim(),
+                  ),
             Postedgigs(),
             Builder(
               builder: (context) {
                 final tabController = DefaultTabController.of(context);
-                return Postyourjob(tabController: tabController); // pass controller
+                return Postyourjob(
+                    tabController: tabController); // pass controller
               },
-            ),            Profileemployer(),
+            ),
+            Profileemployer(),
           ],
         ),
       ),
     );
-
   }
 }

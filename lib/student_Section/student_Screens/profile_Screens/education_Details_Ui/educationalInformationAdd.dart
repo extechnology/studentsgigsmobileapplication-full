@@ -184,306 +184,319 @@ class _EducationAddPageState extends State<EducationAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF9F2ED),
-      appBar: AppBar(
-        title: const Text('Add Education'),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
         backgroundColor: const Color(0xffF9F2ED),
-        leading: IconButton(
-          onPressed: () {
-            // Reset to initial state and reload education details
-            context.read<EducationBloc>().add(LoadEducationDetails());
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios_new),
+        appBar: AppBar(
+          title: const Text(
+            'Add Education',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: const Color(0xffF9F2ED),
+          leading: IconButton(
+            onPressed: () {
+              // Reset to initial state and reload education details
+              context.read<EducationBloc>().add(LoadEducationDetails());
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios_new),
+          ),
         ),
-      ),
-      body: BlocConsumer<EducationBloc, EducationState>(
-        listener: (context, state) {
-          if (state is EducationOperationSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-            Navigator.pop(context, true); // Return true to indicate success
-          } else if (state is EducationError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
-        builder: (context, state) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Educational Information",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 24),
-
-                // Academic Level
-                DropdownButtonFormField<String>(
-                  value: selectedAcademicLevel,
-                  items: educationLevels
-                      .map(
-                        (level) => DropdownMenuItem<String>(
-                          value: level['value'],
-                          child: Text(
-                            level['label']!,
-                            overflow: TextOverflow
-                                .ellipsis, // Add ellipsis for overflow
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (val) =>
-                      setState(() => selectedAcademicLevel = val),
-                  decoration: const InputDecoration(
-                    labelText: "Select Your Academic Level",
-                    border: OutlineInputBorder(),
+        body: BlocConsumer<EducationBloc, EducationState>(
+          listener: (context, state) {
+            if (state is EducationOperationSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+              Navigator.pop(context, true); // Return true to indicate success
+            } else if (state is EducationError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+            }
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Educational Information",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  isExpanded:
-                      true, // Add this to make the dropdown take full width
-                ),
-                const SizedBox(height: 16),
+                  const SizedBox(height: 24),
 
-                // Field of Study
-                //_buildFieldOfStudyDropdown(state),
-
-                if (state is FieldsOfStudyLoaded)
+                  // Academic Level
                   DropdownButtonFormField<String>(
-                    value: selectedFieldOfStudy,
-                    items: state.fields
+                    value: selectedAcademicLevel,
+                    items: educationLevels
                         .map(
-                          (field) => DropdownMenuItem<String>(
-                            value: field,
-                            child: Text(field),
+                          (level) => DropdownMenuItem<String>(
+                            value: level['value'],
+                            child: Text(
+                              level['label']!,
+                              overflow: TextOverflow
+                                  .ellipsis, // Add ellipsis for overflow
+                            ),
                           ),
                         )
                         .toList(),
                     onChanged: (val) =>
-                        setState(() => selectedFieldOfStudy = val),
+                        setState(() => selectedAcademicLevel = val),
                     decoration: const InputDecoration(
-                      labelText: "Select Your Field of Study",
+                      labelText: "Select Your Academic Level",
                       border: OutlineInputBorder(),
                     ),
-                  )
-                else if (state is EducationLoading)
-                  const TextField(
-                    decoration: InputDecoration(
-                      labelText: "Loading fields of study...",
-                      border: OutlineInputBorder(),
-                    ),
-                    enabled: false,
-                  )
-                else if (state is EducationError)
-                  Column(
-                    children: [
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: "Error loading fields: ${state.message}",
-                          border: const OutlineInputBorder(),
-                        ),
-                        enabled: false,
-                      ),
-                      const SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (mounted) {
-                            context
-                                .read<EducationBloc>()
-                                .add(LoadFieldsOfStudy());
-                          }
-                        },
-                        child: const Text("Retry Loading Fields"),
-                      ),
-                    ],
-                  )
-                else
-                  ElevatedButton(
-                    onPressed: () {
-                      if (mounted) {
-                        context.read<EducationBloc>().add(LoadFieldsOfStudy());
-                      }
-                    },
-                    child: const Text("Load Fields of Study"),
+                    isExpanded:
+                        true, // Add this to make the dropdown take full width
                   ),
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                // University Search
-                TextField(
-                  controller: _universityController,
-                  decoration: InputDecoration(
-                    labelText: "Search Your University",
-                    border: const OutlineInputBorder(),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.search),
+                  // Field of Study
+                  //_buildFieldOfStudyDropdown(state),
+
+                  if (state is FieldsOfStudyLoaded)
+                    DropdownButtonFormField<String>(
+                      value: selectedFieldOfStudy,
+                      items: state.fields
+                          .map(
+                            (field) => DropdownMenuItem<String>(
+                              value: field,
+                              child: Text(field),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (val) =>
+                          setState(() => selectedFieldOfStudy = val),
+                      decoration: const InputDecoration(
+                        labelText: "Select Your Field of Study",
+                        border: OutlineInputBorder(),
+                      ),
+                    )
+                  else if (state is EducationLoading)
+                    const TextField(
+                      decoration: InputDecoration(
+                        labelText: "Loading fields of study...",
+                        border: OutlineInputBorder(),
+                      ),
+                      enabled: false,
+                    )
+                  else if (state is EducationError)
+                    Column(
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                            labelText: "Error loading fields: ${state.message}",
+                            border: const OutlineInputBorder(),
+                          ),
+                          enabled: false,
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (mounted) {
+                              context
+                                  .read<EducationBloc>()
+                                  .add(LoadFieldsOfStudy());
+                            }
+                          },
+                          child: const Text("Retry Loading Fields"),
+                        ),
+                      ],
+                    )
+                  else
+                    ElevatedButton(
                       onPressed: () {
-                        if (_universityController.text.length >= 2 && mounted) {
-                          context.read<EducationBloc>().add(
-                                SearchUniversities(_universityController.text),
-                              );
+                        if (mounted) {
+                          context
+                              .read<EducationBloc>()
+                              .add(LoadFieldsOfStudy());
                         }
                       },
+                      child: const Text("Load Fields of Study"),
                     ),
-                  ),
-                  onChanged: (value) {
-                    if (value.length >= 2 && mounted) {
-                      context
-                          .read<EducationBloc>()
-                          .add(SearchUniversities(value));
-                    }
-                  },
-                ),
-                const SizedBox(height: 8),
+                  const SizedBox(height: 16),
 
-                // University Results
-                if (state is UniversitiesLoaded &&
-                    state.universities.isNotEmpty)
-                  Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
+                  // University Search
+                  TextField(
+                    controller: _universityController,
+                    decoration: InputDecoration(
+                      labelText: "Search Your University",
+                      border: const OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                          if (_universityController.text.length >= 2 &&
+                              mounted) {
+                            context.read<EducationBloc>().add(
+                                  SearchUniversities(
+                                      _universityController.text),
+                                );
+                          }
+                        },
+                      ),
                     ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: state.universities.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(state.universities[index]),
-                          onTap: () {
-                            setState(() {
-                              selectedUniversity = state.universities[index];
-                              _universityController.text = selectedUniversity!;
-                            });
-                            context
-                                .read<EducationBloc>()
-                                .add(ClearUniversitySearch());
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                const SizedBox(height: 16),
-
-                // Graduation Year
-                DropdownButtonFormField<String>(
-                  value: selectedGraduationYear,
-                  items: years
-                      .map(
-                        (year) => DropdownMenuItem<String>(
-                          value: year,
-                          child: Text(year),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (val) =>
-                      setState(() => selectedGraduationYear = val),
-                  decoration: const InputDecoration(
-                    labelText: "Expected Year of Graduation",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Achievement
-                TextField(
-                  decoration: const InputDecoration(
-                    labelText: "Add Achievement (Optional)",
-                    border: OutlineInputBorder(),
-                  ),
-                  controller: _newAchievementController,
-                ),
-                const SizedBox(height: 24),
-
-                // Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    OutlinedButton(
-                      onPressed: () {
+                    onChanged: (value) {
+                      if (value.length >= 2 && mounted) {
                         context
                             .read<EducationBloc>()
-                            .add(LoadEducationDetails());
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Cancel"),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton(
-                      onPressed: state is EducationLoading
-                          ? null
-                          : () {
-                              if (selectedFieldOfStudy == null ||
-                                  selectedFieldOfStudy!.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Please select field of study')),
-                                );
-                                return;
-                              }
+                            .add(SearchUniversities(value));
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 8),
 
-                              if (selectedUniversity == null ||
-                                  selectedUniversity!.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Please select university')),
-                                );
-                                return;
-                              }
-
-                              if (selectedGraduationYear == null ||
-                                  selectedGraduationYear!.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Please select graduation year')),
-                                );
-                                return;
-                              }
-
-                              if (selectedAcademicLevel == null ||
-                                  selectedAcademicLevel!.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Please select academic level')),
-                                );
-                                return;
-                              }
-
-                              if (mounted) {
-                                context.read<EducationBloc>().add(
-                                      AddEducationDetail(
-                                        fieldOfStudy: selectedFieldOfStudy!,
-                                        institution: selectedUniversity!,
-                                        graduationYear: selectedGraduationYear!,
-                                        academicLevel: selectedAcademicLevel!,
-                                        achievement:
-                                            _newAchievementController.text,
-                                      ),
-                                    );
-                              }
+                  // University Results
+                  if (state is UniversitiesLoaded &&
+                      state.universities.isNotEmpty)
+                    Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.universities.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(state.universities[index]),
+                            onTap: () {
+                              setState(() {
+                                selectedUniversity = state.universities[index];
+                                _universityController.text =
+                                    selectedUniversity!;
+                              });
+                              context
+                                  .read<EducationBloc>()
+                                  .add(ClearUniversitySearch());
                             },
-                      child: state is EducationLoading
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Text("Save"),
+                          );
+                        },
+                      ),
                     ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+                  const SizedBox(height: 16),
+
+                  // Graduation Year
+                  DropdownButtonFormField<String>(
+                    value: selectedGraduationYear,
+                    items: years
+                        .map(
+                          (year) => DropdownMenuItem<String>(
+                            value: year,
+                            child: Text(year),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) =>
+                        setState(() => selectedGraduationYear = val),
+                    decoration: const InputDecoration(
+                      labelText: "Expected Year of Graduation",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Achievement
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: "Add Achievement (Optional)",
+                      border: OutlineInputBorder(),
+                    ),
+                    controller: _newAchievementController,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () {
+                          context
+                              .read<EducationBloc>()
+                              .add(LoadEducationDetails());
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      const SizedBox(width: 12),
+                      ElevatedButton(
+                        onPressed: state is EducationLoading
+                            ? null
+                            : () {
+                                if (selectedFieldOfStudy == null ||
+                                    selectedFieldOfStudy!.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Please select field of study')),
+                                  );
+                                  return;
+                                }
+
+                                if (selectedUniversity == null ||
+                                    selectedUniversity!.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text('Please select university')),
+                                  );
+                                  return;
+                                }
+
+                                if (selectedGraduationYear == null ||
+                                    selectedGraduationYear!.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Please select graduation year')),
+                                  );
+                                  return;
+                                }
+
+                                if (selectedAcademicLevel == null ||
+                                    selectedAcademicLevel!.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Please select academic level')),
+                                  );
+                                  return;
+                                }
+
+                                if (mounted) {
+                                  context.read<EducationBloc>().add(
+                                        AddEducationDetail(
+                                          fieldOfStudy: selectedFieldOfStudy!,
+                                          institution: selectedUniversity!,
+                                          graduationYear:
+                                              selectedGraduationYear!,
+                                          academicLevel: selectedAcademicLevel!,
+                                          achievement:
+                                              _newAchievementController.text,
+                                        ),
+                                      );
+                                }
+                              },
+                        child: state is EducationLoading
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Text("Save"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

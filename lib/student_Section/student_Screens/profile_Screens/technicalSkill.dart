@@ -163,159 +163,164 @@ class _TechnicalskillState extends State<Technicalskill> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _technicalSkillBloc,
-      child: Scaffold(
-        backgroundColor: const Color(0xffF9F2ED),
-        appBar: AppBar(
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
           backgroundColor: const Color(0xffF9F2ED),
-          title: const Text(
-            "Technical Skills",
-            style: TextStyle(
-              fontFamily: "Poppins",
-              color: Color(0xff3F414E),
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
+          appBar: AppBar(
+            backgroundColor: const Color(0xffF9F2ED),
+            title: const Text(
+              "Technical Skills",
+              style: TextStyle(
+                fontFamily: "Poppins",
+                color: Color(0xff3F414E),
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
             ),
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: BlocConsumer<TechnicalSkillBloc, TechnicalSkillState>(
-            listener: (context, state) {
-              if (state is TechnicalSkillError && mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message),
-                    backgroundColor: Colors.red,
-                    duration: const Duration(seconds: 3),
-                  ),
-                );
-              }
-              // Removed TechnicalSkillSuccess listener to avoid duplicate success messages
-            },
-            builder: (context, state) {
-              return Column(
-                children: [
-                  const SizedBox(height: 20),
-                  buildDropdownbuttonFormField(
-                    value: selectedSkill,
-                    items: getFilteredItems(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedSkill = value;
-                      });
-                    },
-                    labeltext: 'Select Skill',
-                    validator: (value) {
-                      if (value == null) return 'Please select a skill';
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    value: selectedLevel,
-                    items: levels
-                        .map((level) => DropdownMenuItem(
-                              value: level,
-                              child: Text(level),
-                            ))
-                        .toList(),
-                    decoration: InputDecoration(
-                      labelText: "Select Level",
-                      labelStyle: const TextStyle(fontFamily: "Poppins"),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15)),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: BlocConsumer<TechnicalSkillBloc, TechnicalSkillState>(
+              listener: (context, state) {
+                if (state is TechnicalSkillError && mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.red,
+                      duration: const Duration(seconds: 3),
                     ),
-                    onChanged: (value) => setState(() => selectedLevel = value),
-                    validator: (value) {
-                      if (value == null) return 'Please select your level';
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          backgroundColor: const Color(0xffFF9500),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            selectedSkill = null;
-                            selectedLevel = null;
-                          });
-                          context
-                              .read<TechnicalSkillBloc>()
-                              .add(ResetTechnicalSkillForm());
-                        },
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: "Poppins"),
-                        ),
+                  );
+                }
+                // Removed TechnicalSkillSuccess listener to avoid duplicate success messages
+              },
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    buildDropdownbuttonFormField(
+                      value: selectedSkill,
+                      items: getFilteredItems(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedSkill = value;
+                        });
+                      },
+                      labeltext: 'Select Skill',
+                      validator: (value) {
+                        if (value == null) return 'Please select a skill';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      value: selectedLevel,
+                      items: levels
+                          .map((level) => DropdownMenuItem(
+                                value: level,
+                                child: Text(level),
+                              ))
+                          .toList(),
+                      decoration: InputDecoration(
+                        labelText: "Select Level",
+                        labelStyle: const TextStyle(fontFamily: "Poppins"),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15)),
                       ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          backgroundColor: const Color(0xff004673),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                      onChanged: (value) =>
+                          setState(() => selectedLevel = value),
+                      validator: (value) {
+                        if (value == null) return 'Please select your level';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            backgroundColor: const Color(0xffFF9500),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              selectedSkill = null;
+                              selectedLevel = null;
+                            });
+                            context
+                                .read<TechnicalSkillBloc>()
+                                .add(ResetTechnicalSkillForm());
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: "Poppins"),
+                          ),
                         ),
-                        onPressed: state is TechnicalSkillProcessing
-                            ? null
-                            : () {
-                                if (selectedSkill != null &&
-                                    selectedLevel != null) {
-                                  context.read<TechnicalSkillBloc>().add(
-                                        AddTechnicalSkill(
-                                          skill: selectedSkill!,
-                                          level: selectedLevel!,
-                                          context: context,
-                                        ),
-                                      );
-                                  setState(() {
-                                    selectedSkill = null;
-                                    selectedLevel = null;
-                                  });
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text("Select both skill and level"),
-                                      backgroundColor: Colors.orange,
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                }
-                              },
-                        child: state is TechnicalSkillProcessing
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            backgroundColor: const Color(0xff004673),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                          ),
+                          onPressed: state is TechnicalSkillProcessing
+                              ? null
+                              : () {
+                                  if (selectedSkill != null &&
+                                      selectedLevel != null) {
+                                    context.read<TechnicalSkillBloc>().add(
+                                          AddTechnicalSkill(
+                                            skill: selectedSkill!,
+                                            level: selectedLevel!,
+                                            context: context,
+                                          ),
+                                        );
+                                    setState(() {
+                                      selectedSkill = null;
+                                      selectedLevel = null;
+                                    });
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text("Select both skill and level"),
+                                        backgroundColor: Colors.orange,
+                                        duration: Duration(seconds: 2),
+                                      ),
+                                    );
+                                  }
+                                },
+                          child: state is TechnicalSkillProcessing
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text(
+                                  'Save',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Poppins"),
                                 ),
-                              )
-                            : const Text(
-                                'Save',
-                                style: TextStyle(
-                                    color: Colors.white, fontFamily: "Poppins"),
-                              ),
-                      ),
-                    ],
-                  ),
-                  const Divider(),
-                  Expanded(
-                    child: _buildSkillsList(state),
-                  ),
-                ],
-              );
-            },
+                        ),
+                      ],
+                    ),
+                    const Divider(),
+                    Expanded(
+                      child: _buildSkillsList(state),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),

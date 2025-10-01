@@ -55,212 +55,216 @@ class _LanguageDropdownContentState extends State<_LanguageDropdownContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffF9F2ED),
-      appBar: AppBar(
-        backgroundColor: const Color(0xffF9F2ED),
-        title: Text(
-          "Select Language",
-          style: TextStyle(
-            fontFamily: "Poppins",
-            color: Color(0xff3F414E),
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        backgroundColor: Color(0xffF9F2ED),
+        appBar: AppBar(
+          backgroundColor: const Color(0xffF9F2ED),
+          title: Text(
+            "Select Language",
+            style: TextStyle(
+              fontFamily: "Poppins",
+              color: Color(0xff3F414E),
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+            ),
           ),
         ),
-      ),
-      body: BlocConsumer<LanguageBloc, LanguageState>(
-        listener: (context, state) {
-          if (state is LanguageError) {
-            // Show error only in SnackBar, not in dialog
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Error: ${state.message}"),
-                backgroundColor: Colors.red,
-                duration: Duration(seconds: 3),
-              ),
-            );
-            // Still refresh to show current state from backend
-            Future.delayed(Duration(milliseconds: 1000), () {
-              context.read<LanguageBloc>().add(FetchLanguages());
-            });
-          } else if (state is LanguageActionSuccess) {
-            // Show success message
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("✓ ${state.message}"),
-                backgroundColor: Colors.green,
-                duration: Duration(seconds: 2),
-              ),
-            );
-            // Refresh the languages list after success
-            Future.delayed(Duration(milliseconds: 500), () {
-              context.read<LanguageBloc>().add(FetchLanguages());
-            });
-          }
-        },
-        builder: (context, state) {
-          // Only show language skills from backend, no error handling in UI
-          List<LanguageSkill> languages = <LanguageSkill>[];
+        body: BlocConsumer<LanguageBloc, LanguageState>(
+          listener: (context, state) {
+            if (state is LanguageError) {
+              // Show error only in SnackBar, not in dialog
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Error: ${state.message}"),
+                  backgroundColor: Colors.red,
+                  duration: Duration(seconds: 3),
+                ),
+              );
+              // Still refresh to show current state from backend
+              Future.delayed(Duration(milliseconds: 1000), () {
+                context.read<LanguageBloc>().add(FetchLanguages());
+              });
+            } else if (state is LanguageActionSuccess) {
+              // Show success message
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("✓ ${state.message}"),
+                  backgroundColor: Colors.green,
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              // Refresh the languages list after success
+              Future.delayed(Duration(milliseconds: 500), () {
+                context.read<LanguageBloc>().add(FetchLanguages());
+              });
+            }
+          },
+          builder: (context, state) {
+            // Only show language skills from backend, no error handling in UI
+            List<LanguageSkill> languages = <LanguageSkill>[];
 
-          if (state is LanguageLoaded) {
-            languages = List<LanguageSkill>.from(state.languages);
-          }
+            if (state is LanguageLoaded) {
+              languages = List<LanguageSkill>.from(state.languages);
+            }
 
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                DropdownSearch<String>(
-                  items: (filter, loadProps) => languagesList,
-                  selectedItem: selectedLanguage,
-                  popupProps: PopupProps.menu(
-                    showSearchBox: true,
-                    searchFieldProps: TextFieldProps(
-                      decoration: InputDecoration(
-                        hintText: "Search your language...",
-                        hintStyle: TextStyle(
-                          fontFamily: "Poppins",
-                          color: Colors.grey,
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  DropdownSearch<String>(
+                    items: (filter, loadProps) => languagesList,
+                    selectedItem: selectedLanguage,
+                    popupProps: PopupProps.menu(
+                      showSearchBox: true,
+                      searchFieldProps: TextFieldProps(
+                        decoration: InputDecoration(
+                          hintText: "Search your language...",
+                          hintStyle: TextStyle(
+                            fontFamily: "Poppins",
+                            color: Colors.grey,
+                          ),
+                          border: OutlineInputBorder(),
                         ),
-                        border: OutlineInputBorder(),
                       ),
                     ),
-                  ),
-                  decoratorProps: DropDownDecoratorProps(
-                    baseStyle: TextStyle(
-                      fontFamily: "Poppins",
+                    decoratorProps: DropDownDecoratorProps(
+                      baseStyle: TextStyle(
+                        fontFamily: "Poppins",
+                      ),
+                      decoration: InputDecoration(
+                        labelText: "Select a language",
+                        labelStyle: const TextStyle(
+                          fontFamily: "Poppins",
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                      ),
                     ),
+                    onChanged: (value) =>
+                        setState(() => selectedLanguage = value),
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    value: selectedLevel,
+                    items: levels
+                        .map((level) => DropdownMenuItem(
+                              value: level,
+                              child: Text(level),
+                            ))
+                        .toList(),
                     decoration: InputDecoration(
-                      labelText: "Select a language",
+                      labelText: "Select Level",
                       labelStyle: const TextStyle(
                         fontFamily: "Poppins",
                       ),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15)),
                     ),
+                    onChanged: (value) => setState(() => selectedLevel = value),
                   ),
-                  onChanged: (value) =>
-                      setState(() => selectedLanguage = value),
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: selectedLevel,
-                  items: levels
-                      .map((level) => DropdownMenuItem(
-                            value: level,
-                            child: Text(level),
-                          ))
-                      .toList(),
-                  decoration: InputDecoration(
-                    labelText: "Select Level",
-                    labelStyle: const TextStyle(
-                      fontFamily: "Poppins",
-                    ),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                  ),
-                  onChanged: (value) => setState(() => selectedLevel = value),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        backgroundColor: const Color(0xffFF9500),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          backgroundColor: const Color(0xffFF9500),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: "Poppins"),
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                            color: Colors.white, fontFamily: "Poppins"),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        backgroundColor: Color(0xff004673),
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                      ),
-                      onPressed: () async {
-                        if (selectedLanguage != null && selectedLevel != null) {
-                          // Add the language
-                          context.read<LanguageBloc>().add(
-                              AddLanguage(selectedLanguage!, selectedLevel!));
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15)),
+                          backgroundColor: Color(0xff004673),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                        ),
+                        onPressed: () async {
+                          if (selectedLanguage != null &&
+                              selectedLevel != null) {
+                            // Add the language
+                            context.read<LanguageBloc>().add(
+                                AddLanguage(selectedLanguage!, selectedLevel!));
 
-                          // Clear the form immediately
-                          setState(() {
-                            selectedLanguage = null;
-                            selectedLevel = null;
-                          });
+                            // Clear the form immediately
+                            setState(() {
+                              selectedLanguage = null;
+                              selectedLevel = null;
+                            });
 
-                          // Show saving message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Saving language...",
-                                style: TextStyle(color: Colors.black),
+                            // Show saving message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "Saving language...",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                backgroundColor: Colors.white,
+                                duration: Duration(seconds: 1),
                               ),
-                              backgroundColor: Colors.white,
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
+                            );
 
-                          // Wait a bit then refresh
-                          await Future.delayed(Duration(milliseconds: 500));
-                          context.read<LanguageBloc>().add(FetchLanguages());
-                        } else {
-                          // Show validation error in SnackBar instead of dialog
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text("Please select both Language and Level"),
-                              backgroundColor: Colors.orange,
-                            ),
-                          );
-                        }
-                      },
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                            color: Colors.white, fontFamily: "Poppins"),
+                            // Wait a bit then refresh
+                            await Future.delayed(Duration(milliseconds: 500));
+                            context.read<LanguageBloc>().add(FetchLanguages());
+                          } else {
+                            // Show validation error in SnackBar instead of dialog
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "Please select both Language and Level"),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          }
+                        },
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: "Poppins"),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Divider(),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Language Skills",
-                      style: TextStyle(
-                        fontFamily: "Poppins",
-                        color: Color(0xff3F414E),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                      )),
-                ),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: _buildLanguageList(context, languages),
-                ),
-                if (state is LanguageLoading)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
+                    ],
                   ),
-              ],
-            ),
-          );
-        },
+                  Divider(),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Language Skills",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          color: Color(0xff3F414E),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        )),
+                  ),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: _buildLanguageList(context, languages),
+                  ),
+                  if (state is LanguageLoading)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

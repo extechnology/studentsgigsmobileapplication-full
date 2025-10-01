@@ -78,55 +78,58 @@ class _ShowExperienceState extends State<ShowExperience> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF9F2ED),
-      appBar: AppBar(
+    return SafeArea(
+      top: false,
+      child: Scaffold(
         backgroundColor: const Color(0xffF9F2ED),
-        title: const Text(
-          'Work Experience',
-          style: TextStyle(
-            fontFamily: "Poppin",
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Color(0xff3F414E),
+        appBar: AppBar(
+          backgroundColor: const Color(0xffF9F2ED),
+          title: const Text(
+            'Work Experience',
+            style: TextStyle(
+              fontFamily: "Poppin",
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Color(0xff3F414E),
+            ),
           ),
         ),
-      ),
-      body: BlocBuilder<ExperienceBloc, ExperienceState>(
-        builder: (context, state) {
-          if (state is ExperienceLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is ExperienceError) {
-            return Center(child: Text(state.message));
-          } else if (state is ExperienceLoaded) {
-            return _buildExperienceList(state.experiences);
-          } else {
-            return const Center(child: Text('No experiences found'));
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff004673),
-        onPressed: () async {
-          // Navigate and wait for result
-          final result = await Navigator.push<bool>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => ExperienceBloc(ExperienceService()),
-                child: ExperinceScreen(),
+        body: BlocBuilder<ExperienceBloc, ExperienceState>(
+          builder: (context, state) {
+            if (state is ExperienceLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is ExperienceError) {
+              return Center(child: Text(state.message));
+            } else if (state is ExperienceLoaded) {
+              return _buildExperienceList(state.experiences);
+            } else {
+              return const Center(child: Text('No experiences found'));
+            }
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Color(0xff004673),
+          onPressed: () async {
+            // Navigate and wait for result
+            final result = await Navigator.push<bool>(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => ExperienceBloc(ExperienceService()),
+                  child: ExperinceScreen(),
+                ),
               ),
-            ),
-          );
+            );
 
-          // If experience was added successfully, reload the experiences
-          if (result == true) {
-            context.read<ExperienceBloc>().add(LoadExperiences());
-          }
-        },
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
+            // If experience was added successfully, reload the experiences
+            if (result == true) {
+              context.read<ExperienceBloc>().add(LoadExperiences());
+            }
+          },
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
         ),
       ),
     );

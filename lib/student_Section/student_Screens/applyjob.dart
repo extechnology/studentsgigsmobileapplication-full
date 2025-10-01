@@ -656,7 +656,14 @@ class _ApplyForJobScreenState extends State<ApplyForJobScreen> {
     return Scaffold(
       backgroundColor: Color(0xffF9F2ED),
       appBar: AppBar(
-        title: Text('Apply for Job'),
+        title: Text(
+          'Apply for Job',
+          style: TextStyle(
+            fontFamily: "Poppins",
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Color(0xffF9F2ED),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -689,7 +696,7 @@ class _ApplyForJobScreenState extends State<ApplyForJobScreen> {
                     widget.jobTitle,
                     style: TextStyle(
                       fontFamily: "Poppins",
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

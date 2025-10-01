@@ -20,100 +20,103 @@ class _PremiumPlansView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF9F2ED),
-      appBar: AppBar(
-        title: const Text(
-          'Premium Plans',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w600,
-            color: Color(0xff3F414E),
-          ),
-        ),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
         backgroundColor: const Color(0xffF9F2ED),
-        elevation: 0,
-      ),
-      body: BlocConsumer<PremiumPlansBloc, PremiumPlansState>(
-        listener: (context, state) {
-          if (state is PremiumPlansLoaded && state.showUpgradeDialog) {
-            _showUpgradeDialog(context, state.selectedPlan!);
-          }
-          if (state is PremiumPlansLoaded && state.showRestrictedDialog) {
-            _showRestrictedDialog(
-              context,
-              state.dialogTitle!,
-              state.dialogMessage!,
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is PremiumPlansInitial || state is PremiumPlansLoading) {
-            return _buildLoadingState();
-          }
-
-          if (state is PremiumPlansError) {
-            return _buildErrorState(context, state.message);
-          }
-
-          if (state is PremiumPlansLoaded) {
-            if (state.plans.isEmpty) {
-              return _buildEmptyState();
+        appBar: AppBar(
+          title: const Text(
+            'Premium Plans',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w600,
+              color: Color(0xff3F414E),
+            ),
+          ),
+          backgroundColor: const Color(0xffF9F2ED),
+          elevation: 0,
+        ),
+        body: BlocConsumer<PremiumPlansBloc, PremiumPlansState>(
+          listener: (context, state) {
+            if (state is PremiumPlansLoaded && state.showUpgradeDialog) {
+              _showUpgradeDialog(context, state.selectedPlan!);
+            }
+            if (state is PremiumPlansLoaded && state.showRestrictedDialog) {
+              _showRestrictedDialog(
+                context,
+                state.dialogTitle!,
+                state.dialogMessage!,
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is PremiumPlansInitial || state is PremiumPlansLoading) {
+              return _buildLoadingState();
             }
 
-            return Column(
-              children: [
-                // Header section
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ShaderMask(
-                        shaderCallback: (Rect bounds) {
-                          return const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Color(0xffEB8125),
-                              Color(0xffc55a5f),
-                              Color(0xff004673)
-                            ],
-                          ).createShader(bounds);
-                        },
-                        blendMode: BlendMode.srcIn,
-                        child: const Text(
-                          "Unlock Your Full Potential With Premium",
-                          style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              height: 1.5),
-                          textAlign: TextAlign.center,
+            if (state is PremiumPlansError) {
+              return _buildErrorState(context, state.message);
+            }
+
+            if (state is PremiumPlansLoaded) {
+              if (state.plans.isEmpty) {
+                return _buildEmptyState();
+              }
+
+              return Column(
+                children: [
+                  // Header section
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ShaderMask(
+                          shaderCallback: (Rect bounds) {
+                            return const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xffEB8125),
+                                Color(0xffc55a5f),
+                                Color(0xff004673)
+                              ],
+                            ).createShader(bounds);
+                          },
+                          blendMode: BlendMode.srcIn,
+                          child: const Text(
+                            "Unlock Your Full Potential With Premium",
+                            style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 24,
+                                fontWeight: FontWeight.w700,
+                                height: 1.5),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildPlanStatusInfo(state),
-                    ],
+                        const SizedBox(height: 8),
+                        _buildPlanStatusInfo(state),
+                      ],
+                    ),
                   ),
-                ),
 
-                // Expanded PageView to take remaining space
-                Expanded(
-                  child: _buildPlansPageView(context, state),
-                ),
+                  // Expanded PageView to take remaining space
+                  Expanded(
+                    child: _buildPlansPageView(context, state),
+                  ),
 
-                // Dots indicator
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: _buildDotsIndicator(context, state),
-                ),
-              ],
-            );
-          }
+                  // Dots indicator
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: _buildDotsIndicator(context, state),
+                  ),
+                ],
+              );
+            }
 
-          return const SizedBox.shrink();
-        },
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
