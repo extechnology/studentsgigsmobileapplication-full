@@ -31,6 +31,7 @@ class _ApplyForJobScreenState extends State<ApplyForJobScreen> {
   Map<String, dynamic>? _userPlanData;
   List<dynamic>? _availablePlans;
   bool _isCheckingPlan = true;
+  bool _hasApplied = false; // Track application status
   final PlanService _planService = PlanService();
 
   @override
@@ -635,7 +636,7 @@ class _ApplyForJobScreenState extends State<ApplyForJobScreen> {
         // Refresh plan status after successful application
         await _checkUserPlanStatus();
 
-        Navigator.pop(context);
+        Navigator.pushNamed(context, "StudentHomeScreens");
       } else {
         throw Exception('Failed to submit application (${response.statusCode}');
       }
@@ -651,252 +652,315 @@ class _ApplyForJobScreenState extends State<ApplyForJobScreen> {
     }
   }
 
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffF9F2ED),
-      appBar: AppBar(
-        title: Text(
-          'Apply for Job',
-          style: TextStyle(
-            fontFamily: "Poppins",
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, _hasApplied);
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xffF9F2ED),
+        appBar: AppBar(
+          title: Text(
+            'Apply for Job',
+            style: TextStyle(
+              fontFamily: "Poppins",
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: Color(0xffF9F2ED),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, _hasApplied),
           ),
         ),
-        backgroundColor: Color(0xffF9F2ED),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: _isCheckingPlan
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(color: Color(0xff004673)),
-                  SizedBox(height: 16),
-                  Text(
-                    'Checking plan status...',
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.jobTitle,
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    widget.companyName,
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-
-                  // Plan status indicator
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: _canUserApply()
-                          ? Colors.green.shade100
-                          : Colors.red.shade100,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: _canUserApply() ? Colors.green : Colors.red,
-                        width: 1,
+        body: _isCheckingPlan
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(color: Color(0xff004673)),
+                    SizedBox(height: 16),
+                    Text(
+                      'Checking plan status...',
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        color: Colors.grey[600],
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          _canUserApply() ? Icons.check_circle : Icons.warning,
-                          size: 16,
-                          color: _canUserApply() ? Colors.green : Colors.red,
-                        ),
-                        SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            _canUserApply()
-                                ? '${_getCurrentPlanName()} Plan - Can Apply'
-                                : _getRestrictionMessage(),
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 12,
-                              color: _canUserApply()
-                                  ? Colors.green.shade700
-                                  : Colors.red.shade700,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
+                  ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.jobTitle,
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-
-                  SizedBox(height: 30),
-
-                  // Resume Upload Section
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    SizedBox(height: 5),
+                    Text(
+                      widget.companyName,
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    SizedBox(height: 10),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: _hasApplied
+                            ? Colors.blue.shade100
+                            : (_canUserApply()
+                                ? Colors.green.shade100
+                                : Colors.red.shade100),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: _hasApplied
+                              ? Colors.blue
+                              : (_canUserApply() ? Colors.green : Colors.red),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            'Upload Resume',
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                          Icon(
+                            _hasApplied
+                                ? Icons.check_circle
+                                : (_canUserApply()
+                                    ? Icons.check_circle
+                                    : Icons.warning),
+                            size: 16,
+                            color: _hasApplied
+                                ? Colors.blue
+                                : (_canUserApply() ? Colors.green : Colors.red),
+                          ),
+                          SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              _hasApplied
+                                  ? 'Application Submitted Successfully'
+                                  : (_canUserApply()
+                                      ? '${_getCurrentPlanName()} Plan - Can Apply'
+                                      : _getRestrictionMessage()),
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 12,
+                                color: _hasApplied
+                                    ? Colors.blue.shade700
+                                    : (_canUserApply()
+                                        ? Colors.green.shade700
+                                        : Colors.red.shade700),
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Supported formats: PDF, DOC, DOCX',
-                            style: TextStyle(
-                              fontFamily: "Poppins",
-                              fontSize: 14,
-                              color: Colors.grey,
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    if (_hasApplied) ...[
+                      Center(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline,
+                              size: 80,
+                              color: Colors.green,
                             ),
-                          ),
-                          SizedBox(height: 20),
-                          if (_resumeFile != null)
-                            Column(
-                              children: [
-                                Row(
+                            SizedBox(height: 20),
+                            Text(
+                              'Application Submitted!',
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              'Your application has been successfully submitted.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 16,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            SizedBox(height: 30),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xff004673),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                minimumSize: Size(double.infinity, 50),
+                              ),
+                              child: Text(
+                                'Back to Jobs',
+                                style: TextStyle(fontFamily: "Poppins"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ] else ...[
+                      Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Upload Resume',
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'Supported formats: PDF, DOC, DOCX',
+                                style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              if (_resumeFile != null)
+                                Column(
                                   children: [
-                                    Icon(Icons.insert_drive_file,
-                                        color: Colors.blue),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(
-                                        _resumeFile!.name,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.insert_drive_file,
+                                            color: Colors.blue),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: Text(
+                                            _resumeFile!.name,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.close),
+                                          onPressed: () => setState(
+                                              () => _resumeFile = null),
+                                        ),
+                                      ],
                                     ),
-                                    IconButton(
-                                      icon: Icon(Icons.close),
-                                      onPressed: () =>
-                                          setState(() => _resumeFile = null),
-                                    ),
+                                    SizedBox(height: 20),
                                   ],
                                 ),
-                                SizedBox(height: 20),
-                              ],
-                            ),
-                          ElevatedButton(
-                            onPressed: _canUserApply() ? _pickResume : null,
+                              ElevatedButton(
+                                onPressed: _canUserApply() ? _pickResume : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _canUserApply()
+                                      ? Color(0xff004673)
+                                      : Colors.grey,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  minimumSize: Size(double.infinity, 50),
+                                ),
+                                child: Text(
+                                  _resumeFile == null
+                                      ? 'Select Resume'
+                                      : 'Change Resume',
+                                  style: TextStyle(fontFamily: "Poppins"),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              if (_resumeFile != null)
+                                ElevatedButton(
+                                  onPressed: (_isLoading || !_canUserApply())
+                                      ? null
+                                      : () => _submitApplication(true),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _canUserApply()
+                                        ? Colors.green
+                                        : Colors.grey,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    minimumSize: Size(double.infinity, 50),
+                                  ),
+                                  child: _isLoading
+                                      ? CircularProgressIndicator(
+                                          color: Colors.white)
+                                      : Text(
+                                          'Submit with Resume',
+                                          style:
+                                              TextStyle(fontFamily: "Poppins"),
+                                        ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      if (!_canUserApply()) ...[
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: _showRestrictionDialog,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: _canUserApply()
-                                  ? Color(0xff004673)
-                                  : Colors.grey,
+                              backgroundColor: Color(0xff004673),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               minimumSize: Size(double.infinity, 50),
                             ),
                             child: Text(
-                              _resumeFile == null
-                                  ? 'Select Resume'
-                                  : 'Change Resume',
-                              style: TextStyle(fontFamily: "Poppins"),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          if (_resumeFile != null)
-                            ElevatedButton(
-                              onPressed: (_isLoading || !_canUserApply())
-                                  ? null
-                                  : () => _submitApplication(true),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _canUserApply()
-                                    ? Colors.green
-                                    : Colors.grey,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                minimumSize: Size(double.infinity, 50),
+                              !_isProfileCompleted() || !_isAgeValid()
+                                  ? 'Complete Requirements'
+                                  : 'Upgrade Plan to Apply',
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 16,
                               ),
-                              child: _isLoading
-                                  ? CircularProgressIndicator(
-                                      color: Colors.white)
-                                  : Text(
-                                      'Submit with Resume',
-                                      style: TextStyle(fontFamily: "Poppins"),
-                                    ),
                             ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  // Apply without resume option or show restriction message
-                  if (!_canUserApply()) ...[
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: _showRestrictionDialog,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xff004673),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          minimumSize: Size(double.infinity, 50),
-                        ),
-                        child: Text(
-                          !_isProfileCompleted() || !_isAgeValid()
-                              ? 'Complete Requirements'
-                              : 'Upgrade Plan to Apply',
-                          style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 16,
                           ),
                         ),
-                      ),
-                    ),
-                  ] else ...[
-                    Center(
-                      child: TextButton(
-                        onPressed:
-                            _isLoading ? null : () => _submitApplication(false),
-                        child: Text(
-                          'Apply without Resume',
-                          style: TextStyle(
-                            fontFamily: "Poppins",
-                            fontSize: 16,
-                            color: Color(0xff004673),
+                      ] else ...[
+                        Center(
+                          child: TextButton(
+                            onPressed: _isLoading
+                                ? null
+                                : () => _submitApplication(false),
+                            child: Text(
+                              'Apply without Resume',
+                              style: TextStyle(
+                                fontFamily: "Poppins",
+                                fontSize: 16,
+                                color: Color(0xff004673),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      ],
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }
