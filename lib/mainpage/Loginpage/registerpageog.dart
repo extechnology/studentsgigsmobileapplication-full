@@ -1252,7 +1252,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                   obscureText: obscureText,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'Password',
+                                    hintText: 'Password',hintStyle: TextStyle(color: Colors.grey[400]),
                                     contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
                                     suffixIcon: Padding(
                                       padding: EdgeInsets.only(right: width * 0.02), // 👈 Adjust padding here
@@ -1292,7 +1292,7 @@ class _GoogleSignInPageState extends State<GoogleSignInPage> {
                                   obscureText: obscureTextconformpassword,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'Confirm password',
+                                    hintText: 'Confirm password',hintStyle: TextStyle(color: Colors.grey[400]),
                                     contentPadding: EdgeInsets.symmetric(
                                       vertical: height * 0.02,  // ~16 on 800px height
                                       horizontal: width * 0.03, // ~12 on 400px width
@@ -1487,7 +1487,7 @@ Widget textform({ TextEditingController ? controllers,String ? hint, Icon ?  ico
           decoration: InputDecoration(
 
             border: InputBorder.none,
-            hintText: hint,
+            hintText: hint,hintStyle: TextStyle(color: Colors.grey[400]),
             suffixIcon: Padding(
               padding: EdgeInsets.only(right: width * 0.03), // 👈 Adjust padding here
               child: iconforsuffix
