@@ -47,7 +47,7 @@ class OtpAuthRepository {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print("response:$data");
+        // print("response:$data");
         if (data['access'] != null) {
           await _secureStorage.write(
               key: 'access_token', value: data['access']);
