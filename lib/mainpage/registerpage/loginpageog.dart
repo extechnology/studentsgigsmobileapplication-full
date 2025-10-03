@@ -2285,7 +2285,7 @@ class _RegisterpageState extends State<Registerpage> {
                               obscureText: obscureText,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: 'Password',
+                                hintText: 'Password',hintStyle: TextStyle(color: Colors.grey[400]),
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: height * 0.025,
                                     horizontal: width * 0.033),
@@ -2986,7 +2986,8 @@ Widget textform(
           controller: controllers,
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: hint,
+            hintText: hint,hintStyle:TextStyle(color: Colors.grey[400]) ,
+
             suffixIcon: Padding(
                 padding: EdgeInsets.only(
                     right: width * 0.033), // 👈 Adjust padding here

@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Students Gigs',
       routes: {
         "Dashborad": (context) => const Dashborad(),
         "Homepageifdatalocation": (context) => const Homepageifdatalocation(),
