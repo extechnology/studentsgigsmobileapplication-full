@@ -115,6 +115,7 @@ class GigsDetailScreen extends StatelessWidget {
     };
 
     return SafeArea(
+      top: false,
       child: Scaffold(
         backgroundColor: const Color(0xffF9F2ED),
         appBar: AppBar(
