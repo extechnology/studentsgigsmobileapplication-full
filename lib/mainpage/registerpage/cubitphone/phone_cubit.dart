@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:bloc/bloc.dart';
@@ -27,7 +26,8 @@ class PhoneCubit extends Cubit<PhoneState> {
     }
 
     // Listen for future changes
-    _connectionSubscription = InternetConnection().onStatusChange.listen((status) {
+    _connectionSubscription =
+        InternetConnection().onStatusChange.listen((status) {
       isConnected = (status == InternetStatus.connected);
       if (!isConnected) {
         emit(PhoneInitial());
@@ -42,10 +42,12 @@ class PhoneCubit extends Cubit<PhoneState> {
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   static const String userType = "employer";
+
   /// Send OTP to mobile number
   Future<void> sendOtp(String mobile) async {
     emit(PhoneLoading());
-    final url = Uri.parse("https://server.studentsgigs.com/api/employer/send-sms-otp/");
+    final url =
+        Uri.parse("https://server.studentsgigs.com/api/employer/send-sms-otp/");
 
     try {
       // 👉 Remove "+" if present
@@ -67,25 +69,27 @@ class PhoneCubit extends Cubit<PhoneState> {
         if (data["status"] == "success") {
           final otp = data["otp"];
           emit(PhoneOtpSent(otp: otp));
-          print("✅ OTP sent to $cleanMobile");
+          // print("✅ OTP sent to $cleanMobile");
         } else {
           emit(PhoneError("Failed to send OTP"));
-          print("❌ OTP send failed: ${data.toString()}");
+          // print("❌ OTP send failed: ${data.toString()}");
         }
       } else {
         emit(PhoneError("Error: ${response.statusCode}"));
-        print("❌ Backend error: ${response.statusCode}");
+        // print("❌ Backend error: ${response.statusCode}");
       }
     } catch (e) {
       emit(PhoneError("Exception: $e"));
-      print("❌ Exception: $e");
+      // print("❌ Exception: $e");
     }
   }
 
   /// Verify OTP
-  Future<void> verifyOtp(BuildContext context, String mobile, String otp) async {
+  Future<void> verifyOtp(
+      BuildContext context, String mobile, String otp) async {
     emit(PhoneLoading());
-    final url = Uri.parse("https://server.studentsgigs.com/api/employer/verify-sms-otp/");
+    final url = Uri.parse(
+        "https://server.studentsgigs.com/api/employer/verify-sms-otp/");
 
     try {
       // 👉 Remove "+" if present
@@ -107,16 +111,13 @@ class PhoneCubit extends Cubit<PhoneState> {
         final token = data['access']; // or data['refresh'] if needed
         // print(token);
         // ✅ Save token securely
-        await secureStorage.write(key:'access_token', value: token);
+        await secureStorage.write(key: 'access_token', value: token);
         await _storage.write(key: 'user_type', value: userType);
 
         if (token!.isNotEmpty) {
           getcompanyinfo(context);
-
-
         } else {
           Navigator.pop(context); // ✅ Close the loading dialog
-
 
           Navigator.pushNamed(context, 'GoogleSignInPage');
           // Navigator.of(context)
@@ -125,9 +126,6 @@ class PhoneCubit extends Cubit<PhoneState> {
 
         emit(PhoneVerifed2());
       } else {
-
-
-
         emit(PhoneError("Invalid OTP"));
       }
     } catch (e) {
@@ -135,7 +133,10 @@ class PhoneCubit extends Cubit<PhoneState> {
       Navigator.pop(context); // ✅ Close the loading dialog
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:isConnected ? Text("Something went wrong: "): Text("Oops! We couldn’t load right now. \n Please check your network availability."),
+          content: isConnected
+              ? Text("Something went wrong: ")
+              : Text(
+                  "Oops! We couldn’t load right now. \n Please check your network availability."),
           backgroundColor: Colors.red,
           duration: Duration(seconds: 3),
         ),
@@ -165,19 +166,21 @@ class PhoneCubit extends Cubit<PhoneState> {
     //   print("❌ Exception: $e");
     // }
   }
-  Future<void> getcompanyinfo(BuildContext context) async {
-    await Future.delayed(const Duration(milliseconds: 3000)); // ⏳ 2-second delay
 
-    final token = await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
+  Future<void> getcompanyinfo(BuildContext context) async {
+    await Future.delayed(
+        const Duration(milliseconds: 3000)); // ⏳ 2-second delay
+
+    final token =
+        await ApiConstantsemployer.getTokenOnly(); // ✅ get actual token
     // final token2 = await ApiConstantsemployer.getTokenOnly2(); // ✅ get actual token
 
     final url = "$baseurl/api/employer/employer-info/";
-    final response = await http.get(Uri.parse(url),headers: {
+    final response = await http.get(Uri.parse(url), headers: {
       'Authorization': 'Bearer ${token}',
       'Content-Type': 'application/json',
-
     });
-    if(response.statusCode >= 200 && response.statusCode <= 299){
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
       final data = compantonboardingFromJson(response.body);
       // print(data);
 
@@ -185,13 +188,11 @@ class PhoneCubit extends Cubit<PhoneState> {
       final email = data.employer!.user!.email;
       await _storage.write(key: 'user_email', value: email);
 
-
-
       if ((data.employer?.companyName ?? "").isNotEmpty) {
         // Navigate to dashboard if company name is empty
         Navigator.pop(context); // ✅ Close the loading dialog
 
-        Navigator.pushReplacementNamed(context,'Dashborad' );
+        Navigator.pushReplacementNamed(context, 'Dashborad');
         // Navigator.pushReplacement(
         //   context,
         //   MaterialPageRoute(builder: (context) => Dashborad()),
@@ -199,7 +200,7 @@ class PhoneCubit extends Cubit<PhoneState> {
       } else {
         Navigator.pop(context); // ✅ Close the loading dialog
 
-        Navigator.pushReplacementNamed(context,'OnboardProfiles' );
+        Navigator.pushReplacementNamed(context, 'OnboardProfiles');
 
         // Navigator.pushReplacement(
         //   context,
@@ -221,19 +222,13 @@ class PhoneCubit extends Cubit<PhoneState> {
 
       // print("networkurl$networkImage");
 
-
       // emit(CompanyinfoInitial());
       // Future.delayed(Duration(milliseconds: 5000), () {
       //   // Trigger a fake user interaction
       //   emit(CompanyinfoInitial()); // Ensure rebuild (if needed)
       // });
-
-    }else {
+    } else {
       // print("Something Wrong");
     }
-
   }
-
 }
-
-

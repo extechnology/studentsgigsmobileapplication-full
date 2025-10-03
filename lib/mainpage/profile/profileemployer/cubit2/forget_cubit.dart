@@ -12,7 +12,8 @@ class ForgetCubit extends Cubit<ForgetState> {
 
   final String baseurl = ApiConstantsemployer.baseUrl;
 
-  Future<void> resetPassword({required String confirm_password,required String password}) async {
+  Future<void> resetPassword(
+      {required String confirm_password, required String password}) async {
     emit(ForgetIoading());
 
     try {
@@ -23,23 +24,24 @@ class ForgetCubit extends Cubit<ForgetState> {
       final request = http.MultipartRequest('POST', uri)
         ..fields['confirm_password'] = confirm_password
         ..fields['password'] = password
-        ..headers['Authorization'] = 'Bearer ${token ?? ""}'; // add token manually
+        ..headers['Authorization'] =
+            'Bearer ${token ?? ""}'; // add token manually
 
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         emit(ForgetIoaded("Password reset link sent."));
-        print("tokensucces");
-        print(token);
+        // print("tokensucces");
+        // print(token);
       } else {
-        print("tokensucces1");
-        print(token);
+        // print("tokensucces1");
+        // print(token);
 
         emit(ForgetError("Failed: ${response.body}"));
       }
     } catch (e) {
-      print("tokensucces2");
+      // print("tokensucces2");
 
       emit(ForgetError("Server error"));
     }

@@ -92,7 +92,7 @@ class ForgotPasswordRepository {
           'message': data['message'] ?? 'Password reset successfully',
         };
       } else {
-        print("Error to reset----${response.body}");
+        // print("Error to reset----${response.body}");
         return {
           'success': false,
           'error':
@@ -100,7 +100,7 @@ class ForgotPasswordRepository {
         };
       }
     } catch (e) {
-      print("Error to reset----$e");
+      // print("Error to reset----$e");
       return {
         'success': false,
         'error': 'Network error: ${e.toString()}',
@@ -120,7 +120,7 @@ Future<void> passwordResetWithLogin(
     );
 
     if (response.statusCode == 200) {
-      print("Password reset success: ${response.statusCode}");
+      // print("Password reset success: ${response.statusCode}");
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -130,8 +130,8 @@ Future<void> passwordResetWithLogin(
         ),
       );
     } else {
-      print("Error in Reset: ${response.body}");
-      print("Password reset failed: ${response.statusCode}");
+      // print("Error in Reset: ${response.body}");
+      // print("Password reset failed: ${response.statusCode}");
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -141,7 +141,7 @@ Future<void> passwordResetWithLogin(
       );
     }
   } catch (e) {
-    print("Exception in password reset: $e");
+    // print("Exception in password reset: $e");
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Password reset failed: ${e.toString()}"),
