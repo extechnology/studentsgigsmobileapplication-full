@@ -9,10 +9,15 @@ import '../../Loginpage/cubit/login_cubit.dart';
 import '../../Loginpage/registerpageog.dart';
 import '../../dashborad/dashborad.dart';
 import '../../datapage/datapage.dart';
+import '../../postedsisg/cubit2/delete_cubit.dart';
 import '../../registerpage/loginpageog.dart';
 import '../Planusage/planusage.dart';
 import '../companyinfo/companyinfo.dart';
 import 'cubit2/forget_cubit.dart';
+import 'package:pinput/pinput.dart';
+
+import 'cubittaccountdelete/delete_account_cubit.dart';
+
 
 class Profileemployer extends StatelessWidget {
   const Profileemployer({super.key});
@@ -31,6 +36,9 @@ class Profileemployer extends StatelessWidget {
     ),
     BlocProvider(
       create: (context) => ForgetCubit(),
+    ),
+    BlocProvider(
+      create: (context) => DeleteAccountCubit(),
     ),
   ],
   child: BlocBuilder<ProfileemployerCubit, ProfileemployerState>(
@@ -283,11 +291,53 @@ class Profileemployer extends StatelessWidget {
                       //   );
                       // }
                     },
-                       bottomRight: width * 0.042, bottomLeft: width * 0.042,
+                       // bottomRight: width * 0.042, bottomLeft: width * 0.042,
                    ),
                 ),
 
            ),
+                 BlocListener<DeleteAccountCubit, DeleteAccountState>(
+                   listener: (context, state) {
+                     final cubit = context.read<DeleteAccountCubit>();
+
+                     // Loading dialog
+                     if (state is DeleteAccountLoading) {
+                       showDialog(
+                         context: context,
+                         barrierDismissible: false,
+                         builder: (_) => const Center(child: CircularProgressIndicator()),
+                       );
+                     } else {
+                       if (Navigator.canPop(context)) Navigator.pop(context);
+                     }
+
+                     // OTP sent → open OTP dialog
+                     if (state is DeleteAccountOtpSent) {
+                       if (cubit.email.text.trim() != null) {
+                         _showOtpDialog(context, cubit.email.text.trim(), state.message);
+                       }
+                     }
+
+                     // Success → show snackbar
+                     if (state is DeleteAccountSuccess) {
+                       ScaffoldMessenger.of(context)
+                           .showSnackBar(SnackBar(content: Text(state.message)));
+                     }
+
+                     // Error → show snackbar
+                     if (state is DeleteAccountError) {
+                       ScaffoldMessenger.of(context)
+                           .showSnackBar(SnackBar(content: Text(state.error)));
+                     }
+                   },
+                   child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.075), // 7.5% of screen width
+              child: buildprofile(context: context, text: ' Delete account', leadingIcon: Icons.account_circle, callback: () { _showDeleteAccountDialog(context); },
+                bottomRight: width * 0.042, bottomLeft: width * 0.042,
+
+              ),
+            ),
+),
                  SizedBox(height: height * 0.14), // roughly 15px on a 750px screen
 
                  Container(
@@ -559,4 +609,110 @@ Future<void> showResetPasswordDialog(BuildContext context) async {
       ],
     ),
   );
+}
+
+
+
+void _showDeleteAccountDialog(BuildContext context) {
+  final emailController = TextEditingController();
+  final cubit = context.read<DeleteAccountCubit>();
+
+  showDialog(
+    context: context,
+    builder: (ctx) => Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "Delete Account",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            const Text("Enter your email to continue."),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: cubit.email,
+              decoration: const InputDecoration(
+                labelText: "Email",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text("Cancel")),
+                ElevatedButton(
+                  onPressed: () {
+                    cubit.requestOtp(cubit.email.text.trim());  // ✅ pass string
+                      Navigator.pop(ctx); // close email dialog
+
+                  },
+                  child: const Text("Next"),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+/// --- OTP Dialog ---
+void _showOtpDialog(BuildContext context, String email, String message) {
+  final otpController = TextEditingController();
+  final cubit = context.read<DeleteAccountCubit>();
+
+  showDialog(
+    context: context,
+    builder: (ctx) => Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              "Verify OTP",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            Text(message),
+            const SizedBox(height: 20),
+            Pinput(
+              length: 6,
+              controller: cubit.otp,
+              showCursor: true,
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text("Cancel")),
+                ElevatedButton(
+                  onPressed: () {
+                      cubit.verifyOtp( cubit.otp.text.trim()); // verify OTP
+                      Navigator.pop(ctx);
+
+                  },
+                  child: const Text("Verify"),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    ),
+  );
+
 }
