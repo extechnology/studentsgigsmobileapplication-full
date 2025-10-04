@@ -728,7 +728,6 @@ class _PostyourjobState extends State<Postyourjob> {
                                   config: QuillSimpleToolbarConfig(
 
 
-                                    embedButtons: FlutterQuillEmbeds.toolbarButtons(),
                                     showUndo: true,
 
                                     showRedo: true,
