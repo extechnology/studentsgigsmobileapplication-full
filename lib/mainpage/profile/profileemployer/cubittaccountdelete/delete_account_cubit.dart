@@ -23,12 +23,12 @@ class DeleteAccountCubit extends Cubit<DeleteAccountState> {
       );
 
       if (response.statusCode == 200) {
-        print("a${email.trim()}");
+        // print("a${email.trim()}");
 
         final data = jsonDecode(response.body);
         emit(DeleteAccountOtpSent(data["message"] ?? "OTP sent successfully"));
       } else {
-        print("b${email.trim()}");
+        // print("b${email.trim()}");
 
         emit(DeleteAccountError("Failed to send OTP"));
       }
@@ -38,7 +38,7 @@ class DeleteAccountCubit extends Cubit<DeleteAccountState> {
   }
 
   /// Step 2: Verify OTP
-  Future<void> verifyOtp( String otp) async {
+  Future<void> verifyOtp(String otp) async {
     emit(DeleteAccountLoading());
     try {
       final response = await http.post(
@@ -51,7 +51,8 @@ class DeleteAccountCubit extends Cubit<DeleteAccountState> {
 
       if (response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        emit(DeleteAccountSuccess(data["message"] ?? "Account deleted successfully"));
+        emit(DeleteAccountSuccess(
+            data["message"] ?? "Account deleted successfully"));
       } else {
         emit(DeleteAccountError("OTP verification failed"));
       }
