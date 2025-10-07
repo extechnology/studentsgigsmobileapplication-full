@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:anjalim/student_Section/authentication/google_Auth/googlesignup.dart';
 import 'package:anjalim/student_Section/authentication/other_functionalities/forgot_password.dart';
+import 'package:anjalim/student_Section/custom_widgets/count_down.dart';
 import 'package:anjalim/student_Section/models_std/employee_Profile/employeeProfileImages.dart';
 import 'package:anjalim/student_Section/services/student_Imageupload.dart';
+import 'package:anjalim/student_Section/student_Screens/profile_Screens/account_delete_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,6 +25,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late ScrollController _scrollController;
   bool _showProfilePicInAppBar = false;
   bool isLoggingOut = false;
+  bool _showOtpField = false;
+  bool _isResendOtpEnabled = false;
+  int _otpCountdownSeconds = 600; // 10 minutes
+  Timer? _otpTimer;
 
   @override
   void initState() {
@@ -368,6 +376,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         _buildDivider(),
         _buildMenuItem(
+          icon: Icons.delete,
+          title: "Delete Account",
+          color: const Color(0xff004673),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => const DeleteAccountDialog(),
+            );
+          },
+          isLast: true,
+        ),
+        _buildDivider(),
+        _buildMenuItem(
           icon: Icons.logout_outlined,
           title: "Log Out",
           color: const Color(0xff004673),
@@ -436,33 +457,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       endIndent: 20,
     );
   }
-
-  // Widget _buildActionButtons() {
-  //   return Container(
-  //     margin: const EdgeInsets.symmetric(horizontal: 20),
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           child: _buildActionButton(
-  //             icon: Icons.lock_reset_outlined,
-  //             title: "Reset Password",
-  //             color: const Color(0xffEB8125),
-  //             onTap: () => _showForgotPasswordDialog(),
-  //           ),
-  //         ),
-  //         const SizedBox(width: 15),
-  //         Expanded(
-  //           child: _buildActionButton(
-  //             icon: Icons.logout_outlined,
-  //             title: "Log Out",
-  //             color: const Color(0xff004673),
-  //             onTap: () => _showLogoutConfirmationDialog(),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   // Footer Section with Privacy Policy Links
   Widget _buildPrivacyPolicySection() {
